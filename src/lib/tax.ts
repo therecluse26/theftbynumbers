@@ -45,7 +45,11 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
     : 0;
   const base = wage + employerShare;
 
-  const total = employeeTax + employerShare + salesTax;
+  // Everything the employment relationship costs in tax. Sales tax is absent
+  // on purpose: your employer never pays it, so it cannot be a share of what
+  // you cost them.
+  const employmentTax = employeeTax + employerShare;
+  const total = employmentTax + salesTax;
 
   return {
     wage,
@@ -58,9 +62,14 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
     employerShare,
     salesTax,
     employeeTax,
+    employmentTax,
     total,
+    // Sales tax comes out of this later. It is not withheld, so it does not
+    // change what the paycheck nets.
+    takeHomePay: afterDirect,
     kept: Math.max(0, wage - employeeTax - salesTax),
     effectiveRate: base > 0 ? total / base : 0,
+    employmentRate: base > 0 ? employmentTax / base : 0,
   };
 }
 

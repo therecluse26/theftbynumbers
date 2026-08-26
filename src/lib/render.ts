@@ -61,11 +61,18 @@ export function heroText(r: Breakdown, inputs: Inputs): HeroText {
         status.whoObject +
         '. Of that, tax takes',
       figure: usd(r.total),
+      // The percentage is quoted against your cost to your employer, so its
+      // numerator must be employment tax only. Sales tax gets its own clause;
+      // your employer never pays it.
       foot:
-        'That is <b>' +
-        pct(r.effectiveRate) +
-        '</b> of your full cost to your employer. Your paycheck still nets <b>' +
-        usd(r.kept) +
+        'Payroll and income tax take <b>' +
+        pct(r.employmentRate) +
+        '</b> of your full cost to your employer. ' +
+        (r.salesTax > 0
+          ? 'Sales tax takes <b>' + usd(r.salesTax) + '</b> more when you spend. '
+          : '') +
+        'Your paycheck still nets <b>' +
+        usd(r.takeHomePay) +
         '</b> &mdash; the employer\'s share never reaches it.',
       keptPct: 'Kept ' + pct(r.kept / r.base) + ' of what you cost',
       ribbonBase: 'Every dollar it costs to employ you, left to right',

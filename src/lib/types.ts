@@ -206,8 +206,22 @@ export interface Breakdown {
   salesTax: number;
   /** The taxes your paycheck feels. */
   employeeTax: number;
+  /**
+   * Tax that passes through the employment relationship: what is withheld from
+   * your wage, plus the employer's share. Sales tax is not part of it, because
+   * your employer never pays it.
+   */
+  employmentTax: number;
   total: number;
+  /** What the paycheck nets: wage less withholdings. Sales tax is spent later. */
+  takeHomePay: number;
+  /** What is left after every tax on this page, sales tax included. */
   kept: number;
   /** Total tax as a share of base. */
   effectiveRate: number;
+  /**
+   * employmentTax as a share of base. This is the only honest rate to quote
+   * against your cost to your employer.
+   */
+  employmentRate: number;
 }
