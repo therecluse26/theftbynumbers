@@ -85,7 +85,14 @@ export interface BasketData {
   items: BasketItem[];
 }
 
-export type PriceRef = 'metals.gold.usdPerTroyOz' | 'state.medianHomeValue';
+export type PriceRef =
+  | 'metals.gold.usdPerTroyOz'
+  | 'state.medianHomeValue'
+  | 'basket.college-year'
+  | 'charity.life-amf'
+  /** The reader's own take-home. A rung priced this way costs them their own life. */
+  | 'reader.annualTakeHome'
+  | 'reader.monthlyTakeHome';
 
 export interface LadderItem {
   id: string;
@@ -101,6 +108,62 @@ export interface LadderItem {
 export interface LadderData {
   meta: DataMeta;
   items: LadderItem[];
+}
+
+/**
+ * A receipt card. The kind decides which fields carry the number.
+ *
+ *   duration  your tax funds this yearly cost for a length of time
+ *   unit      how many of these your tax comes to
+ *   share     your tax as a share of one lump sum
+ *   fact      no arithmetic; a finding that stands on its own
+ *   computed  worked out in code from the reader's own figures
+ */
+export type ReceiptKind = 'duration' | 'unit' | 'share' | 'fact' | 'computed';
+
+/** Names a function in render.ts. Add the case there before adding a value here. */
+export type ReceiptCompute = 'social-security';
+
+export interface ReceiptItem {
+  id: string;
+  group: string;
+  kind: ReceiptKind;
+  label?: string;
+  singular?: string;
+  plural?: string;
+  annualCost?: number;
+  price?: number;
+  total?: number;
+  figure?: string;
+  compute?: ReceiptCompute;
+  note: string;
+  source?: { label: string; url: string };
+}
+
+export interface ReceiptGroup {
+  id: string;
+  title: string;
+  lede: string;
+}
+
+export interface ReceiptData {
+  meta: DataMeta;
+  groups: ReceiptGroup[];
+  items: ReceiptItem[];
+}
+
+export interface CharityItem {
+  id: string;
+  singular: string;
+  plural: string;
+  price: number;
+  note: string;
+  source: { label: string; url: string };
+}
+
+export interface CharityData {
+  meta: DataMeta;
+  items: CharityItem[];
 }
 
 export interface AssumptionsData {

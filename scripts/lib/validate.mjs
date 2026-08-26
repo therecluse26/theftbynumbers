@@ -103,6 +103,29 @@ export function semanticErrors(entry, data) {
     }
   }
 
+  if (entry.id === 'receipt') {
+    duplicate(data.items.map((i) => i.id), 'receipt item');
+    duplicate(data.groups.map((g) => g.id), 'receipt group');
+    const groups = new Set(data.groups.map((g) => g.id));
+    for (const item of data.items) {
+      if (!groups.has(item.group)) {
+        errors.push(`${item.id} points at group "${item.group}", which does not exist`);
+      }
+    }
+    // A card that renders a count must not carry a rate as well, or the two
+    // numbers disagree and nobody can tell which one the card used.
+    for (const item of data.items) {
+      const carried = ['annualCost', 'price', 'total'].filter(
+        (key) => item[key] !== undefined,
+      );
+      if (item.kind !== 'computed' && carried.length > 1) {
+        errors.push(`${item.id} carries ${carried.join(' and ')}; a card takes one`);
+      }
+    }
+  }
+
+  if (entry.id === 'charity') duplicate(data.items.map((i) => i.id), 'charity item');
+
   if (entry.id === 'assumptions') {
     const inv = data.investment;
     if (inv.minAnnualReturnPct > inv.maxAnnualReturnPct) {

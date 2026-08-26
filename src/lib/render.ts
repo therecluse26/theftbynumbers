@@ -5,11 +5,11 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import { ASSUMPTIONS, BASKET, METALS, TAX, longDate } from './data';
-import { commas, escapeHtml, pct, usd } from './format';
+import { ASSUMPTIONS, BASKET, CHARITY, METALS, RECEIPT, TAX, longDate } from './data';
+import { career, commas, duration, escapeHtml, pct, tinyPct, usd } from './format';
 import { resolveLadder } from './ladder';
 import { employerSharePctLabel, investmentSeries } from './tax';
-import type { Breakdown, Inputs } from './types';
+import type { Breakdown, Inputs, ReceiptItem } from './types';
 
 const INK = '#0B0B0A';
 const BONE = '#EDEAE3';
@@ -375,37 +375,292 @@ export function ledgerHtml(r: Breakdown, inputs: Inputs): string {
   return html;
 }
 
+/* ---------- cards ---------- */
+
+/**
+ * How many of a thing an amount comes to, and the small word beside it.
+ *
+ * Above ten, a fraction is noise, so round. Below one, the count reads
+ * "0.35 of one" and needs the singular noun back from the caller.
+ */
+function countText(count: number): { shown: string; unit: string; singular: boolean } {
+  if (count >= 10) return { shown: commas(Math.round(count)), unit: '', singular: false };
+  if (count >= 1) return { shown: count.toFixed(1), unit: '', singular: false };
+  return { shown: count.toFixed(2), unit: 'of one', singular: true };
+}
+
+/** One card. Every string from a data file arrives escaped by the caller. */
+function card(
+  extraClass: string,
+  figure: string,
+  unit: string,
+  label: string,
+  note: string,
+  source?: { label: string; url: string },
+): string {
+  return (
+    '<div class="buy' +
+    (extraClass ? ' ' + extraClass : '') +
+    '">' +
+    '<span class="buy-count">' +
+    figure +
+    (unit ? '<small>' + escapeHtml(unit) + '</small>' : '') +
+    '</span>' +
+    '<p class="buy-label">' +
+    escapeHtml(label) +
+    '</p>' +
+    '<p class="buy-price">' +
+    escapeHtml(note) +
+    '</p>' +
+    (source
+      ? '<p class="buy-src"><a href="' +
+        escapeHtml(source.url) +
+        '" target="_blank" rel="noopener noreferrer">' +
+        escapeHtml(source.label) +
+        '</a></p>'
+      : '') +
+    '</div>'
+  );
+}
+
 /* ---------- basket ---------- */
 
 export function basketHtml(total: number): string {
   let html = '';
   for (const item of BASKET.items) {
-    const count = total / item.price;
-    let shown: string;
-    let unit = '';
-    if (count >= 10) shown = commas(Math.round(count));
-    else if (count >= 1) shown = count.toFixed(1);
-    else {
-      shown = count.toFixed(2);
-      unit = 'of one';
-    }
-    // Below one, the count reads "0.35 of one" and needs the singular noun.
-    const label = count < 1 ? item.singular : item.plural;
+    const { shown, unit, singular } = countText(total / item.price);
+    html += card(
+      '',
+      shown,
+      unit,
+      singular ? item.singular : item.plural,
+      item.note.replace('{price}', usd(item.price)),
+    );
+  }
+  return html;
+}
+
+/* ---------- receipt ---------- */
+
+export interface LifeCost {
+  /** "5 years and 6 months". */
+  figure: string;
+  note: string;
+  /** The five-day week, with the government's share filled in. */
+  weekHtml: string;
+  weekNote: string;
+}
+
+const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+
+/**
+ * How much of a working life the tax costs.
+ *
+ * Tax is a share of what you earn, so the share of your career it takes is the
+ * effective rate itself. No hourly wage is needed and the answer holds at every
+ * income. This is the strongest sentence on the page.
+ */
+export function lifeCost(r: Breakdown, inputs: Inputs): LifeCost {
+  const yearsForTax = r.effectiveRate * inputs.years;
+  const hoursOfForty = r.effectiveRate * 40;
+
+  let days = '';
+  for (const day of WEEKDAYS) days += '<span class="wd">' + day + '</span>';
+
+  return {
+    figure: career(yearsForTax),
+    note:
+      'You work ' +
+      inputs.years +
+      ' ' +
+      plural(inputs.years, 'year') +
+      '. That much of it is for the government, not for you.',
+    weekHtml:
+      '<div class="week" role="img" aria-label="' +
+      pct(r.effectiveRate) +
+      ' of every working week goes to tax.">' +
+      '<div class="week-fill" style="width:' +
+      Math.min(100, r.effectiveRate * 100).toFixed(2) +
+      '%"></div>' +
+      '<div class="week-days">' +
+      days +
+      '</div>' +
+      '</div>',
+    weekNote:
+      'In a 40-hour week, ' +
+      hoursOfForty.toFixed(1) +
+      ' hours of your work are theirs before an hour of it is yours.',
+  };
+}
+
+/** Seconds in a year, averaged over the leap cycle. */
+const SECONDS_IN_YEAR = 31_557_600;
+
+/** One receipt card. The kind decides which field carries the number. */
+function receiptCard(
+  item: ReceiptItem,
+  r: Breakdown,
+  inputs: Inputs,
+  taxOverYears: number,
+): string {
+  const note = item.note.replace('{price}', usd(item.price ?? 0));
+
+  if (item.kind === 'duration') {
+    const seconds = (taxOverYears / item.annualCost!) * SECONDS_IN_YEAR;
+    const text = duration(seconds);
+    const at = text.indexOf(' ');
+    return card(
+      'rc',
+      text.slice(0, at),
+      text.slice(at + 1),
+      item.label!,
+      note,
+      item.source,
+    );
+  }
+
+  if (item.kind === 'unit') {
+    const { shown, unit, singular } = countText(taxOverYears / item.price!);
+    return card(
+      'rc',
+      shown,
+      unit,
+      singular ? item.singular! : item.plural!,
+      note,
+      item.source,
+    );
+  }
+
+  if (item.kind === 'share') {
+    return card(
+      'rc',
+      tinyPct(taxOverYears / item.total!),
+      '',
+      item.label!,
+      note,
+      item.source,
+    );
+  }
+
+  if (item.kind === 'fact') {
+    return card('rc rc-fact', escapeHtml(item.figure!), '', item.label!, note, item.source);
+  }
+
+  // Computed: worked out from the reader's own figures, not from a fixed price.
+  //
+  // Both halves of the payroll tax. Box 4 is only the half your paycheck feels;
+  // the employer pays the same again. This page already argues that half is your
+  // money, so counting one half here would contradict its own ledger.
+  //
+  // Whether this beats the benefit depends on the years slider, and at short runs
+  // it does not. Say so. The argument that holds at every setting is the last
+  // sentence: a Social Security claim dies with you, and a balance does not.
+  const bothHalves = r.socialSecurity * 2;
+  const series = investmentSeries(bothHalves, inputs.returnPct, inputs.years, 0);
+  const final = series[inputs.years]!.balance;
+  return card(
+    'rc rc-wide',
+    usd(final),
+    '',
+    item.label!,
+    usd(bothHalves) +
+      ' a year goes in, counting the half your employer pays. Held for ' +
+      inputs.years +
+      ' ' +
+      plural(inputs.years, 'year') +
+      ' at ' +
+      inputs.returnPct.toFixed(1) +
+      '%, it would be this, and drawing four percent of it would pay you ' +
+      usd(final * 0.04) +
+      ' a year without touching the pot. ' +
+      note +
+      ' A benefit stops when you die. A balance passes to your children.',
+    item.source,
+  );
+}
+
+/**
+ * The whole receipt: every group, in file order, each with its own grid.
+ *
+ * Every figure here is the reader's SHARE of a national total. Nobody's dollars
+ * are traceable to one missile or one empty desk. The copy must never say the
+ * reader bought a thing; the notes section carries the same warning.
+ */
+export function receiptHtml(r: Breakdown, inputs: Inputs): string {
+  const taxOverYears = r.total * inputs.years;
+
+  let html = '';
+  for (const group of RECEIPT.groups) {
+    const items = RECEIPT.items.filter((item) => item.group === group.id);
+    if (items.length === 0) continue;
+
+    let cards = '';
+    for (const item of items) cards += receiptCard(item, r, inputs, taxOverYears);
+
     html +=
-      '<div class="buy">' +
-      '<span class="buy-count">' +
-      shown +
-      (unit ? '<small>' + unit + '</small>' : '') +
-      '</span>' +
-      '<p class="buy-label">' +
-      escapeHtml(label) +
+      '<div class="rc-group">' +
+      '<h3 class="rc-title">' +
+      escapeHtml(group.title) +
+      '</h3>' +
+      '<p class="rc-lede">' +
+      escapeHtml(group.lede) +
       '</p>' +
-      '<p class="buy-price">' +
-      escapeHtml(item.note.replace('{price}', usd(item.price))) +
-      '</p>' +
+      '<div class="buy-grid">' +
+      cards +
+      '</div>' +
       '</div>';
   }
   return html;
+}
+
+/** The lede above the receipt. It names the sum every card divides. */
+export function receiptLede(r: Breakdown, inputs: Inputs): string {
+  return (
+    'Over ' +
+    inputs.years +
+    ' ' +
+    plural(inputs.years, 'year') +
+    ' you hand over ' +
+    usd(r.total * inputs.years) +
+    '. Every figure below is your share of a national total, not a purchase in your name.'
+  );
+}
+
+/* ---------- give ---------- */
+
+export function giveHtml(taxOverYears: number): string {
+  let html = '';
+  for (const item of CHARITY.items) {
+    const { shown, unit, singular } = countText(taxOverYears / item.price);
+    html += card(
+      'gv',
+      shown,
+      unit,
+      singular ? item.singular : item.plural,
+      item.note.replace('{price}', usd(item.price)),
+      item.source,
+    );
+  }
+  return html;
+}
+
+/**
+ * The lede above the give. The two halves of the sentence are the whole argument.
+ * The federal figure comes from the receipt file, never from a number typed here.
+ */
+export function giveLede(r: Breakdown, inputs: Inputs): string {
+  const taxOverYears = r.total * inputs.years;
+  const federal = RECEIPT.items.find((item) => item.id === 'federal-spending');
+  const seconds = federal?.annualCost
+    ? (taxOverYears / federal.annualCost) * SECONDS_IN_YEAR
+    : 0;
+  return (
+    'The same ' +
+    usd(taxOverYears) +
+    '. To the federal government it bought ' +
+    duration(seconds) +
+    '. Handed over by you instead, it buys this.'
+  );
 }
 
 /* ---------- invest ---------- */
@@ -425,7 +680,10 @@ export interface InvestText {
   chartNote: string;
 }
 
-/** One block of a bar. Below a tenth of the width its label will not fit. */
+/**
+ * One block of a bar. A block thinner than an eighth of the bar cannot hold a
+ * money figure, so it goes bare. The legend under the bars names it instead.
+ */
 function cmpSegment(
   className: string,
   share: number,
@@ -435,7 +693,7 @@ function cmpSegment(
   return (
     '<div class="cmp-seg ' +
     className +
-    (share < 0.11 ? ' narrow' : '') +
+    (share < 0.13 ? ' narrow' : '') +
     '" style="flex-grow:' +
     share +
     ';flex-basis:0">' +
@@ -565,7 +823,7 @@ export function investText(r: Breakdown, inputs: Inputs): InvestText {
 }
 
 
-/* ---------- unlock ladder ---------- */
+/* ---------- ladder ---------- */
 
 export interface StackRender {
   html: string;
@@ -574,10 +832,17 @@ export interface StackRender {
 
 /**
  * The ladder, cheapest first, with a waterline marking where the balance lands.
- * Everything above the line is bought outright; the next few are shown short.
+ * Everything above the line is bought back outright; the next few are shown short.
+ *
+ * The rungs measure freedom, not objects, so several of them are priced from the
+ * reader's own take-home. That is why this needs the take-home passed in.
  */
-export function stack(balance: number, inputs: Inputs): StackRender {
-  const items = resolveLadder(inputs.stateIndex);
+export function stack(
+  balance: number,
+  inputs: Inputs,
+  annualTakeHome: number,
+): StackRender {
+  const items = resolveLadder(inputs.stateIndex, annualTakeHome);
   const waterline =
     '<div class="waterline">' +
     '<span>Your balance after ' +
@@ -644,7 +909,7 @@ export function stack(balance: number, inputs: Inputs): StackRender {
     lede:
       cleared === 0
         ? 'Not yet enough for anything on this list. Raise the income, the years, or the return.'
-        : 'Invested instead of paid, the balance clears ' +
+        : 'Invested instead of paid, the balance buys back ' +
           cleared +
           ' of the ' +
           items.length +
@@ -655,9 +920,10 @@ export function stack(balance: number, inputs: Inputs): StackRender {
 /** The footnote under the ladder. Its date comes from the metals file. */
 export function stackFootnote(): string {
   return (
-    'Prices are rough ' +
+    'A rung about your own time is priced at your take-home, held flat. ' +
+    'Other prices are ' +
     TAX.taxYear +
-    ' retail. The home is the median value in the state you picked above. ' +
+    ' averages. The home is the median value in the state you picked above. ' +
     'Gold moves daily; this uses spot on ' +
     longDate(METALS.meta.updatedAt) +
     '.'

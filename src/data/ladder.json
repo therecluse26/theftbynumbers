@@ -5,11 +5,11 @@
     "fields": {
       "price": {
         "updateMode": "manual",
-        "label": "Rough 2026 retail and asking prices",
-        "url": "https://www.caranddriver.com/",
-        "maxAgeDays": 180,
+        "label": "2025 and 2026 US average and median costs of living",
+        "url": "https://www.bls.gov/cex/",
+        "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "Items with a priceFrom block take their price from another data file and need no manual edit."
+        "note": "Items with a priceFrom block take their price from another data file, or from the reader's own take-home. Those need no manual edit."
       }
     }
   },
@@ -19,79 +19,118 @@
       "singular": "One-ounce gold bar",
       "plural": "One-ounce gold bars",
       "priceFrom": { "ref": "metals.gold.usdPerTroyOz", "multiplier": 1 },
-      "note": "spot, {price} an ounce"
+      "note": "spot, {price} an ounce. The money nobody can print more of."
     },
     {
-      "id": "rolex-submariner",
-      "singular": "Rolex Submariner",
-      "plural": "Rolex Submariners",
-      "price": 11000,
-      "note": "at retail, if you can get one"
+      "id": "month-back",
+      "singular": "Month you never have to work",
+      "plural": "Months you never have to work",
+      "priceFrom": { "ref": "reader.monthlyTakeHome", "multiplier": 1 },
+      "note": "{price}, one month of your own take-home. A month of your life, bought back."
     },
     {
-      "id": "tesla-model-3",
-      "singular": "Tesla Model 3",
-      "plural": "Tesla Model 3s",
-      "price": 43000,
-      "note": "long range, before incentives"
+      "id": "emergency-fund",
+      "singular": "Three months of expenses, the fund that ends the fear",
+      "plural": "Emergency funds of three months each",
+      "priceFrom": { "ref": "reader.monthlyTakeHome", "multiplier": 3 },
+      "note": "{price}. Most American households do not have this, and know it."
     },
     {
-      "id": "porsche-911",
-      "singular": "Porsche 911 Carrera",
-      "plural": "Porsche 911 Carreras",
-      "price": 135000,
-      "note": "base car, before options"
+      "id": "childcare-year",
+      "singular": "Year of childcare for one child",
+      "plural": "Years of childcare for one child",
+      "price": 13184,
+      "note": "{price} a year, the 2025 national average. It is why one parent stops working."
     },
     {
-      "id": "median-home",
-      "singular": "Median US home",
-      "plural": "Median US homes",
-      "singularInState": "Median home in {state}",
-      "pluralInState": "Median homes in {state}",
+      "id": "used-car-owned",
+      "singular": "Used car, owned outright",
+      "plural": "Used cars, owned outright",
+      "price": 26500,
+      "note": "{price}, the average used price. No payment, no lender, nothing to repossess."
+    },
+    {
+      "id": "year-back",
+      "singular": "Year you never have to work",
+      "plural": "Years you never have to work",
+      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 1 },
+      "note": "{price}, one year of your own take-home. A year of your life, bought back."
+    },
+    {
+      "id": "parent-care-year",
+      "singular": "Year of a parent's care",
+      "plural": "Years of a parent's care",
+      "price": 74400,
+      "note": "{price} a year, the national median for assisted living. Somebody in your family will need it."
+    },
+    {
+      "id": "home-deposit",
+      "singular": "Deposit on a median US home",
+      "plural": "Deposits on a median US home",
+      "singularInState": "Deposit on the median home in {state}",
+      "pluralInState": "Deposits on the median home in {state}",
+      "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 0.2 },
+      "note": "{price} down, a fifth of the value. Enough to end the mortgage insurance."
+    },
+    {
+      "id": "degree-paid",
+      "singular": "Four-year degree, paid in cash",
+      "plural": "Four-year degrees, paid in cash",
+      "priceFrom": { "ref": "basket.college-year", "multiplier": 4 },
+      "note": "{price} for four years in-state. No loan, no interest, no thirty-year repayment."
+    },
+    {
+      "id": "home-owned",
+      "singular": "Median US home, owned outright",
+      "plural": "Median US homes, owned outright",
+      "singularInState": "Median home in {state}, owned outright",
+      "pluralInState": "Median homes in {state}, owned outright",
       "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 1 },
-      "note": "Zillow median value"
+      "note": "{price}, Zillow median value. No mortgage. Nobody takes it for a missed payment."
     },
     {
-      "id": "ferrari-296",
-      "singular": "Ferrari 296 GTB",
-      "plural": "Ferrari 296 GTBs",
-      "price": 350000,
-      "note": "before options"
+      "id": "child-raised",
+      "singular": "Child raised to eighteen, every cost paid",
+      "plural": "Children raised to eighteen, every cost paid",
+      "price": 332000,
+      "note": "{price}, the USDA figure carried to today's money. College is on top of it."
     },
     {
-      "id": "gold-good-delivery",
-      "singular": "Good Delivery gold bar",
-      "plural": "Good Delivery gold bars",
-      "priceFrom": { "ref": "metals.gold.usdPerTroyOz", "multiplier": 400 },
-      "note": "400 troy ounces, vault standard"
+      "id": "scholarship",
+      "singular": "Scholarship in your name, one student a year, forever",
+      "plural": "Scholarships in your name, one student a year, forever",
+      "priceFrom": { "ref": "basket.college-year", "multiplier": 25 },
+      "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry."
     },
     {
-      "id": "bugatti-tourbillon",
-      "singular": "Bugatti Tourbillon",
-      "plural": "Bugatti Tourbillons",
-      "price": 4200000,
-      "note": "before options"
+      "id": "decade-back",
+      "singular": "Decade you never have to work",
+      "plural": "Decades you never have to work",
+      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 10 },
+      "note": "{price}, ten years of your own take-home. Ten years of your life, bought back."
     },
     {
-      "id": "trophy-mansion",
-      "singular": "Trophy mansion",
-      "plural": "Trophy mansions",
-      "price": 12000000,
-      "note": "Beverly Hills, typical"
+      "id": "homes-for-children",
+      "singular": "Paid-off home for each of three children",
+      "plural": "Sets of three paid-off homes",
+      "singularInState": "Paid-off {state} home for each of three children",
+      "pluralInState": "Sets of three paid-off {state} homes",
+      "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 3 },
+      "note": "{price}. Three median homes, no mortgage on any of them."
     },
     {
-      "id": "gulfstream-g700",
-      "singular": "Gulfstream G700",
-      "plural": "Gulfstream G700s",
-      "price": 80000000,
-      "note": "new, typical spec"
+      "id": "never-work",
+      "singular": "The rest of your life, not working",
+      "plural": "Whole lifetimes of not working",
+      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 25 },
+      "note": "{price}. Draw a twenty-fifth a year and the pot is expected to outlive you."
     },
     {
-      "id": "superyacht",
-      "singular": "100-metre superyacht",
-      "plural": "100-metre superyachts",
-      "price": 300000000,
-      "note": "new build"
+      "id": "thousand-lives",
+      "singular": "A thousand lives saved from malaria",
+      "plural": "Thousands of lives saved from malaria",
+      "priceFrom": { "ref": "charity.life-amf", "multiplier": 1000 },
+      "note": "{price} at GiveWell's estimate. The estimate carries a wide band. The top rung is not a thing you own."
     }
   ]
 }

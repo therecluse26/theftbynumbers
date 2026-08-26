@@ -1,0 +1,29 @@
+---
+import type { LifeCost } from '../lib/render';
+
+interface Props {
+  life: LifeCost;
+  lede: string;
+  groups: string;
+}
+
+const { life, lede, groups } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section three</p>
+    <h2>What your money was actually spent on</h2>
+  </div>
+
+  <div class="life">
+    <p class="eyebrow eyebrow-y">Your life's work, in their hands</p>
+    <p class="life-fig num" id="lifeFig">{life.figure}</p>
+    <p class="life-note" id="lifeNote">{life.note}</p>
+    <div id="lifeWeek" set:html={life.weekHtml} />
+    <p class="hint" id="lifeWeekNote">{life.weekNote}</p>
+  </div>
+
+  <p class="rc-intro" id="receiptLede">{lede}</p>
+  <div id="receiptGroups" set:html={groups} />
+</section>

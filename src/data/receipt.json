@@ -1,0 +1,254 @@
+{
+  "$schema": "../../schemas/receipt.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "annualCost": {
+        "updateMode": "manual",
+        "label": "Yearly federal costs, from the published accounts",
+        "url": "https://www.cbo.gov/publication/61307",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "Re-sample after each fiscal year closes. Each item carries its own source."
+      },
+      "price": {
+        "updateMode": "manual",
+        "label": "Unit costs the government publishes for its own purchases",
+        "url": "https://www.gao.gov/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "Each item carries its own source. A weapon price moves with the contract, not the calendar."
+      },
+      "total": {
+        "updateMode": "manual",
+        "label": "Lump sums, counted once and still running",
+        "url": "https://costsofwar.watson.brown.edu/costs",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "These are cumulative totals, not yearly rates. They only grow."
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "scale",
+      "title": "The scale of it",
+      "lede": "Your whole working life, laid against one year of federal spending. The unit is the second."
+    },
+    {
+      "id": "waste",
+      "title": "Pissed away",
+      "lede": "No war in this group. This is money that bought nothing at all."
+    },
+    {
+      "id": "name",
+      "title": "Bought in your name",
+      "lede": "Not frivolous. Deliberate. Your share of what the money was used to do."
+    },
+    {
+      "id": "good",
+      "title": "The good it does",
+      "lede": "The programmes people defend when they defend the tax. Priced honestly, including where they hold up."
+    }
+  ],
+  "items": [
+    {
+      "id": "federal-spending",
+      "group": "scale",
+      "kind": "duration",
+      "annualCost": 7000000000000,
+      "label": "of all federal spending",
+      "note": "Outlays were $7.0 trillion in the 2025 fiscal year. That is what your life's work bought at the till.",
+      "source": {
+        "label": "CBO, Monthly Budget Review, fiscal year 2025",
+        "url": "https://www.cbo.gov/publication/61307"
+      }
+    },
+    {
+      "id": "debt-interest",
+      "group": "scale",
+      "kind": "duration",
+      "annualCost": 1000000000000,
+      "label": "of interest on the national debt",
+      "note": "Net interest passed $1 trillion a year for the first time in 2025. It buys nothing. It is rent on money already spent.",
+      "source": {
+        "label": "CBO, Monthly Budget Review, fiscal year 2025",
+        "url": "https://www.cbo.gov/publication/61307"
+      }
+    },
+    {
+      "id": "deficit",
+      "group": "scale",
+      "kind": "duration",
+      "annualCost": 1800000000000,
+      "label": "of the deficit on its own",
+      "note": "The 2025 shortfall was $1.8 trillion. Nobody has paid for that part yet. Somebody will.",
+      "source": {
+        "label": "CBO, Monthly Budget Review, fiscal year 2025",
+        "url": "https://www.cbo.gov/publication/61307"
+      }
+    },
+    {
+      "id": "improper-payments",
+      "group": "waste",
+      "kind": "duration",
+      "annualCost": 186000000000,
+      "label": "of payments the government admits were wrong",
+      "note": "Fifteen agencies reported $186 billion of improper payments in 2025, across 64 programmes. The running total since 2003 is about $3 trillion.",
+      "source": {
+        "label": "GAO-26-108694, Payment Integrity",
+        "url": "https://www.gao.gov/products/gao-26-108694"
+      }
+    },
+    {
+      "id": "congress-pay",
+      "group": "waste",
+      "kind": "duration",
+      "annualCost": 93090000,
+      "label": "of the salaries of all 535 members of Congress",
+      "note": "535 voting members at $174,000 each. They set that figure themselves and have not moved it since January 2009.",
+      "source": {
+        "label": "CRS 97-1011, Salaries of Members of Congress",
+        "url": "https://www.congress.gov/crs-product/97-1011"
+      }
+    },
+    {
+      "id": "ui-fraud",
+      "group": "waste",
+      "kind": "share",
+      "total": 100000000000,
+      "label": "of the unemployment money that was simply stolen",
+      "note": "GAO puts pandemic unemployment fraud between $100 billion and $135 billion. This card uses the low end. States have clawed back about $1.2 billion of it.",
+      "source": {
+        "label": "GAO-23-106696, Unemployment Insurance",
+        "url": "https://www.gao.gov/products/gao-23-106696"
+      }
+    },
+    {
+      "id": "high-speed-rail",
+      "group": "waste",
+      "kind": "share",
+      "total": 126300000000,
+      "label": "of California's high-speed railway",
+      "note": "Voters were told $33 billion in 2008. The 2026 business plan says $126.3 billion. No passenger has ridden it.",
+      "source": {
+        "label": "California High-Speed Rail Authority, 2026 draft business plan",
+        "url": "https://hsr.ca.gov/about/business-plans/"
+      }
+    },
+    {
+      "id": "empty-offices",
+      "group": "waste",
+      "kind": "fact",
+      "figure": "17 of 24",
+      "label": "federal agencies used a quarter or less of their headquarters",
+      "note": "GAO measured real attendance against building capacity over three weeks in 2023. You pay the lease, the heat and the light on the empty desks.",
+      "source": {
+        "label": "GAO-23-107060, Federal Real Property",
+        "url": "https://www.gao.gov/products/gao-23-107060"
+      }
+    },
+    {
+      "id": "tomahawk",
+      "group": "name",
+      "kind": "unit",
+      "price": 2240000,
+      "singular": "Tomahawk cruise missile",
+      "plural": "Tomahawk cruise missiles",
+      "note": "The Marine Corps bought 38 Block V missiles for $85.1 million. That is {price} each, used once.",
+      "source": {
+        "label": "Tomahawk programme, NAVAIR",
+        "url": "https://www.navair.navy.mil/product/Tomahawk"
+      }
+    },
+    {
+      "id": "f35-hour",
+      "group": "name",
+      "kind": "unit",
+      "price": 41986,
+      "singular": "hour of an F-35 in the air",
+      "plural": "hours of an F-35 in the air",
+      "note": "{price} an hour, everything counted: fuel, parts, contractors, overhead. One hour.",
+      "source": {
+        "label": "GAO-24-106703, F-35 Sustainment",
+        "url": "https://www.gao.gov/products/gao-24-106703"
+      }
+    },
+    {
+      "id": "prison-year",
+      "group": "name",
+      "kind": "unit",
+      "price": 47162,
+      "singular": "year of holding one person in federal prison",
+      "plural": "years of holding one person in federal prison",
+      "note": "{price} a year. The Bureau of Prisons publishes this figure itself, in the Federal Register.",
+      "source": {
+        "label": "Annual Determination of Average Cost of Incarceration Fee, FY2024",
+        "url": "https://www.federalregister.gov/documents/2025/12/15/2025-22777/annual-determination-of-average-cost-of-incarceration-fee-coif"
+      }
+    },
+    {
+      "id": "forfeiture",
+      "group": "name",
+      "kind": "share",
+      "total": 68800000000,
+      "label": "of the property police have taken since 2000",
+      "note": "At least $68.8 billion forfeited by state and federal agencies. Under civil forfeiture the owner need never be charged with a crime.",
+      "source": {
+        "label": "Institute for Justice, Policing for Profit",
+        "url": "https://ij.org/report/policing-for-profit-4/"
+      }
+    },
+    {
+      "id": "war-on-terror",
+      "group": "name",
+      "kind": "share",
+      "total": 8000000000000,
+      "label": "of the wars fought since 2001",
+      "note": "About $8 trillion. At least 940,000 people died in the direct violence: civilians, soldiers on every side, contractors, journalists and aid workers.",
+      "source": {
+        "label": "Costs of War, Brown University",
+        "url": "https://costsofwar.watson.brown.edu/costs"
+      }
+    },
+    {
+      "id": "social-security",
+      "group": "good",
+      "kind": "computed",
+      "compute": "social-security",
+      "price": 25013,
+      "label": "if your Social Security tax had stayed yours",
+      "note": "The average retired worker collects {price} a year, and half collect less. Your own benefit depends on an earnings history this page never asks for.",
+      "source": {
+        "label": "SSA, average monthly benefit for a retired worker",
+        "url": "https://www.ssa.gov/faqs/en/questions/KA-01903.html"
+      }
+    },
+    {
+      "id": "medicare-year",
+      "group": "good",
+      "kind": "unit",
+      "price": 18900,
+      "singular": "year of Medicare for one person",
+      "plural": "years of Medicare for one person",
+      "note": "Medicare cost $1.21 trillion in 2025, spread across 70 million people. That is {price} each.",
+      "source": {
+        "label": "USAFacts, federal Medicare spending",
+        "url": "https://usafacts.org/answers/how-much-does-medicare-cost-the-federal-government/country/united-states/"
+      }
+    },
+    {
+      "id": "school-year",
+      "group": "good",
+      "kind": "unit",
+      "price": 17250,
+      "singular": "year of public school for one child",
+      "plural": "years of public school for one child",
+      "note": "{price} a year, for one pupil. That is current spending only. Buildings and debt are counted separately.",
+      "source": {
+        "label": "NCES, current expenditure per pupil",
+        "url": "https://nces.ed.gov/fastfacts/display.asp?id=66"
+      }
+    }
+  ]
+}

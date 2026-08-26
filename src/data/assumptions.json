@@ -6,7 +6,7 @@
       "salesTax.combinedRate": {
         "updateMode": "manual",
         "label": "Tax Foundation, combined state and average local sales tax rate",
-        "url": "https://taxfoundation.org/data/all/state/2025-sales-taxes/",
+        "url": "https://taxfoundation.org/data/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26"
       },

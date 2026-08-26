@@ -63,14 +63,6 @@
       "source": { "label": "Cox Automotive used vehicle price index", "url": "https://www.coxautoinc.com/market-insights/" }
     },
     {
-      "id": "new-car",
-      "singular": "New car, average price",
-      "plural": "New cars, average price",
-      "price": 49000,
-      "note": "$49,000 each",
-      "source": { "label": "Kelley Blue Book average transaction price", "url": "https://www.kbb.com/car-news/" }
-    },
-    {
       "id": "home-down-payment",
       "singular": "Down payment on a median US home",
       "plural": "Down payments on a median US home",
@@ -87,12 +79,28 @@
       "source": { "label": "EIA weekly retail gasoline prices", "url": "https://www.eia.gov/petroleum/gasdiesel/" }
     },
     {
-      "id": "iphone",
-      "singular": "iPhone",
-      "plural": "iPhones",
-      "price": 1000,
-      "note": "$1,000 each",
-      "source": { "label": "Apple US retail", "url": "https://www.apple.com/shop/buy-iphone" }
+      "id": "childcare-month",
+      "singular": "Month of childcare for one child",
+      "plural": "Months of childcare for one child",
+      "price": 1099,
+      "note": "$1,099 a month",
+      "source": { "label": "Child Care Aware of America, price of care", "url": "https://info.childcareaware.org/price-and-supply-2025" }
+    },
+    {
+      "id": "student-loan-year",
+      "singular": "Year of student loan payments",
+      "plural": "Years of student loan payments",
+      "price": 6036,
+      "note": "$503 a month",
+      "source": { "label": "Education Data Initiative, average student loan payment", "url": "https://educationdata.org/average-student-loan-payment" }
+    },
+    {
+      "id": "funeral",
+      "singular": "Funeral with viewing and burial",
+      "plural": "Funerals with viewing and burial",
+      "price": 9170,
+      "note": "$9,170, before the plot",
+      "source": { "label": "National Funeral Directors Association, cost of a funeral", "url": "https://www.nfda.org/news/statistics" }
     },
     {
       "id": "health-premium-year",
@@ -100,7 +108,7 @@
       "plural": "Years of a household's share of health premiums",
       "price": 6850,
       "note": "$6,850 a year",
-      "source": { "label": "KFF Employer Health Benefits Survey", "url": "https://www.kff.org/health-costs/report/employer-health-benefits-annual-survey/" }
+      "source": { "label": "KFF Employer Health Benefits Survey", "url": "https://www.kff.org/health-costs/" }
     },
     {
       "id": "wedding",

@@ -1,0 +1,95 @@
+{
+  "$schema": "../../schemas/charity.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "price": {
+        "updateMode": "manual",
+        "label": "GiveWell cost-effectiveness estimates, dollars per unit of good",
+        "url": "https://www.givewell.org/how-much-does-it-cost-to-save-a-life",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "A cost per life saved is a modelled average with a wide band, not a price tag. GiveWell expects these figures to rise over time. Re-read the source before quoting."
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "deworming",
+      "singular": "child dewormed for a year",
+      "plural": "children dewormed for a year",
+      "price": 1,
+      "note": "About {price} a child. Worms keep children out of school and out of work for life.",
+      "source": {
+        "label": "GiveWell, top charities",
+        "url": "https://www.givewell.org/charities/top-charities"
+      }
+    },
+    {
+      "id": "vitamin-a",
+      "singular": "vitamin A supplement",
+      "plural": "vitamin A supplements",
+      "price": 1,
+      "note": "About {price} to deliver one dose. Vitamin A deficiency blinds and kills small children.",
+      "source": {
+        "label": "GiveWell, Helen Keller Intl vitamin A supplementation",
+        "url": "https://www.givewell.org/international/technical/programs/vitamin-A"
+      }
+    },
+    {
+      "id": "malaria-net",
+      "singular": "insecticide-treated bed net",
+      "plural": "insecticide-treated bed nets",
+      "price": 6,
+      "note": "About {price} a net, delivered and hung. It covers a bed for years.",
+      "source": {
+        "label": "GiveWell, how much does it cost to save a life",
+        "url": "https://www.givewell.org/how-much-does-it-cost-to-save-a-life"
+      }
+    },
+    {
+      "id": "infant-vaccinated",
+      "singular": "infant fully vaccinated",
+      "plural": "infants fully vaccinated",
+      "price": 160,
+      "note": "About {price} an infant. New Incentives pays mothers a small sum to finish the schedule, and they do.",
+      "source": {
+        "label": "GiveWell, New Incentives",
+        "url": "https://www.givewell.org/international/technical/programs/new-incentives"
+      }
+    },
+    {
+      "id": "life-vitamin-a",
+      "singular": "life saved with vitamin A",
+      "plural": "lives saved with vitamin A",
+      "price": 3500,
+      "note": "GiveWell's estimated average, about {price} a life. The real range runs from roughly $1,000 to $8,500.",
+      "source": {
+        "label": "GiveWell, Helen Keller Intl vitamin A supplementation",
+        "url": "https://www.givewell.org/research/grants/Helen-Keller-Intl-Vitamin-A-Supplementation-December-2024"
+      }
+    },
+    {
+      "id": "life-smc",
+      "singular": "life saved from malaria with seasonal medicine",
+      "plural": "lives saved from malaria with seasonal medicine",
+      "price": 4000,
+      "note": "GiveWell's estimated average for the Malaria Consortium, about {price} a life.",
+      "source": {
+        "label": "GiveWell, top charities",
+        "url": "https://www.givewell.org/charities/top-charities"
+      }
+    },
+    {
+      "id": "life-amf",
+      "singular": "life saved from malaria with nets",
+      "plural": "lives saved from malaria with nets",
+      "price": 5500,
+      "note": "GiveWell's estimated average for the Against Malaria Foundation, about {price} a life.",
+      "source": {
+        "label": "GiveWell, top charities",
+        "url": "https://www.givewell.org/charities/top-charities"
+      }
+    }
+  ]
+}

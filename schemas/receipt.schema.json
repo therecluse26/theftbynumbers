@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "The receipt",
+  "description": "Section three: what the money was actually spent on. Groups order the page. Every item names its own group and its own card kind.",
+  "type": "object",
+  "required": ["meta", "groups", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Rendered in this order. An item points at one of these by id.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "lede"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "lede": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "group", "kind", "note"],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": { "properties": { "kind": { "const": "duration" } }, "required": ["kind"] },
+            "then": { "required": ["annualCost", "label"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "unit" } }, "required": ["kind"] },
+            "then": { "required": ["price", "singular", "plural"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "share" } }, "required": ["kind"] },
+            "then": { "required": ["total", "label"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "fact" } }, "required": ["kind"] },
+            "then": { "required": ["figure", "label"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "computed" } }, "required": ["kind"] },
+            "then": { "required": ["compute", "label"] }
+          }
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "group": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "kind": {
+            "enum": ["duration", "unit", "share", "fact", "computed"],
+            "description": "duration: your tax funds this annual cost for a length of time. unit: how many of these your tax comes to. share: your tax as a share of one lump sum. fact: no arithmetic, a finding on its own. computed: worked out in code from the reader's own numbers."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The line under the figure, for every kind but unit."
+          },
+          "singular": { "type": "string", "minLength": 1 },
+          "plural": { "type": "string", "minLength": 1 },
+          "annualCost": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Dollars a year. Only on a duration card."
+          },
+          "price": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Dollars for one of them, on a unit card. A computed card may also carry a price as a figure for its own note to quote; nothing divides by it."
+          },
+          "total": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "One lump sum, not a yearly rate. Only on a share card."
+          },
+          "figure": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The big text on a fact card. Printed as written."
+          },
+          "compute": {
+            "enum": ["social-security"],
+            "description": "Names a function in src/lib/render.ts. Add the case there before adding a value here."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The small print under the card. Supports the {price} token."
+          },
+          "source": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

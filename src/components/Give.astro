@@ -1,0 +1,25 @@
+---
+interface Props {
+  lede: string;
+  cards: string;
+}
+
+const { lede, cards } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section six</p>
+    <h2>What the same money does in your hands</h2>
+  </div>
+
+  <p class="rc-intro" id="giveLede">{lede}</p>
+  <div class="buy-grid" id="giveGrid" set:html={cards} />
+
+  <p class="hint" style="margin-top:14px;max-width:66ch">
+    These are modelled averages from GiveWell, not price tags. A cost per life
+    saved carries a wide band, and GiveWell expects every one of these figures to
+    rise over time. GiveDirectly, which simply hands cash to people in extreme
+    poverty, reports that about 89 cents of each dollar reaches the recipient.
+  </p>
+</section>

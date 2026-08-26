@@ -22,7 +22,9 @@ threshold is written in the code. This document explains the parts.
 | `src/data/states.json` | State income tax rate and median home value | rate by a person; home value by `zillow-zhvi` |
 | `src/data/metals.json` | Spot gold, dollars per troy ounce | `gold-spot` |
 | `src/data/basket.json` | Everyday purchase prices, section two | a person |
-| `src/data/ladder.json` | The unlock ladder, section four | a person |
+| `src/data/receipt.json` | What the money was spent on, section three | a person |
+| `src/data/ladder.json` | The ladder, section five | a person |
+| `src/data/charity.json` | Dollars per unit of good, section six | a person |
 | `src/data/assumptions.json` | Sales tax estimate, slider ranges, defaults | a person |
 
 Each file has a schema of the same name in `schemas/`.
@@ -101,6 +103,30 @@ A ladder item takes a fixed `price`, or a `priceFrom` block:
 
 To add a new `ref`, add the case to `priceFromRef` in `src/lib/ladder.ts` and the
 value to the enum in `schemas/ladder.schema.json`. Do both, or validation fails.
+
+A `reader.*` ref prices a rung from the reader's own take-home, so the rung costs
+them their own time rather than a shop price. A rung that resolves to zero is
+dropped, which is what happens to every `reader.*` rung when the income box is
+empty.
+
+## The receipt card kinds
+
+`src/data/receipt.json` holds one `kind` per card, and the kind decides which
+field carries the number.
+
+| Kind | Field | The card shows |
+| --- | --- | --- |
+| `duration` | `annualCost` | How long the reader's tax funds that yearly cost |
+| `unit` | `price` | How many of them the tax comes to |
+| `share` | `total` | The tax as a share of one lump sum |
+| `fact` | `figure` | A finding on its own, with no arithmetic |
+| `computed` | `compute` | A figure worked out in code from the reader's own numbers |
+
+A `computed` card names a function in `src/lib/render.ts`. Add the case there and
+the value to the enum in `schemas/receipt.schema.json` together.
+
+**Every receipt figure is a share, never a purchase.** Write card copy as "your
+share of", never "you bought". Money is fungible and the notes section says so.
 
 ## What the scheduled job will do
 

@@ -1,7 +1,8 @@
 # Withheld
 
 A single-page calculator. It shows what one year of US tax costs a wage earner,
-what that money would have bought, and what it would be worth invested instead.
+what that money would have bought, what the government spent it on, and what it
+would be worth invested or given away instead.
 
 Nothing the reader types leaves the page. The site is static.
 
@@ -17,7 +18,7 @@ npm run preview    # serve dist/
 ## How it is put together
 
 ```
-src/data/          The numbers. Six JSON files. See DATA.md
+src/data/          The numbers. Eight JSON files. See DATA.md
 schemas/           A JSON Schema per data file
 scripts/           Validate and refresh the data files
 src/lib/           Tax arithmetic, formatting, and the HTML builders

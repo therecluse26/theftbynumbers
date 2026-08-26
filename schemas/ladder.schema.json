@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "The unlock ladder",
-  "description": "Section four: what the invested balance clears. An item has a fixed price or a priceFrom block, never both.",
+  "title": "The ladder",
+  "description": "Section five: what the invested balance buys back. An item has a fixed price or a priceFrom block, never both.",
   "type": "object",
   "required": ["meta", "items"],
   "additionalProperties": false,
@@ -33,8 +33,15 @@
             "additionalProperties": false,
             "properties": {
               "ref": {
-                "enum": ["metals.gold.usdPerTroyOz", "state.medianHomeValue"],
-                "description": "Where the price comes from. Add a case to src/lib/ladder.ts before adding a value here."
+                "enum": [
+                  "metals.gold.usdPerTroyOz",
+                  "state.medianHomeValue",
+                  "basket.college-year",
+                  "charity.life-amf",
+                  "reader.annualTakeHome",
+                  "reader.monthlyTakeHome"
+                ],
+                "description": "Where the price comes from. A reader.* ref prices the rung from the reader's own take-home. Add a case to src/lib/ladder.ts before adding a value here."
               },
               "multiplier": { "type": "number", "exclusiveMinimum": 0 }
             }

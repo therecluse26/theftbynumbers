@@ -11,9 +11,14 @@ import {
   basketHtml,
   dialSvg,
   emptyHeroText,
+  giveHtml,
+  giveLede,
   heroText,
   investText,
   ledgerHtml,
+  lifeCost,
+  receiptHtml,
+  receiptLede,
   ribbon,
   stack,
   statusEcho,
@@ -51,6 +56,14 @@ const dom = {
   empty: el('empty'),
   ledgerBody: el('ledgerBody'),
   buyGrid: el('buyGrid'),
+  lifeFig: el('lifeFig'),
+  lifeNote: el('lifeNote'),
+  lifeWeek: el('lifeWeek'),
+  lifeWeekNote: el('lifeWeekNote'),
+  receiptLede: el('receiptLede'),
+  receiptGroups: el('receiptGroups'),
+  giveLede: el('giveLede'),
+  giveGrid: el('giveGrid'),
   yearsEcho: el('yearsEcho'),
   fvFig: el('fvFig'),
   fvNote: el('fvNote'),
@@ -128,6 +141,17 @@ function update(): void {
   dom.ledgerBody.innerHTML = ledgerHtml(breakdown, inputs);
   dom.buyGrid.innerHTML = basketHtml(breakdown.total);
 
+  const life = lifeCost(breakdown, inputs);
+  dom.lifeFig.textContent = life.figure;
+  dom.lifeNote.textContent = life.note;
+  dom.lifeWeek.innerHTML = life.weekHtml;
+  dom.lifeWeekNote.textContent = life.weekNote;
+  dom.receiptLede.textContent = receiptLede(breakdown, inputs);
+  dom.receiptGroups.innerHTML = receiptHtml(breakdown, inputs);
+
+  dom.giveLede.textContent = giveLede(breakdown, inputs);
+  dom.giveGrid.innerHTML = giveHtml(breakdown.total * inputs.years);
+
   const invest = investText(breakdown, inputs);
   dom.yearsEcho.textContent = String(inputs.years);
   dom.fvFig.textContent = invest.balance;
@@ -138,7 +162,7 @@ function update(): void {
   dom.cmpHeading.textContent = invest.heading;
   dom.cmpBody.innerHTML = invest.comparison;
 
-  const ladder = stack(invest.balanceValue, inputs);
+  const ladder = stack(invest.balanceValue, inputs, breakdown.kept);
   dom.stack.innerHTML = ladder.html;
   dom.stackLede.textContent = ladder.lede;
 }
