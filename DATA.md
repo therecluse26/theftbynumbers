@@ -23,6 +23,7 @@ threshold is written in the code. This document explains the parts.
 | `src/data/metals.json` | Spot gold, dollars per troy ounce | `gold-spot` |
 | `src/data/basket.json` | Everyday purchase prices, section two | a person |
 | `src/data/receipt.json` | What the money was spent on, section three | a person |
+| `src/data/outlays.json` | Federal spending by category, the donut in section three | a person |
 | `src/data/ladder.json` | The ladder, section five | a person |
 | `src/data/charity.json` | Dollars per unit of good, section six | a person |
 | `src/data/assumptions.json` | Sales tax estimate, slider ranges, defaults | a person |
@@ -74,6 +75,21 @@ node scripts/update-data.mjs --force            Accept a change a guard refused
 
 `npm run build` runs `data:validate` first. A bad data commit cannot ship.
 
+## The outlay guard rails
+
+The donut in section three and the "all federal spending" card divide the same
+number. Two rules in `semanticErrors` stop them drifting apart.
+
+1. The category amounts in `outlays.json` must sum to its own `totalOutlays`,
+   within a tenth of a percent. A donut whose parts do not add up is a lie.
+2. `totalOutlays` must equal the `annualCost` of the `federal-spending` card in
+   `receipt.json`.
+
+Break either one and `npm run build` refuses. To refresh the figures, pull the
+Monthly Treasury Statement table 5 from the Fiscal Data API, take the `Total--`
+rows at nesting level 2, and update the `federal-spending` card in the same
+commit.
+
 ## The guard rails
 
 An updater throws when the source looks wrong. A throw leaves the file alone and
@@ -118,9 +134,14 @@ field carries the number.
 | --- | --- | --- |
 | `duration` | `annualCost` | How long the reader's tax funds that yearly cost |
 | `unit` | `price` | How many of them the tax comes to |
-| `share` | `total` | The tax as a share of one lump sum |
+| `household` | `total` | One lump sum, split evenly across every US household |
 | `fact` | `figure` | A finding on its own, with no arithmetic |
 | `computed` | `compute` | A figure worked out in code from the reader's own numbers |
+
+There used to be a `share` kind: the reader's tax as a percentage of a national
+lump sum. It printed figures like `0.0000041%`, which tells a reader nothing.
+`household` replaced it. If a lump sum was never funded by tax at all, such as
+property seized under civil forfeiture, it is a `fact` and no arithmetic applies.
 
 A `computed` card names a function in `src/lib/render.ts`. Add the case there and
 the value to the enum in `schemas/receipt.schema.json` together.

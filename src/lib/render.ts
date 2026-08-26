@@ -5,8 +5,17 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import { ASSUMPTIONS, BASKET, CHARITY, METALS, RECEIPT, TAX, longDate } from './data';
-import { career, commas, duration, escapeHtml, pct, tinyPct, usd } from './format';
+import {
+  ASSUMPTIONS,
+  BASKET,
+  CHARITY,
+  METALS,
+  OUTLAYS,
+  RECEIPT,
+  TAX,
+  longDate,
+} from './data';
+import { career, commas, duration, escapeHtml, months, pct, usd } from './format';
 import { resolveLadder } from './ladder';
 import { employerSharePctLabel, investmentSeries } from './tax';
 import type { Breakdown, Inputs, ReceiptItem } from './types';
@@ -104,6 +113,51 @@ export function emptyHeroText(inputs: Inputs): HeroText {
   };
 }
 
+/* ---------- arcs ---------- */
+
+/*
+ * Both the dial and the donut are arcs on a circle centred on the origin.
+ * The trigonometry lives here once. Degrees run clockwise from twelve o'clock.
+ */
+
+function point(radius: number, deg: number): [string, string] {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return [(radius * Math.cos(a)).toFixed(2), (radius * Math.sin(a)).toFixed(2)];
+}
+
+function arc(
+  radius: number,
+  a0: number,
+  a1: number,
+  width: number,
+  colour: string,
+): string {
+  const p0 = point(radius, a0);
+  const p1 = point(radius, a1);
+  const large = Math.abs(a1 - a0) > 180 ? 1 : 0;
+  return (
+    '<path d="M' +
+    p0[0] +
+    ' ' +
+    p0[1] +
+    ' A' +
+    radius +
+    ' ' +
+    radius +
+    ' 0 ' +
+    large +
+    ' 1 ' +
+    p1[0] +
+    ' ' +
+    p1[1] +
+    '" fill="none" stroke="' +
+    colour +
+    '" stroke-width="' +
+    width +
+    '" stroke-linecap="butt"/>'
+  );
+}
+
 /* ---------- dial ---------- */
 
 export function dialSvg(effectiveRate: number): string {
@@ -112,37 +166,6 @@ export function dialSvg(effectiveRate: number): string {
   const START = -135;
   const clamped = Math.min(effectiveRate, MAX);
   const angle = START + (clamped / MAX) * SWEEP;
-
-  const point = (radius: number, deg: number): [string, string] => {
-    const a = ((deg - 90) * Math.PI) / 180;
-    return [(radius * Math.cos(a)).toFixed(2), (radius * Math.sin(a)).toFixed(2)];
-  };
-  const arc = (radius: number, a0: number, a1: number, width: number, colour: string) => {
-    const p0 = point(radius, a0);
-    const p1 = point(radius, a1);
-    const large = Math.abs(a1 - a0) > 180 ? 1 : 0;
-    return (
-      '<path d="M' +
-      p0[0] +
-      ' ' +
-      p0[1] +
-      ' A' +
-      radius +
-      ' ' +
-      radius +
-      ' 0 ' +
-      large +
-      ' 1 ' +
-      p1[0] +
-      ' ' +
-      p1[1] +
-      '" fill="none" stroke="' +
-      colour +
-      '" stroke-width="' +
-      width +
-      '" stroke-linecap="butt"/>'
-    );
-  };
 
   let g = arc(74, START, START + SWEEP, 15, 'rgba(237,234,227,.14)');
   if (clamped > 0.0005) g += arc(74, START, angle, 15, YELLOW);
@@ -500,6 +523,125 @@ export function lifeCost(r: Breakdown, inputs: Inputs): LifeCost {
   };
 }
 
+/* ---------- the donut ---------- */
+
+/**
+ * One step per slice, brightest first. Same yellow-to-dark ramp as the ribbon,
+ * extended so ten slices stay apart. No hue that is not already on the page.
+ */
+const SLICE_COLOURS = [
+  '#FFD400',
+  '#EFC504',
+  '#E0B905',
+  '#D1AC08',
+  '#C29F0C',
+  '#B2920F',
+  '#A38512',
+  '#937514',
+  '#7C6415',
+  '#5C4A16',
+];
+
+export interface DonutRender {
+  svg: string;
+  legend: string;
+  note: string;
+}
+
+/**
+ * Where the money goes, and what each slice cost the reader in months of work.
+ *
+ * The slices come from Treasury's closed accounts and add up to the year's total
+ * outlays; validation refuses a file where they do not. The reader's own share of
+ * a slice is their tax times that slice's share of the whole.
+ */
+export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
+  const total = OUTLAYS.totalOutlays || 1;
+  const taxOverYears = r.total * inputs.years;
+
+  const RADIUS = 62;
+  const WIDTH = 30;
+
+  let svg = '';
+  let legend = '';
+  let angle = 0;
+
+  OUTLAYS.categories.forEach((category, index) => {
+    const share = category.amount / total;
+    const sweep = share * 360;
+    const colour = SLICE_COLOURS[index % SLICE_COLOURS.length]!;
+
+    // A slice under a fifth of a degree draws as a dot and reads as dirt.
+    if (sweep > 0.2) {
+      // A single arc cannot span a full circle; its two ends would meet and
+      // the path would collapse to nothing.
+      if (sweep >= 359.9) {
+        svg +=
+          '<circle r="' +
+          RADIUS +
+          '" fill="none" stroke="' +
+          colour +
+          '" stroke-width="' +
+          WIDTH +
+          '"/>';
+      } else {
+        svg += arc(RADIUS, angle, angle + sweep, WIDTH, colour);
+      }
+    }
+    angle += sweep;
+
+    const yours = taxOverYears * share;
+    const monthsOfLife = r.effectiveRate * inputs.years * share * 12;
+
+    legend +=
+      '<div class="dn-row">' +
+      '<i class="dn-dot" style="background:' +
+      colour +
+      '"></i>' +
+      '<span class="dn-name">' +
+      escapeHtml(category.name) +
+      '<span class="dn-note">' +
+      escapeHtml(category.note) +
+      '</span></span>' +
+      '<span class="dn-pct num">' +
+      pct(share) +
+      '</span>' +
+      '<span class="dn-yours num">' +
+      usd(yours) +
+      '</span>' +
+      '<span class="dn-life num">' +
+      months(monthsOfLife) +
+      '</span>' +
+      '</div>';
+  });
+
+  svg +=
+    '<text x="0" y="-6" text-anchor="middle" font-family="IBM Plex Mono, monospace" ' +
+    'font-size="10" letter-spacing="2" fill="' +
+    BONE +
+    '" opacity=".5">FY' +
+    OUTLAYS.fiscalYear +
+    '</text>';
+  svg +=
+    '<text x="0" y="14" text-anchor="middle" font-family="IBM Plex Mono, monospace" ' +
+    'font-size="15" fill="' +
+    BONE +
+    '">$' +
+    (total / 1e12).toFixed(2) +
+    'tn</text>';
+
+  return {
+    svg,
+    legend,
+    note:
+      'Every dollar the federal government spent in ' +
+      OUTLAYS.fiscalYear +
+      ', from Treasury’s closed accounts. "Yours" is your ' +
+      usd(taxOverYears) +
+      ' split the same way. The last column is that slice, priced in your own working life.',
+  };
+}
+
 /** Seconds in a year, averaged over the leap cycle. */
 const SECONDS_IN_YEAR = 31_557_600;
 
@@ -538,13 +680,23 @@ function receiptCard(
     );
   }
 
-  if (item.kind === 'share') {
+  if (item.kind === 'household') {
+    // A lump sum spread evenly over every household. The split is flat, not
+    // scaled to income, so say so. The second sentence is what makes the card
+    // move with the sliders: the same bill, priced in the reader's own tax.
+    const perHousehold = item.total! / RECEIPT.households;
+    const yearsOfTax = r.total > 0 ? perHousehold / r.total : 0;
     return card(
       'rc',
-      tinyPct(taxOverYears / item.total!),
+      usd(perHousehold),
       '',
       item.label!,
-      note,
+      note +
+        ' Split evenly across ' +
+        commas(RECEIPT.households) +
+        ' US households. At your income that is ' +
+        career(yearsOfTax) +
+        ' of tax.',
       item.source,
     );
   }

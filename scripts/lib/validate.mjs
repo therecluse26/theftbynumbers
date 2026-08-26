@@ -7,8 +7,8 @@ import { basename, join } from 'node:path';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 
-import { DATA_FILES, ROOT, SHARED_SCHEMAS, schemaPath } from './registry.mjs';
-import { getPath } from './json-io.mjs';
+import { DATA_FILES, ROOT, SHARED_SCHEMAS, dataPath, findDataFile, schemaPath } from './registry.mjs';
+import { getPath, readJson } from './json-io.mjs';
 
 function buildAjv() {
   const ajv = new Ajv({ allErrors: true, strict: false });
@@ -125,6 +125,38 @@ export function semanticErrors(entry, data) {
   }
 
   if (entry.id === 'charity') duplicate(data.items.map((i) => i.id), 'charity item');
+
+  if (entry.id === 'outlays') {
+    duplicate(data.categories.map((c) => c.id), 'outlay category');
+
+    // The donut is a whole dollar split into parts. If the parts do not add up,
+    // the picture lies. A tenth of a percent of drift is rounding; more is a bug.
+    const sum = data.categories.reduce((run, c) => run + c.amount, 0);
+    const drift = Math.abs(sum - data.totalOutlays) / data.totalOutlays;
+    if (drift > 0.001) {
+      errors.push(
+        `categories sum to ${Math.round(sum)}, which is ${(drift * 100).toFixed(2)}% ` +
+          `away from totalOutlays ${data.totalOutlays}`,
+      );
+    }
+
+    // The donut and the "all federal spending" card divide the same number.
+    // Let them drift and the page contradicts itself in two places at once.
+    try {
+      const receipt = readJson(dataPath(findDataFile('receipt')));
+      const card = receipt.items.find((i) => i.id === 'federal-spending');
+      if (!card) {
+        errors.push('receipt.json has no federal-spending card to agree with');
+      } else if (card.annualCost !== data.totalOutlays) {
+        errors.push(
+          `totalOutlays ${data.totalOutlays} does not match the federal-spending ` +
+            `card in receipt.json, which says ${card.annualCost}`,
+        );
+      }
+    } catch (error) {
+      errors.push(`could not cross-check receipt.json: ${error.message}`);
+    }
+  }
 
   if (entry.id === 'assumptions') {
     const inv = data.investment;

@@ -34,8 +34,6 @@ function priceFromRef(
       return charityPrice('life-amf');
     case 'reader.annualTakeHome':
       return annualTakeHome;
-    case 'reader.monthlyTakeHome':
-      return annualTakeHome / 12;
   }
 }
 

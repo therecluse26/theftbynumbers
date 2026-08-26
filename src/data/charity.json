@@ -48,14 +48,25 @@
       }
     },
     {
-      "id": "infant-vaccinated",
-      "singular": "infant fully vaccinated",
-      "plural": "infants fully vaccinated",
-      "price": 160,
-      "note": "About {price} an infant. New Incentives pays mothers a small sum to finish the schedule, and they do.",
+      "id": "safe-water",
+      "singular": "person given safe drinking water for a year",
+      "plural": "people given safe drinking water for a year",
+      "price": 1.5,
+      "note": "About {price} a person a year, by putting chlorine dispensers at the water source. Dirty water kills small children first.",
       "source": {
-        "label": "GiveWell, New Incentives",
-        "url": "https://www.givewell.org/international/technical/programs/new-incentives"
+        "label": "GiveWell, Evidence Action's Dispensers for Safe Water",
+        "url": "https://www.givewell.org/charities/dispensers-for-safe-water-December-2018-version"
+      }
+    },
+    {
+      "id": "child-fed",
+      "singular": "starving child fed back to health",
+      "plural": "starving children fed back to health",
+      "price": 150,
+      "note": "About {price} for the full six to eight week course of therapeutic food, delivery and staff included. Most children recover completely.",
+      "source": {
+        "label": "UNICEF, ready-to-use therapeutic food",
+        "url": "https://www.unicef.org/supply/ready-use-therapeutic-food-rutf"
       }
     },
     {

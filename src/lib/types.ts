@@ -90,9 +90,12 @@ export type PriceRef =
   | 'state.medianHomeValue'
   | 'basket.college-year'
   | 'charity.life-amf'
-  /** The reader's own take-home. A rung priced this way costs them their own life. */
-  | 'reader.annualTakeHome'
-  | 'reader.monthlyTakeHome';
+  /**
+   * The reader's own take-home. A rung priced this way costs them their own life.
+   * Years only: a multiplier of 0.25 is three months. One time unit keeps the
+   * ladder from listing the same idea twice at two scales.
+   */
+  | 'reader.annualTakeHome';
 
 export interface LadderItem {
   id: string;
@@ -113,13 +116,17 @@ export interface LadderData {
 /**
  * A receipt card. The kind decides which fields carry the number.
  *
- *   duration  your tax funds this yearly cost for a length of time
- *   unit      how many of these your tax comes to
- *   share     your tax as a share of one lump sum
- *   fact      no arithmetic; a finding that stands on its own
- *   computed  worked out in code from the reader's own figures
+ *   duration   your tax funds this yearly cost for a length of time
+ *   unit       how many of these your tax comes to
+ *   household  one lump sum, split evenly across every US household
+ *   fact       no arithmetic; a finding that stands on its own
+ *   computed   worked out in code from the reader's own figures
+ *
+ * There used to be a `share` kind: the reader's tax as a percentage of a
+ * national lump sum. It printed things like "0.0000041%", which tells nobody
+ * anything. `household` replaces it with a dollar figure a person can picture.
  */
-export type ReceiptKind = 'duration' | 'unit' | 'share' | 'fact' | 'computed';
+export type ReceiptKind = 'duration' | 'unit' | 'household' | 'fact' | 'computed';
 
 /** Names a function in render.ts. Add the case there before adding a value here. */
 export type ReceiptCompute = 'social-security';
@@ -148,8 +155,26 @@ export interface ReceiptGroup {
 
 export interface ReceiptData {
   meta: DataMeta;
+  /** US households. The denominator for every household card. */
+  households: number;
   groups: ReceiptGroup[];
   items: ReceiptItem[];
+}
+
+export interface OutlayCategory {
+  id: string;
+  name: string;
+  agency?: string;
+  amount: number;
+  note: string;
+  source?: { label: string; url: string };
+}
+
+export interface OutlaysData {
+  meta: DataMeta;
+  fiscalYear: number;
+  totalOutlays: number;
+  categories: OutlayCategory[];
 }
 
 export interface CharityItem {

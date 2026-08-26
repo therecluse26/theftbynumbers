@@ -20,6 +20,7 @@ import {
   investText,
   ledgerHtml,
   lifeCost,
+  outlaysDonut,
   receiptHtml,
   receiptLede,
   ribbon,
@@ -56,6 +57,7 @@ const taxOverYears = breakdown.total * inputs.years;
       <Basket cards={basketHtml(breakdown.total)} />
       <Receipt
         life={lifeCost(breakdown, inputs)}
+        donut={outlaysDonut(breakdown, inputs)}
         lede={receiptLede(breakdown, inputs)}
         groups={receiptHtml(breakdown, inputs)}
       />

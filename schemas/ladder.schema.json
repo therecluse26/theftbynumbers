@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "The ladder",
-  "description": "Section five: what the invested balance buys back. An item has a fixed price or a priceFrom block, never both.",
+  "description": "Section five: what the invested balance buys back. An item has a fixed price or a priceFrom block, never both. Every rung is ONE indivisible thing; the site multiplies it. Never price a rung as a bundle of N things, or the plural becomes a tally of sets: 'Sets of three paid-off homes'. If you want three homes, price one home and let the count say 3x.",
   "type": "object",
   "required": ["meta", "items"],
   "additionalProperties": false,
@@ -18,8 +18,12 @@
         "oneOf": [{ "required": ["price"] }, { "required": ["priceFrom"] }],
         "properties": {
           "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
-          "singular": { "type": "string", "minLength": 1 },
-          "plural": { "type": "string", "minLength": 1 },
+          "singular": { "type": "string", "minLength": 1, "description": "One of the thing. Not a bundle of several." },
+          "plural": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Read it aloud after a number: \"27x Used cars, owned outright\". If it only makes sense as a set, the rung is priced wrong."
+          },
           "singularInState": {
             "type": "string",
             "minLength": 1,
@@ -38,10 +42,9 @@
                   "state.medianHomeValue",
                   "basket.college-year",
                   "charity.life-amf",
-                  "reader.annualTakeHome",
-                  "reader.monthlyTakeHome"
+                  "reader.annualTakeHome"
                 ],
-                "description": "Where the price comes from. A reader.* ref prices the rung from the reader's own take-home. Add a case to src/lib/ladder.ts before adding a value here."
+                "description": "Where the price comes from. A reader.* ref prices the rung from the reader's own take-home; use a fractional multiplier for less than a year. Add a case to src/lib/ladder.ts before adding a value here."
               },
               "multiplier": { "type": "number", "exclusiveMinimum": 0 }
             }

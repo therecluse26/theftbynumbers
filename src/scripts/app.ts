@@ -17,6 +17,7 @@ import {
   investText,
   ledgerHtml,
   lifeCost,
+  outlaysDonut,
   receiptHtml,
   receiptLede,
   ribbon,
@@ -60,6 +61,9 @@ const dom = {
   lifeNote: el('lifeNote'),
   lifeWeek: el('lifeWeek'),
   lifeWeekNote: el('lifeWeekNote'),
+  donutSvg: el('donutSvg'),
+  donutLegend: el('donutLegend'),
+  donutNote: el('donutNote'),
   receiptLede: el('receiptLede'),
   receiptGroups: el('receiptGroups'),
   giveLede: el('giveLede'),
@@ -146,6 +150,11 @@ function update(): void {
   dom.lifeNote.textContent = life.note;
   dom.lifeWeek.innerHTML = life.weekHtml;
   dom.lifeWeekNote.textContent = life.weekNote;
+  const donut = outlaysDonut(breakdown, inputs);
+  dom.donutSvg.innerHTML = donut.svg;
+  dom.donutLegend.innerHTML = donut.legend;
+  dom.donutNote.textContent = donut.note;
+
   dom.receiptLede.textContent = receiptLede(breakdown, inputs);
   dom.receiptGroups.innerHTML = receiptHtml(breakdown, inputs);
 

@@ -6,10 +6,10 @@
       "annualCost": {
         "updateMode": "manual",
         "label": "Yearly federal costs, from the published accounts",
-        "url": "https://www.cbo.gov/publication/61307",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "Re-sample after each fiscal year closes. Each item carries its own source."
+        "note": "Re-sample after each fiscal year closes. Each item carries its own source. The federal-spending card must equal totalOutlays in outlays.json; validation enforces it."
       },
       "price": {
         "updateMode": "manual",
@@ -17,7 +17,7 @@
         "url": "https://www.gao.gov/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "Each item carries its own source. A weapon price moves with the contract, not the calendar."
+        "note": "Each item carries its own source. A weapon price moves with the contract, not the calendar, so record the budget year in the note."
       },
       "total": {
         "updateMode": "manual",
@@ -25,10 +25,19 @@
         "url": "https://costsofwar.watson.brown.edu/costs",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "These are cumulative totals, not yearly rates. They only grow."
+        "note": "These are cumulative totals, not yearly rates. They only grow. The site divides them across every US household."
+      },
+      "households": {
+        "updateMode": "manual",
+        "label": "Number of US households, Census Bureau",
+        "url": "https://www.census.gov/topics/families/families-and-households.html",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "The denominator for every household-share card. Families and Living Arrangements tables, table HH-1."
       }
     }
   },
+  "households": 134790000,
   "groups": [
     {
       "id": "scale",
@@ -48,7 +57,7 @@
     {
       "id": "good",
       "title": "The good it does",
-      "lede": "The programmes people defend when they defend the tax. Priced honestly, including where they hold up."
+      "lede": "The programmes people name first when they defend the tax. Here is what the people who run them publish about them."
     }
   ],
   "items": [
@@ -56,21 +65,21 @@
       "id": "federal-spending",
       "group": "scale",
       "kind": "duration",
-      "annualCost": 7000000000000,
+      "annualCost": 7009973700000,
       "label": "of all federal spending",
-      "note": "Outlays were $7.0 trillion in the 2025 fiscal year. That is what your life's work bought at the till.",
+      "note": "Outlays were $7.01 trillion in the 2025 fiscal year, from Treasury's own closed accounts. That is what your life's work bought at the till.",
       "source": {
-        "label": "CBO, Monthly Budget Review, fiscal year 2025",
-        "url": "https://www.cbo.gov/publication/61307"
+        "label": "Monthly Treasury Statement, total outlays, FY2025",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
       }
     },
     {
       "id": "debt-interest",
       "group": "scale",
       "kind": "duration",
-      "annualCost": 1000000000000,
+      "annualCost": 970000000000,
       "label": "of interest on the national debt",
-      "note": "Net interest passed $1 trillion a year for the first time in 2025. It buys nothing. It is rent on money already spent.",
+      "note": "Net interest was about $970 billion in 2025, the first year it passed a trillion gross. It buys nothing. It is rent on money already spent.",
       "source": {
         "label": "CBO, Monthly Budget Review, fiscal year 2025",
         "url": "https://www.cbo.gov/publication/61307"
@@ -115,9 +124,9 @@
     {
       "id": "ui-fraud",
       "group": "waste",
-      "kind": "share",
+      "kind": "household",
       "total": 100000000000,
-      "label": "of the unemployment money that was simply stolen",
+      "label": "your household's share of the unemployment money that was simply stolen",
       "note": "GAO puts pandemic unemployment fraud between $100 billion and $135 billion. This card uses the low end. States have clawed back about $1.2 billion of it.",
       "source": {
         "label": "GAO-23-106696, Unemployment Insurance",
@@ -127,12 +136,12 @@
     {
       "id": "high-speed-rail",
       "group": "waste",
-      "kind": "share",
+      "kind": "household",
       "total": 126300000000,
-      "label": "of California's high-speed railway",
+      "label": "your household's share of California's high-speed railway",
       "note": "Voters were told $33 billion in 2008. The 2026 business plan says $126.3 billion. No passenger has ridden it.",
       "source": {
-        "label": "California High-Speed Rail Authority, 2026 draft business plan",
+        "label": "California High-Speed Rail Authority, business plans",
         "url": "https://hsr.ca.gov/about/business-plans/"
       }
     },
@@ -149,16 +158,29 @@
       }
     },
     {
-      "id": "tomahawk",
+      "id": "jdam-kit",
       "group": "name",
       "kind": "unit",
-      "price": 2240000,
-      "singular": "Tomahawk cruise missile",
-      "plural": "Tomahawk cruise missiles",
-      "note": "The Marine Corps bought 38 Block V missiles for $85.1 million. That is {price} each, used once.",
+      "price": 25000,
+      "singular": "JDAM kit, turning a dumb bomb into a guided one",
+      "plural": "JDAM kits, turning dumb bombs into guided ones",
+      "note": "About {price} a kit at the Air Force's largest buys, rising above $80,000 when they order fewer. Reported against the 2024 Boeing contract. Each one is used once.",
       "source": {
-        "label": "Tomahawk programme, NAVAIR",
-        "url": "https://www.navair.navy.mil/product/Tomahawk"
+        "label": "Defense News, Boeing JDAM contract",
+        "url": "https://www.defensenews.com/air/2024/05/28/boeing-wins-75-billion-contract-from-us-air-force-for-guided-bombs/"
+      }
+    },
+    {
+      "id": "artillery-shell",
+      "group": "name",
+      "kind": "unit",
+      "price": 3000,
+      "singular": "155mm artillery shell",
+      "plural": "155mm artillery shells",
+      "note": "About {price} for a basic high-explosive round, the figure US officials give. A gun crew can fire this many in an afternoon.",
+      "source": {
+        "label": "M795 155mm projectile",
+        "url": "https://en.wikipedia.org/wiki/M795"
       }
     },
     {
@@ -190,10 +212,10 @@
     {
       "id": "forfeiture",
       "group": "name",
-      "kind": "share",
-      "total": 68800000000,
-      "label": "of the property police have taken since 2000",
-      "note": "At least $68.8 billion forfeited by state and federal agencies. Under civil forfeiture the owner need never be charged with a crime.",
+      "kind": "fact",
+      "figure": "$68.8bn",
+      "label": "of property taken by police since 2000, mostly from people never charged",
+      "note": "Not your tax money, so there is no share of it to work out. It is your neighbours' cars, cash and houses. Under civil forfeiture the owner need never be convicted of anything.",
       "source": {
         "label": "Institute for Justice, Policing for Profit",
         "url": "https://ij.org/report/policing-for-profit-4/"
@@ -202,9 +224,9 @@
     {
       "id": "war-on-terror",
       "group": "name",
-      "kind": "share",
+      "kind": "household",
       "total": 8000000000000,
-      "label": "of the wars fought since 2001",
+      "label": "your household's share of the wars fought since 2001",
       "note": "About $8 trillion. At least 940,000 people died in the direct violence: civilians, soldiers on every side, contractors, journalists and aid workers.",
       "source": {
         "label": "Costs of War, Brown University",
@@ -225,29 +247,27 @@
       }
     },
     {
-      "id": "medicare-year",
+      "id": "trust-fund-2034",
       "group": "good",
-      "kind": "unit",
-      "price": 18900,
-      "singular": "year of Medicare for one person",
-      "plural": "years of Medicare for one person",
-      "note": "Medicare cost $1.21 trillion in 2025, spread across 70 million people. That is {price} each.",
+      "kind": "fact",
+      "figure": "2034",
+      "label": "the year the trust fund empties and benefits are cut by law",
+      "note": "The 2025 Trustees Report projects the combined funds depleted in 2034. Income then covers 81% of scheduled benefits. The remaining 19% is cut automatically, with no vote and no appeal.",
       "source": {
-        "label": "USAFacts, federal Medicare spending",
-        "url": "https://usafacts.org/answers/how-much-does-medicare-cost-the-federal-government/country/united-states/"
+        "label": "Social Security Trustees Report summary",
+        "url": "https://www.ssa.gov/oact/trsum/"
       }
     },
     {
-      "id": "school-year",
+      "id": "no-legal-right",
       "group": "good",
-      "kind": "unit",
-      "price": 17250,
-      "singular": "year of public school for one child",
-      "plural": "years of public school for one child",
-      "note": "{price} a year, for one pupil. That is current spending only. Buildings and debt are counted separately.",
+      "kind": "fact",
+      "figure": "None",
+      "label": "the legal right you hold over the money you have paid in",
+      "note": "In Flemming v. Nestor, 363 U.S. 603 (1960), the Supreme Court held that paying in creates no contractual right to receive. Congress kept the power to change the schedule whenever it likes.",
       "source": {
-        "label": "NCES, current expenditure per pupil",
-        "url": "https://nces.ed.gov/fastfacts/display.asp?id=66"
+        "label": "Flemming v. Nestor, 363 U.S. 603 (1960)",
+        "url": "https://supreme.justia.com/cases/federal/us/363/603/"
       }
     }
   ]

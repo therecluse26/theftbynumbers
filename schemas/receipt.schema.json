@@ -3,11 +3,16 @@
   "title": "The receipt",
   "description": "Section three: what the money was actually spent on. Groups order the page. Every item names its own group and its own card kind.",
   "type": "object",
-  "required": ["meta", "groups", "items"],
+  "required": ["meta", "households", "groups", "items"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
+    "households": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "description": "US households. The denominator for every household card. Census Bureau."
+    },
     "groups": {
       "type": "array",
       "minItems": 1,
@@ -40,7 +45,7 @@
             "then": { "required": ["price", "singular", "plural"] }
           },
           {
-            "if": { "properties": { "kind": { "const": "share" } }, "required": ["kind"] },
+            "if": { "properties": { "kind": { "const": "household" } }, "required": ["kind"] },
             "then": { "required": ["total", "label"] }
           },
           {
@@ -56,8 +61,8 @@
           "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "group": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "kind": {
-            "enum": ["duration", "unit", "share", "fact", "computed"],
-            "description": "duration: your tax funds this annual cost for a length of time. unit: how many of these your tax comes to. share: your tax as a share of one lump sum. fact: no arithmetic, a finding on its own. computed: worked out in code from the reader's own numbers."
+            "enum": ["duration", "unit", "household", "fact", "computed"],
+            "description": "duration: your tax funds this annual cost for a length of time. unit: how many of these your tax comes to. household: one lump sum split evenly across every US household. fact: no arithmetic, a finding on its own. computed: worked out in code from the reader's own numbers."
           },
           "label": {
             "type": "string",
@@ -79,7 +84,7 @@
           "total": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "description": "One lump sum, not a yearly rate. Only on a share card."
+            "description": "One lump sum, not a yearly rate. Only on a household card."
           },
           "figure": {
             "type": "string",

@@ -10,6 +10,7 @@ import charityJson from '../data/charity.json';
 import federalTaxJson from '../data/federal-tax.json';
 import ladderJson from '../data/ladder.json';
 import metalsJson from '../data/metals.json';
+import outlaysJson from '../data/outlays.json';
 import receiptJson from '../data/receipt.json';
 import statesJson from '../data/states.json';
 
@@ -20,6 +21,7 @@ import type {
   FederalTaxData,
   LadderData,
   MetalsData,
+  OutlaysData,
   ReceiptData,
   StatesData,
 } from './types';
@@ -30,6 +32,7 @@ export const METALS = metalsJson as unknown as MetalsData;
 export const BASKET = basketJson as unknown as BasketData;
 export const LADDER = ladderJson as unknown as LadderData;
 export const RECEIPT = receiptJson as unknown as ReceiptData;
+export const OUTLAYS = outlaysJson as unknown as OutlaysData;
 export const CHARITY = charityJson as unknown as CharityData;
 export const ASSUMPTIONS = assumptionsJson as unknown as AssumptionsData;
 
@@ -51,7 +54,7 @@ export const EMPLOYER_SHARE_RATE =
 
 /** Latest data day across every file. Shown in the notes. */
 export function dataUpdatedAt(): string {
-  return [TAX, STATES_DATA, METALS, BASKET, LADDER, RECEIPT, CHARITY, ASSUMPTIONS]
+  return [TAX, STATES_DATA, METALS, BASKET, LADDER, RECEIPT, OUTLAYS, CHARITY, ASSUMPTIONS]
     .map((file) => file.meta.updatedAt)
     .sort()
     .reverse()[0]!;

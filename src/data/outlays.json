@@ -1,0 +1,138 @@
+{
+  "$schema": "../../schemas/outlays.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "amount": {
+        "updateMode": "manual",
+        "label": "Monthly Treasury Statement, table 5, net outlays by agency, fiscal year to date at 30 September",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "These are Treasury's own closed accounts, not a forecast. Refresh once the fiscal year ends in September. The figures come from the API at api.fiscaldata.treasury.gov, dataset mts_table_5, filtered to record_date 2025-09-30, taking the Total-- rows at nesting level 2."
+      },
+      "totalOutlays": {
+        "updateMode": "manual",
+        "label": "Monthly Treasury Statement, total outlays for the fiscal year",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "The Total Outlays line in the same table. Every slice below must add up to it."
+      }
+    }
+  },
+  "fiscalYear": 2025,
+  "totalOutlays": 7009973700000,
+  "categories": [
+    {
+      "id": "health",
+      "name": "Health: Medicare, Medicaid and the rest",
+      "agency": "Department of Health and Human Services",
+      "amount": 1884277200000,
+      "note": "The largest single line in the budget. One department, more than a quarter of everything.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "social-security",
+      "name": "Social Security",
+      "agency": "Social Security Administration",
+      "amount": 1646515200000,
+      "note": "Paid out as it comes in. There is no account with your name on it.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "treasury-interest",
+      "name": "The Treasury, most of it interest on the debt",
+      "agency": "Department of the Treasury",
+      "amount": 1458910200000,
+      "note": "Gross interest on the debt alone was $1,215.6 billion of this. Net of what the government pays its own trust funds, CBO puts the cost near $970 billion. Either way it buys nothing at all.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "defense",
+      "name": "The military",
+      "agency": "Department of Defense, military programs",
+      "amount": 868411600000,
+      "note": "Military programs only. Veterans, nuclear weapons and the intelligence agencies are counted elsewhere.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "veterans",
+      "name": "Veterans",
+      "agency": "Department of Veterans Affairs",
+      "amount": 376591200000,
+      "note": "The bill for the wars, paid decades after the fighting stops.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "agriculture",
+      "name": "Food and farm programs",
+      "agency": "Department of Agriculture",
+      "amount": 227431900000,
+      "note": "Food assistance and farm support, in one department.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "federal-retirement",
+      "name": "Federal employee pensions",
+      "agency": "Office of Personnel Management",
+      "amount": 128239100000,
+      "note": "Retirement and health benefits for people who worked for the government.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "transportation",
+      "name": "Roads, rail and air",
+      "agency": "Department of Transportation",
+      "amount": 127582800000,
+      "note": "Everything people picture when they say roads and bridges. Under two cents of the dollar.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "homeland",
+      "name": "Homeland Security",
+      "agency": "Department of Homeland Security",
+      "amount": 115305600000,
+      "note": "Borders, customs, the coast guard, airport screening and disaster relief.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "everything-else",
+      "name": "Everything else, after receipts",
+      "agency": "Twenty remaining agencies, less undistributed offsetting receipts",
+      "amount": 176708900000,
+      "note": "Energy, housing, labour, justice, the environment, education, the State Department, NASA, the courts and Congress together spent $514.5 billion. The government then nets $337.8 billion of its own receipts against that, leaving this.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    }
+  ]
+}

@@ -15,6 +15,7 @@ export const DATA_FILES = [
   { id: 'basket', label: 'Everyday purchases', file: 'src/data/basket.json', schema: 'schemas/basket.schema.json' },
   { id: 'ladder', label: 'The ladder', file: 'src/data/ladder.json', schema: 'schemas/ladder.schema.json' },
   { id: 'receipt', label: 'The receipt', file: 'src/data/receipt.json', schema: 'schemas/receipt.schema.json' },
+  { id: 'outlays', label: 'Federal outlays', file: 'src/data/outlays.json', schema: 'schemas/outlays.schema.json' },
   { id: 'charity', label: 'The give', file: 'src/data/charity.json', schema: 'schemas/charity.schema.json' },
   { id: 'assumptions', label: 'Assumptions', file: 'src/data/assumptions.json', schema: 'schemas/assumptions.schema.json' },
 ];

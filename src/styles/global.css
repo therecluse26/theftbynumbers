@@ -248,7 +248,37 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   color:var(--bone-70);border-right:1px solid var(--rule);
 }
 .wd:last-child{border-right:0}
-.rc-intro{margin:0 0 26px;font-size:16px;color:var(--bone-70);max-width:62ch;line-height:1.5}
+/* the donut */
+.donut{
+  display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center;
+  border:1px solid var(--rule-2);padding:22px;margin-bottom:8px;
+}
+.dn-chart svg{width:100%;height:auto;display:block}
+.dn-legend{min-width:0}
+.dn-row{
+  display:grid;grid-template-columns:12px 1fr 52px 84px 116px;gap:10px;
+  align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule);
+}
+.dn-row:last-child{border-bottom:0}
+.dn-head{
+  border-bottom:1px solid var(--rule-2);padding-bottom:7px;
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bone-50);
+}
+.dn-head .dn-name,.dn-head .dn-pct,.dn-head .dn-yours,.dn-head .dn-life{font-weight:400}
+.dn-dot{width:12px;height:12px;border-radius:50%;display:block;transform:translateY(2px)}
+.dn-dot-blank{background:none}
+.dn-name{font-size:14px;font-weight:600;color:var(--bone);line-height:1.3;min-width:0}
+.dn-note{
+  display:block;font-family:var(--mono);font-size:10px;letter-spacing:.04em;
+  color:var(--bone-50);font-weight:400;margin-top:3px;line-height:1.45;
+}
+.dn-pct,.dn-yours,.dn-life{font-family:var(--mono);font-size:12px;text-align:right}
+.dn-pct{color:var(--bone-50)}
+.dn-yours{color:var(--bone)}
+.dn-life{color:var(--yellow)}
+
+.rc-intro{margin:22px 0 26px;font-size:16px;color:var(--bone-70);max-width:62ch;line-height:1.5}
 .rc-group{margin-bottom:34px}
 .rc-title{
   font-family:var(--display);font-variation-settings:"wdth" 106,"wght" 800;
@@ -386,6 +416,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 :focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
 
 @media (max-width:860px){
+  /* The donut stacks above its legend, and the legend loses its widest column. */
+  .donut{grid-template-columns:1fr;gap:20px}
+  .dn-chart{max-width:220px;margin:0 auto}
+  .dn-row{grid-template-columns:12px 1fr 48px 88px}
+  .dn-life{grid-column:2/-1;text-align:left;font-size:11px}
+  .dn-head .dn-life{display:none}
   .controls-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .field:nth-child(3n){border-right:1px solid var(--rule);padding-right:22px}
   .field:nth-child(3n+1){padding-left:22px}

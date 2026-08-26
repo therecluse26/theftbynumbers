@@ -1,13 +1,14 @@
 ---
-import type { LifeCost } from '../lib/render';
+import type { DonutRender, LifeCost } from '../lib/render';
 
 interface Props {
   life: LifeCost;
+  donut: DonutRender;
   lede: string;
   groups: string;
 }
 
-const { life, lede, groups } = Astro.props;
+const { life, donut, lede, groups } = Astro.props;
 ---
 
 <section class="section">
@@ -23,6 +24,30 @@ const { life, lede, groups } = Astro.props;
     <div id="lifeWeek" set:html={life.weekHtml} />
     <p class="hint" id="lifeWeekNote">{life.weekNote}</p>
   </div>
+
+  <div class="donut">
+    <div class="dn-chart">
+      <svg
+        id="donutSvg"
+        viewBox="-80 -80 160 160"
+        preserveAspectRatio="xMidYMid meet"
+        role="img"
+        aria-label="Federal spending split by category, with your own share of each"
+        set:html={donut.svg}
+      />
+    </div>
+    <div class="dn-legend">
+      <div class="dn-row dn-head">
+        <i class="dn-dot dn-dot-blank"></i>
+        <span class="dn-name">Where it went</span>
+        <span class="dn-pct">Share</span>
+        <span class="dn-yours">Yours</span>
+        <span class="dn-life">Your life</span>
+      </div>
+      <div id="donutLegend" set:html={donut.legend} />
+    </div>
+  </div>
+  <p class="hint" id="donutNote" style="max-width:70ch">{donut.note}</p>
 
   <p class="rc-intro" id="receiptLede">{lede}</p>
   <div id="receiptGroups" set:html={groups} />

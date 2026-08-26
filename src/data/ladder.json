@@ -22,17 +22,17 @@
       "note": "spot, {price} an ounce. The money nobody can print more of."
     },
     {
-      "id": "month-back",
-      "singular": "Month you never have to work",
-      "plural": "Months you never have to work",
-      "priceFrom": { "ref": "reader.monthlyTakeHome", "multiplier": 1 },
-      "note": "{price}, one month of your own take-home. A month of your life, bought back."
+      "id": "life-saved",
+      "singular": "Life saved from malaria",
+      "plural": "Lives saved from malaria",
+      "priceFrom": { "ref": "charity.life-amf", "multiplier": 1 },
+      "note": "{price} at GiveWell's estimate, which carries a wide band. This rung is not a thing you own."
     },
     {
       "id": "emergency-fund",
-      "singular": "Three months of expenses, the fund that ends the fear",
-      "plural": "Emergency funds of three months each",
-      "priceFrom": { "ref": "reader.monthlyTakeHome", "multiplier": 3 },
+      "singular": "Emergency fund, three months of expenses",
+      "plural": "Emergency funds",
+      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 0.25 },
       "note": "{price}. Most American households do not have this, and know it."
     },
     {
@@ -103,34 +103,11 @@
       "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry."
     },
     {
-      "id": "decade-back",
-      "singular": "Decade you never have to work",
-      "plural": "Decades you never have to work",
-      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 10 },
-      "note": "{price}, ten years of your own take-home. Ten years of your life, bought back."
-    },
-    {
-      "id": "homes-for-children",
-      "singular": "Paid-off home for each of three children",
-      "plural": "Sets of three paid-off homes",
-      "singularInState": "Paid-off {state} home for each of three children",
-      "pluralInState": "Sets of three paid-off {state} homes",
-      "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 3 },
-      "note": "{price}. Three median homes, no mortgage on any of them."
-    },
-    {
       "id": "never-work",
       "singular": "The rest of your life, not working",
-      "plural": "Whole lifetimes of not working",
+      "plural": "Lifetimes of never working again",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 25 },
       "note": "{price}. Draw a twenty-fifth a year and the pot is expected to outlive you."
-    },
-    {
-      "id": "thousand-lives",
-      "singular": "A thousand lives saved from malaria",
-      "plural": "Thousands of lives saved from malaria",
-      "priceFrom": { "ref": "charity.life-amf", "multiplier": 1000 },
-      "note": "{price} at GiveWell's estimate. The estimate carries a wide band. The top rung is not a thing you own."
     }
   ]
 }

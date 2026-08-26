@@ -50,6 +50,19 @@ export function duration(seconds: number): string {
   return say(seconds / SECONDS_IN_YEAR, 'year');
 }
 
+/**
+ * Months, to one decimal: "12.4 months".
+ *
+ * The donut legend compares ten slices of one working life. career() rounds to
+ * whole months, which flattens every small slice to the same "1 month" and makes
+ * the column useless. One decimal keeps them apart.
+ */
+export function months(count: number): string {
+  if (!isFinite(count) || count <= 0) return '0 months';
+  const rounded = Math.round(count * 10) / 10;
+  return rounded + (rounded === 1 ? ' month' : ' months');
+}
+
 /** A count of years as a person says it: "5 years and 6 months". */
 export function career(years: number): string {
   const months = Math.round(years * 12);
@@ -63,22 +76,12 @@ export function career(years: number): string {
   return parts.join(' and ');
 }
 
-/**
- * A share too small for pct(). "0.0000025%".
- *
- * toPrecision would switch to exponent notation below a millionth, and "2.5e-6"
- * reads as noise. Count the leading zeros by hand and keep two figures.
+/*
+ * There was a tinyPct() here, for shares too small for pct() to print without
+ * exponent notation. The receipt used it to show a reader's tax as a fraction of
+ * a national lump sum. "0.0000041%" told nobody anything, so those cards now
+ * divide the lump sum across every household instead, and print plain dollars.
  */
-export function tinyPct(fraction: number): string {
-  const value = fraction * 100;
-  if (!isFinite(value) || value <= 0) return '0%';
-  if (value >= 100) return pct(fraction, 0);
-  if (value >= 0.01) return value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '') + '%';
-
-  const exponent = Math.floor(Math.log10(value));
-  const places = Math.min(20, 1 - exponent);
-  return value.toFixed(places) + '%';
-}
 
 /** Guards every value that reaches innerHTML from a data file. */
 export function escapeHtml(s: string): string {
