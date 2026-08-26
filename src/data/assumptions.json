@@ -1,0 +1,53 @@
+{
+  "$schema": "../../schemas/assumptions.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "salesTax.combinedRate": {
+        "updateMode": "manual",
+        "label": "Tax Foundation, combined state and average local sales tax rate",
+        "url": "https://taxfoundation.org/data/all/state/2025-sales-taxes/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26"
+      },
+      "salesTax.spendShare": {
+        "updateMode": "manual",
+        "label": "Share of take-home spent on taxable goods, editorial estimate",
+        "url": "https://www.bls.gov/cex/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26"
+      },
+      "investment.defaultAnnualReturnPct": {
+        "updateMode": "manual",
+        "label": "Long-run US market average after inflation",
+        "url": "https://www.officialdata.org/us/stocks/s-p-500/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26"
+      }
+    }
+  },
+  "salesTax": {
+    "spendShare": 0.35,
+    "combinedRate": 0.075
+  },
+  "investment": {
+    "defaultAnnualReturnPct": 7,
+    "minAnnualReturnPct": 0,
+    "maxAnnualReturnPct": 12,
+    "stepAnnualReturnPct": 0.1
+  },
+  "horizon": {
+    "defaultYears": 20,
+    "minYears": 1,
+    "maxYears": 45
+  },
+  "income": {
+    "defaultIncome": 85000,
+    "maxIncome": 100000000
+  },
+  "stateRateSlider": {
+    "minPct": 0,
+    "maxPct": 11,
+    "stepPct": 0.05
+  }
+}

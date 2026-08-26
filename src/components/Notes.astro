@@ -1,0 +1,44 @@
+---
+import { dataUpdatedAt, longDate } from '../lib/data';
+import { figuresFootnote } from '../lib/render';
+---
+
+<section class="notes">
+  <h3>Read this before you quote the number</h3>
+  <ol>
+    <li>
+      <b>These are estimates.</b> Real returns depend on credits, retirement
+      contributions, itemized deductions, dependents and dozens of other things this
+      page does not ask about. It is not tax advice.
+    </li>
+    <li>
+      <b>State tax is approximated</b> as a flat rate on gross income. Most states use
+      brackets and their own deductions, so treat this figure as a ballpark.
+    </li>
+    <li>
+      <b>This measures only what left your pocket</b>, not what came back. These taxes
+      also pay for roads, courts, schools, defense and the like.
+    </li>
+    <li>
+      <b>The employer's share is counted as your money only if you accept the incidence
+      argument</b> &mdash; that absent the tax, the same amount would have reached your
+      wage. Most economists do; note that had it been paid to you as salary, income tax
+      would have applied to it too, which this page does not model.
+    </li>
+    <li>
+      <b>Investment returns are not guaranteed.</b> The chart assumes a steady annual
+      return, which no real market delivers. Actual sequences of good and bad years
+      produce very different results.
+    </li>
+    <li>
+      <b>Everything is in today's dollars</b> and holds your income flat, which keeps the
+      comparison readable but is not how a career usually goes.
+    </li>
+    <li><b>Figures used:</b> {figuresFootnote()}</li>
+    <li>
+      <b>Data last refreshed {longDate(dataUpdatedAt())}.</b> Every rate and price on
+      this page comes from a JSON file in the repository. Each file records its own
+      source and refresh date.
+    </li>
+  </ol>
+</section>

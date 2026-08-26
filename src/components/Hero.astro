@@ -1,0 +1,27 @@
+---
+import type { HeroText } from '../lib/render';
+
+interface Props {
+  hero: HeroText;
+  dial: string;
+}
+
+const { hero, dial } = Astro.props;
+---
+
+<div class="wrap">
+  <section class="hero" aria-live="polite">
+    <div>
+      <p class="hero-label" id="heroLabel" set:html={hero.label} />
+      <p class="hero-figure num" id="heroFig">{hero.figure}</p>
+      <p class="hero-foot" id="heroFoot" set:html={hero.foot} />
+    </div>
+    <svg
+      class="dial"
+      id="dial"
+      viewBox="-100 -100 200 200"
+      aria-hidden="true"
+      set:html={dial}
+    />
+  </section>
+</div>

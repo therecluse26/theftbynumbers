@@ -1,0 +1,26 @@
+---
+import type { HeroText, RibbonRender } from '../lib/render';
+
+interface Props {
+  ribbon: RibbonRender;
+  hero: HeroText;
+}
+
+const { ribbon, hero } = Astro.props;
+---
+
+<div class="ribbon-band bleed" id="ribbonBand">
+  <div class="ribbon-inner">
+    <div
+      class="ribbon"
+      id="ribbon"
+      role="img"
+      aria-label={ribbon.ariaLabel}
+      set:html={ribbon.html}
+    />
+    <div class="ribbon-legend">
+      <span id="ribbonBase">{hero.ribbonBase}</span>
+      <span id="keptPct">{hero.keptPct}</span>
+    </div>
+  </div>
+</div>

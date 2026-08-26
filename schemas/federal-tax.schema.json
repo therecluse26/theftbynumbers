@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Federal tax data",
+  "type": "object",
+  "required": ["meta", "taxYear", "filingStatuses", "brackets", "standardDeduction", "payroll"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "taxYear": { "type": "integer", "minimum": 2000, "maximum": 2100 },
+    "filingStatuses": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "shortName", "who", "whoObject"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "$ref": "#/definitions/statusId" },
+          "name": { "type": "string", "minLength": 1 },
+          "shortName": { "type": "string", "minLength": 1 },
+          "who": { "type": "string", "minLength": 1 },
+          "whoObject": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "brackets": {
+      "type": "object",
+      "required": ["single", "mfj", "hoh"],
+      "additionalProperties": false,
+      "properties": {
+        "single": { "$ref": "#/definitions/bracketTable" },
+        "mfj": { "$ref": "#/definitions/bracketTable" },
+        "hoh": { "$ref": "#/definitions/bracketTable" }
+      }
+    },
+    "standardDeduction": { "$ref": "#/definitions/byStatus" },
+    "payroll": {
+      "type": "object",
+      "required": ["socialSecurity", "medicare"],
+      "additionalProperties": false,
+      "properties": {
+        "socialSecurity": {
+          "type": "object",
+          "required": ["rate", "wageBase"],
+          "additionalProperties": false,
+          "properties": {
+            "rate": { "$ref": "#/definitions/rate" },
+            "wageBase": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "medicare": {
+          "type": "object",
+          "required": ["rate", "additionalRate", "additionalThreshold"],
+          "additionalProperties": false,
+          "properties": {
+            "rate": { "$ref": "#/definitions/rate" },
+            "additionalRate": { "$ref": "#/definitions/rate" },
+            "additionalThreshold": { "$ref": "#/definitions/byStatus" }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "statusId": { "enum": ["single", "mfj", "hoh"] },
+    "rate": { "type": "number", "minimum": 0, "maximum": 1 },
+    "byStatus": {
+      "type": "object",
+      "required": ["single", "mfj", "hoh"],
+      "additionalProperties": false,
+      "properties": {
+        "single": { "type": "number", "minimum": 0 },
+        "mfj": { "type": "number", "minimum": 0 },
+        "hoh": { "type": "number", "minimum": 0 }
+      }
+    },
+    "bracketTable": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Ordered lowest to highest. The first entry must start at 0.",
+      "items": {
+        "type": "object",
+        "required": ["from", "rate"],
+        "additionalProperties": false,
+        "properties": {
+          "from": { "type": "number", "minimum": 0 },
+          "rate": { "$ref": "#/definitions/rate" }
+        }
+      }
+    }
+  }
+}

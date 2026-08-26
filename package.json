@@ -1,0 +1,26 @@
+{
+  "name": "endthetheft",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "npm run data:validate && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "data:validate": "node scripts/validate-data.mjs",
+    "data:check": "node scripts/update-data.mjs --check",
+    "data:update": "node scripts/update-data.mjs",
+    "data:update:dry": "node scripts/update-data.mjs --dry-run"
+  },
+  "dependencies": {
+    "astro": "^7.2.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "ajv": "^8.20.0",
+    "ajv-formats": "^3.0.1",
+    "typescript": "^6.0.3"
+  }
+}

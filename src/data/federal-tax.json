@@ -1,0 +1,89 @@
+{
+  "$schema": "../../schemas/federal-tax.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "*": {
+        "updateMode": "manual",
+        "label": "IRS annual inflation adjustments (Rev. Proc.)",
+        "url": "https://www.irs.gov/newsroom/irs-provides-tax-inflation-adjustments-for-tax-year-2026",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "The IRS publishes one revenue procedure per tax year, usually in the autumn. Update taxYear, brackets, standardDeduction and payroll together."
+      }
+    }
+  },
+  "taxYear": 2026,
+  "filingStatuses": [
+    {
+      "id": "single",
+      "name": "Single",
+      "shortName": "Single",
+      "who": "a single filer",
+      "whoObject": "you"
+    },
+    {
+      "id": "mfj",
+      "name": "Married, joint",
+      "shortName": "Joint",
+      "who": "a couple filing jointly",
+      "whoObject": "the two of you"
+    },
+    {
+      "id": "hoh",
+      "name": "Head of household",
+      "shortName": "Head",
+      "who": "a head of household",
+      "whoObject": "you"
+    }
+  ],
+  "brackets": {
+    "single": [
+      { "from": 0, "rate": 0.1 },
+      { "from": 12400, "rate": 0.12 },
+      { "from": 50400, "rate": 0.22 },
+      { "from": 105700, "rate": 0.24 },
+      { "from": 201775, "rate": 0.32 },
+      { "from": 256225, "rate": 0.35 },
+      { "from": 640600, "rate": 0.37 }
+    ],
+    "mfj": [
+      { "from": 0, "rate": 0.1 },
+      { "from": 24800, "rate": 0.12 },
+      { "from": 100800, "rate": 0.22 },
+      { "from": 211400, "rate": 0.24 },
+      { "from": 403550, "rate": 0.32 },
+      { "from": 512450, "rate": 0.35 },
+      { "from": 768700, "rate": 0.37 }
+    ],
+    "hoh": [
+      { "from": 0, "rate": 0.1 },
+      { "from": 17700, "rate": 0.12 },
+      { "from": 67450, "rate": 0.22 },
+      { "from": 105700, "rate": 0.24 },
+      { "from": 201775, "rate": 0.32 },
+      { "from": 256200, "rate": 0.35 },
+      { "from": 640600, "rate": 0.37 }
+    ]
+  },
+  "standardDeduction": {
+    "single": 16100,
+    "mfj": 32200,
+    "hoh": 24150
+  },
+  "payroll": {
+    "socialSecurity": {
+      "rate": 0.062,
+      "wageBase": 184500
+    },
+    "medicare": {
+      "rate": 0.0145,
+      "additionalRate": 0.009,
+      "additionalThreshold": {
+        "single": 200000,
+        "mfj": 250000,
+        "hoh": 200000
+      }
+    }
+  }
+}

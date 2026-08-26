@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Everyday purchases",
+  "description": "Section two: what one year of tax buys.",
+  "type": "object",
+  "required": ["meta", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "singular", "plural", "price", "note"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "singular": { "type": "string", "minLength": 1 },
+          "plural": { "type": "string", "minLength": 1 },
+          "price": { "type": "number", "exclusiveMinimum": 0 },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shown under the label. Supports the {price} token."
+          },
+          "source": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

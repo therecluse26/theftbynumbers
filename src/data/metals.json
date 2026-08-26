@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/metals.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "gold.usdPerTroyOz": {
+        "updateMode": "fetch",
+        "updater": "gold-spot",
+        "label": "Spot gold, US dollars per troy ounce",
+        "url": "https://api.gold-api.com/price/XAU",
+        "maxAgeDays": 7,
+        "updatedAt": "2026-08-26"
+      }
+    }
+  },
+  "gold": {
+    "usdPerTroyOz": 4630
+  }
+}

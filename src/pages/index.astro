@@ -1,0 +1,58 @@
+---
+import Basket from '../components/Basket.astro';
+import Controls from '../components/Controls.astro';
+import Hero from '../components/Hero.astro';
+import Invest from '../components/Invest.astro';
+import Ledger from '../components/Ledger.astro';
+import Notes from '../components/Notes.astro';
+import Rail from '../components/Rail.astro';
+import Ribbon from '../components/Ribbon.astro';
+import Stack from '../components/Stack.astro';
+import Base from '../layouts/Base.astro';
+import {
+  basketHtml,
+  dialSvg,
+  heroText,
+  investText,
+  ledgerHtml,
+  ribbon,
+  stack,
+} from '../lib/render';
+import { computeBreakdown, defaultInputs } from '../lib/tax';
+
+// The opening state is rendered here, at build time, from the same functions
+// the browser script uses. The page is readable before any script runs.
+const inputs = defaultInputs();
+const breakdown = computeBreakdown(inputs);
+const hero = heroText(breakdown, inputs);
+const invest = investText(breakdown, inputs);
+---
+
+<Base
+  title="Withheld - What your taxes cost, and what they could have been"
+  description="A calculator that shows what one year of US tax costs you, what it would have bought, and what it would be worth if you had invested it instead."
+>
+  <Rail />
+  <Hero hero={hero} dial={dialSvg(breakdown.effectiveRate)} />
+  <Ribbon ribbon={ribbon(breakdown)} hero={hero} />
+
+  <div class="wrap">
+    <Controls inputs={inputs} />
+
+    <div class="empty" id="empty" hidden>
+      <p>Enter an income above to see the breakdown.</p>
+    </div>
+
+    <main class="results" id="results">
+      <Ledger rows={ledgerHtml(breakdown, inputs)} />
+      <Basket cards={basketHtml(breakdown.total)} />
+      <Invest invest={invest} years={inputs.years} />
+      <Stack stack={stack(invest.balanceValue, inputs)} />
+      <Notes />
+    </main>
+  </div>
+
+  <script>
+    import '../scripts/app';
+  </script>
+</Base>

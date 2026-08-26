@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Metal spot prices",
+  "type": "object",
+  "required": ["meta", "gold"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "gold": {
+      "type": "object",
+      "required": ["usdPerTroyOz"],
+      "additionalProperties": false,
+      "properties": {
+        "usdPerTroyOz": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    }
+  }
+}

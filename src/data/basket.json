@@ -1,0 +1,114 @@
+{
+  "$schema": "../../schemas/basket.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "price": {
+        "updateMode": "manual",
+        "label": "Typical 2026 US retail and average prices",
+        "url": "https://www.bls.gov/cpi/",
+        "maxAgeDays": 180,
+        "updatedAt": "2026-08-26",
+        "note": "Each item carries its own source. Re-sample yearly, or sooner if a price moves hard."
+      }
+    }
+  },
+  "items": [
+    {
+      "id": "burrito",
+      "singular": "Chipotle burrito",
+      "plural": "Chipotle burritos",
+      "price": 11.5,
+      "note": "$11.50 each",
+      "source": { "label": "Chipotle menu, US average", "url": "https://www.chipotle.com/" }
+    },
+    {
+      "id": "rent-month",
+      "singular": "Month of average US rent",
+      "plural": "Months of average US rent",
+      "price": 1780,
+      "note": "$1,780 a month",
+      "source": { "label": "Zillow Observed Rent Index", "url": "https://www.zillow.com/research/data/" }
+    },
+    {
+      "id": "groceries-week",
+      "singular": "Week of groceries for a family of four",
+      "plural": "Weeks of groceries for a family of four",
+      "price": 265,
+      "note": "$265 a week",
+      "source": { "label": "USDA moderate-cost food plan", "url": "https://www.fns.usda.gov/cnpp/usda-food-plans-cost-food-monthly-reports" }
+    },
+    {
+      "id": "domestic-flight",
+      "singular": "Round-trip domestic flight",
+      "plural": "Round-trip domestic flights",
+      "price": 400,
+      "note": "$400 each",
+      "source": { "label": "BTS average domestic air fare", "url": "https://www.bts.gov/air-fares" }
+    },
+    {
+      "id": "college-year",
+      "singular": "Year of in-state public college tuition",
+      "plural": "Years of in-state public college tuition",
+      "price": 11800,
+      "note": "$11,800 a year",
+      "source": { "label": "College Board, Trends in College Pricing", "url": "https://research.collegeboard.org/trends/college-pricing" }
+    },
+    {
+      "id": "used-car",
+      "singular": "Used car, average price",
+      "plural": "Used cars, average price",
+      "price": 26500,
+      "note": "$26,500 each",
+      "source": { "label": "Cox Automotive used vehicle price index", "url": "https://www.coxautoinc.com/market-insights/" }
+    },
+    {
+      "id": "new-car",
+      "singular": "New car, average price",
+      "plural": "New cars, average price",
+      "price": 49000,
+      "note": "$49,000 each",
+      "source": { "label": "Kelley Blue Book average transaction price", "url": "https://www.kbb.com/car-news/" }
+    },
+    {
+      "id": "home-down-payment",
+      "singular": "Down payment on a median US home",
+      "plural": "Down payments on a median US home",
+      "price": 41500,
+      "note": "10% of $415,000",
+      "source": { "label": "Derived from the median US home price", "url": "https://www.zillow.com/research/data/" }
+    },
+    {
+      "id": "tank-of-gas",
+      "singular": "Full tank of gas",
+      "plural": "Full tanks of gas",
+      "price": 48,
+      "note": "$48 a tank",
+      "source": { "label": "EIA weekly retail gasoline prices", "url": "https://www.eia.gov/petroleum/gasdiesel/" }
+    },
+    {
+      "id": "iphone",
+      "singular": "iPhone",
+      "plural": "iPhones",
+      "price": 1000,
+      "note": "$1,000 each",
+      "source": { "label": "Apple US retail", "url": "https://www.apple.com/shop/buy-iphone" }
+    },
+    {
+      "id": "health-premium-year",
+      "singular": "Year of a household's share of health premiums",
+      "plural": "Years of a household's share of health premiums",
+      "price": 6850,
+      "note": "$6,850 a year",
+      "source": { "label": "KFF Employer Health Benefits Survey", "url": "https://www.kff.org/health-costs/report/employer-health-benefits-annual-survey/" }
+    },
+    {
+      "id": "wedding",
+      "singular": "Average American wedding",
+      "plural": "Average American weddings",
+      "price": 33000,
+      "note": "$33,000 each",
+      "source": { "label": "The Knot Real Weddings Study", "url": "https://www.theknot.com/content/wedding-data-insights" }
+    }
+  ]
+}

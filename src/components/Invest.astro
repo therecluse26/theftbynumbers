@@ -1,0 +1,38 @@
+---
+import type { InvestText } from '../lib/render';
+
+interface Props {
+  invest: InvestText;
+  years: number;
+}
+
+const { invest, years } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section three</p>
+    <h2>If you had invested it instead</h2>
+  </div>
+
+  <div class="invest-top">
+    <div class="stat hero-stat">
+      <p class="eyebrow">
+        Balance after <span id="yearsEcho">{years}</span> years
+      </p>
+      <p class="stat-fig num" id="fvFig">{invest.balance}</p>
+      <p class="stat-note" id="fvNote">{invest.balanceNote}</p>
+    </div>
+    <div class="stat">
+      <p class="eyebrow">Of which is growth</p>
+      <p class="stat-fig num" id="growthFig">{invest.growth}</p>
+      <p class="stat-note" id="growthNote">{invest.growthNote}</p>
+    </div>
+  </div>
+
+  <div class="cmp">
+    <p class="eyebrow eyebrow-y cmp-eyebrow" id="cmpHeading">{invest.heading}</p>
+    <div id="cmpBody" set:html={invest.comparison} />
+    <p class="hint cmp-note" id="chartNote">{invest.chartNote}</p>
+  </div>
+</section>

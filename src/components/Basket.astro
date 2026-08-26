@@ -1,0 +1,15 @@
+---
+interface Props {
+  cards: string;
+}
+
+const { cards } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section two</p>
+    <h2>What one year of it buys</h2>
+  </div>
+  <div class="buy-grid" id="buyGrid" set:html={cards} />
+</section>

@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "State income tax rates and median home values",
+  "type": "object",
+  "required": ["meta", "states"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "states": {
+      "type": "array",
+      "minItems": 1,
+      "description": "The first entry is the national row. The site uses it as the default.",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "incomeTaxRatePct", "medianHomeValue"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Z]{2}$" },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Plain name. The Zillow updater matches on this."
+          },
+          "selectLabel": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Optional override for the text in the state picker."
+          },
+          "isNational": { "type": "boolean" },
+          "incomeTaxRatePct": { "type": "number", "minimum": 0, "maximum": 20 },
+          "medianHomeValue": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  }
+}

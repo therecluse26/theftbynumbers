@@ -1,0 +1,28 @@
+---
+interface Props {
+  rows: string;
+}
+
+const { rows } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section one</p>
+    <h2>Line by line</h2>
+  </div>
+  <table class="ledger">
+    <thead>
+      <tr>
+        <th scope="col" class="c-box">On your W-2</th>
+        <th scope="col">Line item</th>
+        <th scope="col">Amount</th>
+      </tr>
+    </thead>
+    <tbody id="ledgerBody" set:html={rows} />
+  </table>
+  <p class="hint" style="margin-top:14px;max-width:62ch">
+    Box numbers refer to the real form. Anything marked otherwise never appears on
+    a W-2 at all, which is part of why it goes unnoticed.
+  </p>
+</section>

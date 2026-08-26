@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Editorial assumptions and control ranges",
+  "type": "object",
+  "required": ["meta", "salesTax", "investment", "horizon", "income", "stateRateSlider"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "salesTax": {
+      "type": "object",
+      "required": ["spendShare", "combinedRate"],
+      "additionalProperties": false,
+      "properties": {
+        "spendShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "combinedRate": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "investment": {
+      "type": "object",
+      "required": [
+        "defaultAnnualReturnPct",
+        "minAnnualReturnPct",
+        "maxAnnualReturnPct",
+        "stepAnnualReturnPct"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "defaultAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "minAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "maxAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "stepAnnualReturnPct": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "horizon": {
+      "type": "object",
+      "required": ["defaultYears", "minYears", "maxYears"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultYears": { "type": "integer", "minimum": 1 },
+        "minYears": { "type": "integer", "minimum": 1 },
+        "maxYears": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "income": {
+      "type": "object",
+      "required": ["defaultIncome", "maxIncome"],
+      "additionalProperties": false,
+      "properties": {
+        "defaultIncome": { "type": "number", "minimum": 0 },
+        "maxIncome": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "stateRateSlider": {
+      "type": "object",
+      "required": ["minPct", "maxPct", "stepPct"],
+      "additionalProperties": false,
+      "properties": {
+        "minPct": { "type": "number", "minimum": 0 },
+        "maxPct": { "type": "number", "exclusiveMinimum": 0 },
+        "stepPct": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    }
+  }
+}

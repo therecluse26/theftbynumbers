@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Data file provenance",
+  "description": "Every data file carries a meta block. It says where each number came from, when it was last refreshed, and whether a machine or a human refreshes it.",
+  "type": "object",
+  "required": ["updatedAt", "fields"],
+  "additionalProperties": false,
+  "properties": {
+    "updatedAt": {
+      "$ref": "#/definitions/date",
+      "description": "The day any field in this file last changed."
+    },
+    "fields": {
+      "type": "object",
+      "description": "One entry per field, keyed by dotted path. Use \"*\" when the whole file moves together.",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/definitions/field" }
+    }
+  },
+  "definitions": {
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "field": {
+      "type": "object",
+      "required": ["updateMode", "label", "url", "maxAgeDays", "updatedAt"],
+      "additionalProperties": false,
+      "properties": {
+        "updateMode": {
+          "enum": ["fetch", "manual"],
+          "description": "fetch: an updater in scripts/sources can refresh it. manual: a person must."
+        },
+        "updater": {
+          "type": "string",
+          "description": "Name of the updater in scripts/sources. Required when updateMode is fetch."
+        },
+        "label": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" },
+        "maxAgeDays": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "After this many days the field counts as stale. The check command fails on stale fields."
+        },
+        "updatedAt": {
+          "$ref": "#/definitions/date",
+          "description": "The day this field was last confirmed against its source. A fetch that finds no change still moves this date."
+        },
+        "note": { "type": "string" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "updateMode": { "const": "fetch" } },
+            "required": ["updateMode"]
+          },
+          "then": { "required": ["updater"] }
+        }
+      ]
+    }
+  }
+}
