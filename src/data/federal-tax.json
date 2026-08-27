@@ -13,7 +13,7 @@
       },
       "payroll.socialSecurity.wageBase": {
         "updateMode": "manual",
-        "label": "",
+        "label": "SSA, contribution and benefit base",
         "url": "https://www.ssa.gov/oact/cola/cbb.html",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",

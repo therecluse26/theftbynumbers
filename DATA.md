@@ -200,8 +200,12 @@ field carries the number.
 
 There used to be a `share` kind: the reader's tax as a percentage of a national
 lump sum. It printed figures like `0.0000041%`, which tells a reader nothing.
-`household` replaced it. If a lump sum was never funded by tax at all, such as
-property seized under civil forfeiture, it is a `fact` and no arithmetic applies.
+`household` replaced it. If a figure is not a sum of money at all, such as a count
+of failed audits or a markup, it is a `fact` and no arithmetic applies.
+
+There used to be a `forfeiture` card, on civil asset forfeiture. It was removed on
+27 August 2026. The money was never tax money, so no share of it belonged on a tax
+receipt, and the card had to open by saying so.
 
 A `computed` card names a function in `src/lib/render.ts`. Add the case there and
 the value to the enum in `schemas/receipt.schema.json` together.

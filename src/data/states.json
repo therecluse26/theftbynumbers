@@ -13,7 +13,7 @@
       },
       "propertyTaxRatePct": {
         "updateMode": "manual",
-        "label": "",
+        "label": "Tax Foundation, property taxes paid as a share of home value",
         "url": "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",

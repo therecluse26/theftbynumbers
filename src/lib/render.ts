@@ -1359,9 +1359,7 @@ export function salesTaxHint(): string {
     pct(ASSUMPTIONS.salesTax.spendShare, 0) +
     ' of take-home spent on taxable goods at a ' +
     pct(ASSUMPTIONS.salesTax.combinedRate, 1) +
-    ' combined rate.' +
-    sourceLink(ASSUMPTIONS.meta.fields['salesTax.combinedRate']) +
-    sourceLink(ASSUMPTIONS.meta.fields['salesTax.spendShare'])
+    ' combined rate.'
   );
 }
 
@@ -1375,8 +1373,7 @@ export function propertyTaxHint(inputs: Inputs): string {
     usd(row.medianHomeValue) +
     ' median home in ' +
     row.name +
-    '. It never ends, and owning the house outright does not stop it.' +
-    sourceLink(STATES_DATA.meta.fields['propertyTaxRatePct'])
+    '. It never ends, and owning the house outright does not stop it.'
   );
 }
 
@@ -1389,7 +1386,6 @@ export function employerHint(): string {
     "what you cost — so it's counted against your full compensation, not your salary. " +
     'The Social Security half stops at the wage base, so above ' +
     usd(TAX.payroll.socialSecurity.wageBase) +
-    ' the rate on your whole wage is lower. The ledger row shows your own.' +
-    sourceLink(TAX.meta.fields['payroll.socialSecurity.wageBase'])
+    ' the rate on your whole wage is lower. The ledger row shows your own.'
   );
 }

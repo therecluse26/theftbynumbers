@@ -1,14 +1,14 @@
 {
   "$schema": "../../schemas/receipt.schema.json",
   "meta": {
-    "updatedAt": "2026-08-26",
+    "updatedAt": "2026-08-27",
     "fields": {
       "annualCost": {
         "updateMode": "manual",
         "label": "Yearly federal costs, from the published accounts",
         "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government",
         "maxAgeDays": 400,
-        "updatedAt": "2026-08-26",
+        "updatedAt": "2026-08-27",
         "note": "Re-sample after each fiscal year closes. Each item carries its own source. The federal-spending card must equal totalOutlays in outlays.json; validation enforces it."
       },
       "price": {
@@ -24,7 +24,7 @@
         "label": "Lump sums, counted once and still running",
         "url": "https://costsofwar.watson.brown.edu/costs",
         "maxAgeDays": 400,
-        "updatedAt": "2026-08-26",
+        "updatedAt": "2026-08-27",
         "note": "These are cumulative totals, not yearly rates. They only grow. The site divides them across every US household."
       },
       "households": {
@@ -48,6 +48,21 @@
       "id": "waste",
       "title": "Pissed away",
       "lede": "This is money that bought nothing at all."
+    },
+    {
+      "id": "fraud",
+      "title": "Stolen outright",
+      "lede": "Not wasted. Taken. Every figure here comes from the government's own investigators."
+    },
+    {
+      "id": "unaccounted",
+      "title": "Nobody can say where it went",
+      "lede": "The money left. The receipts cannot be produced, and in most cases nobody was held to account."
+    },
+    {
+      "id": "prices",
+      "title": "Prices only a government pays",
+      "lede": "One thing, bought once, at a price no buyer spending their own money would agree to."
     },
     {
       "id": "name",
@@ -110,8 +125,68 @@
       }
     },
     {
-      "id": "ui-fraud",
+      "id": "empty-offices",
       "group": "waste",
+      "kind": "fact",
+      "figure": "17 of 24",
+      "label": "federal agencies used a quarter or less of their headquarters",
+      "note": "GAO measured real attendance against building capacity over three weeks in 2023. You pay the lease, the heat and the light on the empty desks.",
+      "source": {
+        "label": "GAO-23-107060, Federal Real Property",
+        "url": "https://www.gao.gov/products/gao-23-107060"
+      }
+    },
+    {
+      "id": "year-end-spree",
+      "group": "waste",
+      "kind": "fact",
+      "figure": "4.9×",
+      "label": "the spending rate in the last week of the year, before the budget expires",
+      "note": "An agency loses whatever it has not spent by 30 September, so it spends it. Two economists tracked the quality of $130 billion of federal IT projects. The ones bought in that last week were 2.2 to 5.6 times more likely to score below the middle of the pack.",
+      "source": {
+        "label": "Liebman and Mahoney, American Economic Review, 2017",
+        "url": "https://www.aeaweb.org/articles?id=10.1257/aer.20131296"
+      }
+    },
+    {
+      "id": "duplication",
+      "group": "waste",
+      "kind": "fact",
+      "figure": "$100bn+",
+      "label": "still on the table from duplicate and overlapping programmes",
+      "note": "GAO has published a list of them every year since 2011. Acting on the earlier lists has already saved $725 billion. This much is left, named and costed, waiting for a Congress that wants it.",
+      "source": {
+        "label": "GAO, 2025 duplication and cost savings report",
+        "url": "https://www.gao.gov/press-release/gao-recommendations-led-725-billion-financial-benefits-new-duplication-cost-savings-report-shows-potential-100-billion"
+      }
+    },
+    {
+      "id": "fraud-estimate",
+      "group": "fraud",
+      "kind": "duration",
+      "annualCost": 233000000000,
+      "label": "of the money stolen from the government every year",
+      "note": "GAO made the first government-wide estimate of fraud in 2024, on 2018 to 2022 data. The answer was $233 billion to $521 billion a year: three to seven cents of every federal dollar. This card uses the low end.",
+      "source": {
+        "label": "GAO-24-105833, Fraud Risk Management",
+        "url": "https://www.gao.gov/products/gao-24-105833"
+      }
+    },
+    {
+      "id": "pandemic-loans",
+      "group": "fraud",
+      "kind": "household",
+      "total": 200000000000,
+      "label": "your household's share of the pandemic business loans that went to fraudsters",
+      "note": "The Small Business Administration's own inspector general puts more than $200 billion of COVID business loans in the hands of potentially fraudulent actors. That is at least 17 cents of every dollar those programmes paid out. About $30 billion has been seized or returned.",
+      "source": {
+        "label": "SBA OIG 23-09, COVID-19 Pandemic EIDL and PPP Loan Fraud Landscape",
+        "url": "https://www.sba.gov/document/report-23-09-covid-19-pandemic-eidl-ppp-loan-fraud-landscape"
+      }
+    },
+    {
+      "id": "ui-fraud",
+      "group": "fraud",
       "kind": "household",
       "total": 100000000000,
       "label": "your household's share of the unemployment money that was simply stolen",
@@ -122,15 +197,87 @@
       }
     },
     {
-      "id": "empty-offices",
-      "group": "waste",
+      "id": "pentagon-audit",
+      "group": "unaccounted",
       "kind": "fact",
-      "figure": "17 of 24",
-      "label": "federal agencies used a quarter or less of their headquarters",
-      "note": "GAO measured real attendance against building capacity over three weeks in 2023. You pay the lease, the heat and the light on the empty desks.",
+      "figure": "8 of 8",
+      "label": "audits the Pentagon has failed, out of every one it has ever taken",
+      "note": "Congress ordered an annual audit from 2018. The Department of Defense has never passed one, and it is the only one of the 24 major agencies that never has. The 2025 audit covered $4.65 trillion of assets and found 26 material weaknesses. The department now says it will pass by 2028.",
       "source": {
-        "label": "GAO-23-107060, Federal Real Property",
-        "url": "https://www.gao.gov/products/gao-23-107060"
+        "label": "CRS IF12627, Defense Primer: FY2025 Department of Defense Audit Results",
+        "url": "https://www.congress.gov/crs-product/IF12627"
+      }
+    },
+    {
+      "id": "afghan-waste",
+      "group": "unaccounted",
+      "kind": "household",
+      "total": 26000000000,
+      "label": "your household's share of what was wasted rebuilding Afghanistan",
+      "note": "The Afghanistan watchdog shut for good on 31 January 2026. Its final report counted 1,327 instances of waste, fraud and abuse, and at least $26 billion lost, out of $148.21 billion appropriated.",
+      "source": {
+        "label": "SIGAR, Final Report, December 2025 (archived)",
+        "url": "https://web.archive.org/web/20260121091143/https://www.sigar.mil/Portals/147/Files/Reports/sigar-final-report.pdf"
+      }
+    },
+    {
+      "id": "afghan-equipment",
+      "group": "unaccounted",
+      "kind": "household",
+      "total": 7100000000,
+      "label": "your household's share of the equipment handed to the Taliban",
+      "note": "About $7.1 billion of equipment bought for the Afghan forces was left behind in August 2021: rifles, night vision, armoured vehicles, aircraft. The same watchdog says it now forms the core of the Taliban's security apparatus.",
+      "source": {
+        "label": "SIGAR, Final Report, December 2025 (archived)",
+        "url": "https://web.archive.org/web/20260121091143/https://www.sigar.mil/Portals/147/Files/Reports/sigar-final-report.pdf"
+      }
+    },
+    {
+      "id": "soap-dispenser",
+      "group": "prices",
+      "kind": "fact",
+      "figure": "7,943%",
+      "label": "the markup Boeing charged the Air Force on one soap dispenser",
+      "note": "The Pentagon's inspector general checked the price of 46 spare parts for the C-17 transport aircraft. Twelve were overpriced. The lavatory soap dispenser alone cost the Air Force $149,072 more than a fair price.",
+      "source": {
+        "label": "DODIG-2025-009, audit of C-17 spare parts pricing",
+        "url": "https://media.defense.gov/2024/Nov/06/2003579070/-1/-1/1/DODIG-2025-009%20SECURE.PDF"
+      }
+    },
+    {
+      "id": "gas-station",
+      "group": "prices",
+      "kind": "fact",
+      "figure": "$42.7m",
+      "label": "for one filling station in Afghanistan that should have cost $500,000",
+      "note": "A Pentagon task force built a compressed natural gas station at Sheberghan between 2011 and 2014. The same station in Pakistan costs no more than $500,000. Overheads alone came to $30 million. The Department of Defense told the auditor it could not explain the cost.",
+      "source": {
+        "label": "SIGAR-16-2-SP, DoD's Compressed Natural Gas Filling Station in Afghanistan (archived)",
+        "url": "https://web.archive.org/web/20211031085901/https://www.sigar.mil/pdf/special%20projects/SIGAR-16-2-SP.pdf"
+      }
+    },
+    {
+      "id": "g222",
+      "group": "prices",
+      "kind": "fact",
+      "figure": "$40,257",
+      "label": "what 16 cargo planes that cost $549 million sold for as scrap",
+      "note": "The Air Force bought 20 Italian G222 transports for the Afghan Air Force in 2008. They were unreliable, and Afghan pilots called them unsafe. Sixteen were sold for scrap in 2014, at about six cents a pound. Nobody was held to account.",
+      "source": {
+        "label": "SIGAR 21-21-SP, G222 Aircraft Program in Afghanistan",
+        "url": "https://apps.dtic.mil/sti/pdfs/AD1149071.pdf"
+      }
+    },
+    {
+      "id": "sls-launch",
+      "group": "prices",
+      "kind": "fact",
+      "figure": "$4.1bn",
+      "label": "for one launch of the Space Launch System rocket, a price NASA's own auditor calls unsustainable",
+      "note": "NASA's inspector general priced each of the first four Artemis launches at $4.1 billion: the rocket, the capsule and the ground operations together. He used the word unsustainable to Congress. Nothing is recovered. Every launch destroys the rocket.",
+      "source": {
+        "label": "NASA OIG, testimony to the House Subcommittee on Space and Aeronautics",
+        "url": "https://oig.nasa.gov/wp-content/uploads/2024/02/CT-2022-01.pdf"
       }
     },
     {
@@ -186,15 +333,27 @@
       }
     },
     {
-      "id": "forfeiture",
+      "id": "f35-program",
+      "group": "name",
+      "kind": "household",
+      "total": 2000000000000,
+      "label": "your household's share of the F-35 programme, from drawing board to scrapyard",
+      "note": "GAO now puts the lifetime cost above $2 trillion, up from $1.7 trillion, while the plan is to fly the fleet less than before. About $442 billion buys the aircraft. The other $1.6 trillion keeps them flying to 2088.",
+      "source": {
+        "label": "GAO, The F-35 Will Now Exceed $2 Trillion",
+        "url": "https://www.gao.gov/blog/f-35-will-now-exceed-2-trillion-military-plans-fly-it-less"
+      }
+    },
+    {
+      "id": "civilians-bombed",
       "group": "name",
       "kind": "fact",
-      "figure": "$68.8bn",
-      "label": "of property taken by police since 2000, mostly from people never charged",
-      "note": "Not your tax money, so there is no share of it to work out. It is your neighbours' cars, cash and houses. Under civil forfeiture the owner need never be convicted of anything.",
+      "figure": "3 to 7",
+      "label": "civilians killed by US airstrikes every day, on average, for twenty years",
+      "note": "Airwars counted the strikes and the local casualty reports in Afghanistan, Iraq, Syria, Yemen, Somalia, Pakistan and Libya, from 2001 to 2021. It puts civilian deaths from US actions between 22,679 and 48,308. Spread over the 7,305 days of those twenty years, that is three to seven people a day, every day. The US military flew at least 91,340 airstrikes in that time.",
       "source": {
-        "label": "Institute for Justice, Policing for Profit",
-        "url": "https://ij.org/report/policing-for-profit-4/"
+        "label": "Airwars, twenty-year assessment of US civilian harm",
+        "url": "https://airwars.org/tens-of-thousands-of-civilians-likely-killed-by-us-in-forever-wars/"
       }
     },
     {
