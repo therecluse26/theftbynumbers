@@ -140,13 +140,15 @@ sentence agreeing with the spending. The slice argued the other side's case, on
 this page, in the government's favour, ten times over.
 
 **A note names the job, then what that job costs now against what it cost
-before.** Both halves, every slice. The second half comes from a publisher who
-is not Treasury, so the slice's `source` is a list. What is on the page now:
+before.** Both halves, every slice, in about forty words. The second half comes
+from a publisher who is not Treasury, so the slice's `source` is a list. Keep
+these short: ten slice notes and ten cards below them is already a lot of prose,
+and a note nobody finishes argues nothing. What is on the page now:
 
 | Slice | The cost case | Publisher |
 | --- | --- | --- |
 | Health | Individual premiums rose 105% in the four years after the ACA took effect | HHS ASPE, CMS |
-| Social Security | $25.1tn short over 75 years, $2.5tn worse in one report | SSA Trustees |
+| Social Security | $25.1tn short over 75 years; the fund empties in 2034 | SSA Trustees |
 | Treasury, most of it interest | On either interest figure, it now costs more than the whole military slice | Its own table |
 | The military | Never audited; $49.3bn of weapon-program cost growth in one year | GAO-25-107569 |
 | Veterans | 2.6% of federal spending in 2000, 4.4% in 2017, after inflation | CBO |

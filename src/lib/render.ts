@@ -733,8 +733,8 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       ', from Treasury’s closed accounts. "Yours" is your ' +
       usd(taxOverYears) +
       ' of federal tax, split the same way. The last column is that slice, priced ' +
-      'in your own working life. Every slice also says what that money buys now ' +
-      'against what it bought before, and names the publisher of both figures.' +
+      'in your own working life. Each slice also says what that money buys now ' +
+      'against what it bought before.' +
       sourceLink(OUTLAYS.meta.fields['totalOutlays']),
   };
 }

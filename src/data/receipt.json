@@ -71,7 +71,7 @@
     {
       "id": "good",
       "title": "The defense they always make",
-      "lede": "The programs people name first when they defend the tax: the pension, the health care, the schools. Here is what the people who run them publish about them, and what each one costs now against what it cost before."
+      "lede": "The pension, the health care, the schools. The programs people name first when they defend the tax, priced by the people who run them."
     }
   ],
   "items": [
@@ -410,7 +410,7 @@
       "kind": "fact",
       "figure": "105%",
       "label": "the rise in individual health premiums in the four years after the Affordable Care Act took effect",
-      "note": "This is HHS's own accounting, not a critic's. Its policy office compared 2013 premiums with 2017 exchange premiums in the 39 states on healthcare.gov. The average went from $2,784 a year to $5,712. In 62% of those states the premium at least doubled. Alabama rose 222%. New Jersey, the mildest, rose 12%. The law was sold as a way to bring the price down.",
+      "note": "HHS's own accounting, not a critic's. Across the 39 states on healthcare.gov the average premium went from $2,784 a year in 2013 to $5,712 in 2017. In 62% of them it at least doubled. The law was sold as a way to bring the price down.",
       "source": {
         "label": "HHS ASPE, Individual Market Premium Changes 2013-2017",
         "url": "https://aspe.hhs.gov/sites/default/files/private/pdf/256751/IndividualMarketPremiumChanges.pdf"
@@ -422,7 +422,7 @@
       "kind": "fact",
       "figure": "$26,993",
       "label": "the yearly premium on family health cover through an employer",
-      "note": "KFF has run the same survey since 1999. The family premium rose 6% in 2025 alone and 24% over five years, ahead of both wages and inflation. Your employer pays most of it, out of money that would otherwise be your wage, so it never appears on your payslip and never appears on this page's tax total either. It is the largest bill you never see.",
+      "note": "Up 6% in 2025 alone and 24% over five years, ahead of both wages and inflation. Your employer pays most of it out of money that would otherwise be your wage, so it never reaches your payslip. It is the largest bill you never see.",
       "source": {
         "label": "KFF, 2025 Employer Health Benefits Survey",
         "url": "https://www.kff.org/health-costs/2025-employer-health-benefits-survey/"
@@ -434,7 +434,7 @@
       "kind": "fact",
       "figure": "18.0%",
       "label": "of the entire US economy now goes on health care",
-      "note": "CMS's own actuaries put national health spending at $5.3 trillion in 2024, or $15,474 for every person in the country. It grew 7.2% that year against 5.3% for the economy, so the share climbed from 17.6% to 18.0% in twelve months. Medicare and Medicaid together pay for more of that bill than private insurance does. This is the market the tax built.",
+      "note": "CMS's own actuaries put the bill at $5.3 trillion in 2024, $15,474 for every person in the country. It grew 7.2% that year against 5.3% for the economy. Medicare and Medicaid together pay for more of it than private insurance does. This is the market the tax built.",
       "source": {
         "label": "CMS, National Health Expenditures 2024 Highlights",
         "url": "https://www.cms.gov/files/document/highlights.pdf"
@@ -446,7 +446,7 @@
       "kind": "fact",
       "figure": "$94bn",
       "label": "of Medicare and Medicaid payments the government itself calls improper, in one year",
-      "note": "CMS published the 2025 rates: $28.8 billion in Medicare fee-for-service, $23.7 billion in Medicare Advantage, $4.2 billion in Part D and $37.4 billion in Medicaid. That is half of the $186 billion government-wide figure above, from two programs. It is not counted twice on this page; it is the largest part of that same card, named. Every dollar of it was collected from someone.",
+      "note": "CMS published the 2025 rates itself: $28.8bn in Medicare fee-for-service, $23.7bn in Medicare Advantage, $4.2bn in Part D, $37.4bn in Medicaid. Half of the government-wide $186 billion above, out of two programs. This is that card's largest part, not a second charge.",
       "source": {
         "label": "CMS, Fiscal Year 2025 improper payments fact sheet",
         "url": "https://www.cms.gov/newsroom/fact-sheets/fiscal-year-2025-improper-payments-fact-sheet"
@@ -458,7 +458,7 @@
       "kind": "fact",
       "figure": "2033",
       "label": "the year Medicare's hospital fund runs dry and payments are cut by law",
-      "note": "The 2025 trustees moved the date three years closer in a single report. From 2033 the fund's income covers 89% of the cost of the care already promised. The other 11% is cut automatically, and the trustees expect that gap to widen for at least a decade after. This is the second fund on this page with a published expiry date.",
+      "note": "The 2025 trustees moved the date three years closer in a single report. From 2033 income covers 89% of the care already promised. The other 11% is cut automatically, and the gap widens after. This is the second fund on this page with an expiry date.",
       "source": {
         "label": "Medicare and Social Security Trustees Report summary",
         "url": "https://www.ssa.gov/oact/trsum/"
@@ -470,7 +470,7 @@
       "kind": "fact",
       "figure": "1970s",
       "label": "the decade whose test scores today's 17-year-olds still have not beaten",
-      "note": "NAEP has run the same long-term trend test since 1971. In 2012, the last year it was given to 17-year-olds, their reading and mathematics scores were not measurably different from the early 1970s. Real spending per public school pupil has more than doubled over the same period. Twice the money, the same result, and no refund.",
+      "note": "NAEP has run the same test since 1971. In 2012, the last year 17-year-olds sat it, their reading and mathematics scores were no better than in the early 1970s. Real spending per pupil more than doubled over the same years. Twice the money, the same result.",
       "source": [
         {
           "label": "NCES Fast Facts, long-term trends in reading and mathematics achievement",
@@ -488,7 +488,7 @@
       "kind": "fact",
       "figure": "60 cents",
       "label": "of every extra dollar of subsidized student loan went straight onto the tuition bill",
-      "note": "Three economists at the Federal Reserve Bank of New York measured what colleges did when Congress raised the loan caps. Sixty cents in the dollar came back as higher tuition, and the effect was strongest at the dearest programs. Help with the price raised the price. Section two prices a year of college on this page; that is the figure this policy moved.",
+      "note": "Three Federal Reserve Bank of New York economists measured what colleges did when Congress raised the loan caps. Sixty cents in the dollar came back as higher tuition, strongest at the dearest programs. Help with the price raised the price.",
       "source": {
         "label": "Federal Reserve Bank of New York, Staff Report 733, Credit Supply and the Rise in College Tuition",
         "url": "https://www.newyorkfed.org/research/staff_reports/sr733.html"
