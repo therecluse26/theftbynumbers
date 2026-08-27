@@ -26,7 +26,7 @@ const INK = '#0B0B0A';
 const BONE = '#EDEAE3';
 const YELLOW = '#FFD400';
 
-/* Legend swatches. The grey segment needs none; it is named in its own bar. */
+/* Legend swatches. The gray segment needs none; it is named in its own bar. */
 const CMP_TAX = '#FFD400';
 const CMP_GROWTH = '#A38512';
 
@@ -118,7 +118,7 @@ export function emptyHeroText(inputs: Inputs): HeroText {
 /* ---------- arcs ---------- */
 
 /*
- * Both the dial and the donut are arcs on a circle centred on the origin.
+ * Both the dial and the donut are arcs on a circle centered on the origin.
  * The trigonometry lives here once. Degrees run clockwise from twelve o'clock.
  */
 
@@ -133,7 +133,7 @@ function arc(
   a0: number,
   a1: number,
   width: number,
-  colour: string,
+  color: string,
   attrs = '',
 ): string {
   const p0 = point(radius, a0);
@@ -155,7 +155,7 @@ function arc(
     ' ' +
     p1[1] +
     '" fill="none" stroke="' +
-    colour +
+    color +
     '" stroke-width="' +
     width +
     '" stroke-linecap="butt"' +
@@ -259,7 +259,7 @@ export function ribbon(r: Breakdown): RibbonRender {
 
   const total = r.base || 1;
   let html = '';
-  for (const [name, box, amount, background, colour] of parts) {
+  for (const [name, box, amount, background, color] of parts) {
     if (amount <= 0) continue;
     const share = amount / total;
     html +=
@@ -270,7 +270,7 @@ export function ribbon(r: Breakdown): RibbonRender {
       ';flex-basis:0;background:' +
       background +
       ';color:' +
-      colour +
+      color +
       '">' +
       '<span class="sb-box">' +
       box +
@@ -575,7 +575,7 @@ export function lifeCost(r: Breakdown, inputs: Inputs): LifeCost {
  * One step per slice, brightest first. Same yellow-to-dark ramp as the ribbon,
  * extended so ten slices stay apart. No hue that is not already on the page.
  */
-const SLICE_COLOURS = [
+const SLICE_COLORS = [
   '#FFD400',
   '#EFC504',
   '#E0B905',
@@ -613,11 +613,14 @@ export const DONUT_ANCHOR_R = DONUT_RADIUS + DONUT_LIT_WIDTH / 2;
  *
  * The slices come from Treasury's closed accounts and add up to the year's total
  * outlays; validation refuses a file where they do not. The reader's own share of
- * a slice is their tax times that slice's share of the whole.
+ * a slice is their federal tax times that slice's share of the whole.
+ *
+ * Federal tax, not the whole bill. These are federal accounts, so a Californian's
+ * state tax has no business enlarging their slice of one.
  */
 export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
   const total = OUTLAYS.totalOutlays || 1;
-  const taxOverYears = r.total * inputs.years;
+  const taxOverYears = r.federalTotal * inputs.years;
 
   const RADIUS = DONUT_RADIUS;
   const WIDTH = DONUT_WIDTH;
@@ -629,7 +632,7 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
   OUTLAYS.categories.forEach((category, index) => {
     const share = category.amount / total;
     const sweep = share * 360;
-    const colour = SLICE_COLOURS[index % SLICE_COLOURS.length]!;
+    const color = SLICE_COLORS[index % SLICE_COLORS.length]!;
 
     // The pair of hooks that ties one slice to one legend row: which category
     // it is, and the angle a connector should leave the ring at.
@@ -652,7 +655,7 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
           ' r="' +
           RADIUS +
           '" fill="none" stroke="' +
-          colour +
+          color +
           '" stroke-width="' +
           WIDTH +
           '"/>';
@@ -662,7 +665,7 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
           angle,
           angle + sweep,
           WIDTH,
-          colour,
+          color,
           'class="dn-slice" ' + hooks,
         );
       }
@@ -670,14 +673,18 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
     angle += sweep;
 
     const yours = taxOverYears * share;
-    const monthsOfLife = r.effectiveRate * inputs.years * share * 12;
+    // The same numerator as the column beside it. Using effectiveRate here would
+    // price the months off the whole bill while "Yours" prices the dollars off
+    // the federal part, and the two columns would describe one slice two ways.
+    const federalRate = r.base > 0 ? r.federalTotal / r.base : 0;
+    const monthsOfLife = federalRate * inputs.years * share * 12;
 
     legend +=
       '<div class="dn-row" tabindex="0" ' +
       hooks +
       '>' +
       '<i class="dn-dot" style="background:' +
-      colour +
+      color +
       '"></i>' +
       '<span class="dn-name">' +
       escapeHtml(category.name) +
@@ -725,7 +732,8 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       OUTLAYS.fiscalYear +
       ', from Treasury’s closed accounts. "Yours" is your ' +
       usd(taxOverYears) +
-      ' split the same way. The last column is that slice, priced in your own working life.' +
+      ' of federal tax, split the same way. The last column is that slice, priced ' +
+      'in your own working life.' +
       sourceLink(OUTLAYS.meta.fields['totalOutlays']),
   };
 }
@@ -742,13 +750,14 @@ const SECONDS_IN_YEAR = 31_557_600;
  * cards therefore meant different things by the same word, and half of them
  * barely moved when the reader changed their income.
  *
- * The denominator is federal outlays, while `r.total` counts state, sales and
- * property tax too. That overstates the reader's federal contribution a little.
- * The donut legend and the roads card have always worked this way; this keeps
- * one arithmetic across the page rather than adding a second.
+ * Both halves must describe the same government. This used to divide `r.total`,
+ * which counts state, sales and property tax, by federal outlays. A Californian
+ * with all three boxes ticked saw every figure in sections three and six 53% too
+ * high, because $12,123 a year that never left the state was being credited
+ * against Washington's spending. `federalTotal` is the honest numerator.
  */
 function federalDollarShare(r: Breakdown): number {
-  return OUTLAYS.totalOutlays > 0 ? r.total / OUTLAYS.totalOutlays : 0;
+  return OUTLAYS.totalOutlays > 0 ? r.federalTotal / OUTLAYS.totalOutlays : 0;
 }
 
 /** One receipt card. The kind decides which field carries the number. */
@@ -778,19 +787,27 @@ function receiptCard(
   if (item.kind === 'yearly') {
     // A yearly national cost, run for as long as the reader works. The years
     // slider belongs here: twenty years of work fund twenty years of the waste.
+    //
+    // The sub-line has to carry the horizon. Without it the card reads "$10,884"
+    // under a label ending "every year", and a reader takes the figure for a
+    // yearly one when it is twenty years of $544.
     const yours = federalDollarShare(r) * item.annualCost! * inputs.years;
+    const costShare = item.annualCost! / OUTLAYS.totalOutlays;
+    const yearWord = inputs.years + ' ' + plural(inputs.years, 'year');
     return card(
       'rc',
       usd(yours),
       '',
-      usdShort(item.annualCost!) + ' a year',
+      usdShort(item.annualCost!) + ' a year, over your ' + yearWord,
       item.label!,
       note +
-        ' Your share is the part of every federal dollar you pay, over your ' +
-        inputs.years +
-        ' ' +
-        plural(inputs.years, 'year') +
-        '.',
+        ' That is ' +
+        pct(costShare) +
+        ' of all federal spending. The same ' +
+        pct(costShare) +
+        ' of your own federal tax, over ' +
+        yearWord +
+        ', is the figure above.',
       item.source,
     );
   }
@@ -818,18 +835,27 @@ function receiptCard(
     // The lump is measured against a single year of current outlays, so a bill
     // run up when the government was smaller reads low. The notes section says
     // so. The trailing sentence names the horizon rather than hiding it.
+    //
+    // duration() prints that horizon, never toFixed(1). Four of these bills are
+    // under a twentieth of a year, and one decimal turned every one of them into
+    // "0.0 years of all federal spending" — the same nothing-figure that got the
+    // old `share` kind deleted for printing "0.0000041%".
     const yours = federalDollarShare(r) * item.total!;
-    const yearsOfSpending = item.total! / OUTLAYS.totalOutlays;
+    const spendingTime = duration(
+      (item.total! / OUTLAYS.totalOutlays) * SECONDS_IN_YEAR,
+    );
     return card(
       'rc',
       usd(yours),
       '',
-      usdShort(item.total!) + ' in total',
+      usdShort(item.total!) + ' once, at your rate',
       item.label!,
       note +
-        ' Your share is the part of every federal dollar you pay. This bill is ' +
-        yearsOfSpending.toFixed(1) +
-        ' years of all federal spending.',
+        ' This bill is ' +
+        spendingTime +
+        ' of all federal spending, so it costs you ' +
+        spendingTime +
+        ' of your own federal tax.',
       item.source,
     );
   }
@@ -895,7 +921,8 @@ function receiptCard(
  * reader bought a thing; the notes section carries the same warning.
  */
 export function receiptHtml(r: Breakdown, inputs: Inputs): string {
-  const taxOverYears = r.total * inputs.years;
+  // Federal tax, not the whole bill. Every card here divides a federal figure.
+  const taxOverYears = r.federalTotal * inputs.years;
 
   let html = '';
   for (const group of RECEIPT.groups) {
@@ -921,16 +948,39 @@ export function receiptHtml(r: Breakdown, inputs: Inputs): string {
   return html;
 }
 
-/** The lede above the receipt. It names the sum every card divides. */
+/**
+ * The lede above the receipt. It names the sum every card divides.
+ *
+ * That sum is the federal part of the bill, which is smaller than the hero
+ * figure whenever the reader picks a state or ticks a box. Say both numbers when
+ * they differ, or the reader meets a total here that contradicts the one at the
+ * top of the page. Say one when they are equal; printing a figure twice reads
+ * as a mistake.
+ */
 export function receiptLede(r: Breakdown, inputs: Inputs): string {
+  const federal = usd(r.federalTotal * inputs.years);
+  const span = inputs.years + ' ' + plural(inputs.years, 'year');
+
+  if (r.total - r.federalTotal < 1) {
+    return (
+      'Over ' +
+      span +
+      ' you hand over ' +
+      federal +
+      ' in federal tax. Every figure below is your share of a national total, ' +
+      'not a purchase in your name.'
+    );
+  }
+
   return (
     'Over ' +
-    inputs.years +
-    ' ' +
-    plural(inputs.years, 'year') +
+    span +
     ' you hand over ' +
     usd(r.total * inputs.years) +
-    '. Every figure below is your share of a national total, not a purchase in your name.'
+    ' in tax. ' +
+    federal +
+    ' of it reaches Washington, and that is the sum every figure below divides. ' +
+    'Each one is your share of a national total, not a purchase in your name.'
   );
 }
 
@@ -1179,7 +1229,7 @@ function lockedTier(item: ResolvedLadderItem, balance: number): string {
   );
 }
 
-/** Locked rungs shown per group. Past this it is a wall of grey, not an argument. */
+/** Locked rungs shown per group. Past this it is a wall of gray, not an argument. */
 const LOCKED_PER_GROUP = 2;
 
 /**
@@ -1286,7 +1336,7 @@ function federalSecondsSentence(balance: number): string {
 /* ---------- but what about the roads? ---------- */
 
 /**
- * The transport slice of federal spending, as a share of the whole.
+ * The transportation slice of federal spending, as a share of the whole.
  *
  * This is the first answer section six gives, and the hardest one to argue
  * with. It comes from outlays.json, never from a number typed here, so the
@@ -1338,12 +1388,17 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
     );
   }
 
-  // Reader: the transport share of this reader's own tax, over their own years.
+  // Reader: the transportation share of this reader's own tax, over their own years.
   // The same slice the donut already shows them, lifted out and set alone under
   // the question it answers. Read the compute name; do not assume one exists.
   if (item.compute !== 'roads-share') return '';
 
-  const share = r.total * inputs.years * transportShare();
+  // Federal tax, like every other share on this page. The transportation slice is a
+  // federal account, so state and local tax cannot enlarge the reader's part of
+  // it. This card understates the road bill for a different reason, named in the
+  // notes: most roads are built and kept by states and counties, not Washington.
+  const federalOverYears = r.federalTotal * inputs.years;
+  const share = federalOverYears * transportShare();
   // No sub-line. The transport-share card sits directly above this one and its
   // note already states the national figure, so a second copy of it here would
   // print one number twice, in two roundings, on one screen.
@@ -1358,11 +1413,11 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
       ' ' +
       plural(inputs.years, 'year') +
       ' you hand over ' +
-      usd(r.total * inputs.years) +
-      '. At the transport share, ' +
+      usd(federalOverYears) +
+      ' in federal tax. At the transportation share, ' +
       usd(share) +
       ' of it is the roads answer. The other ' +
-      usd(r.total * inputs.years - share) +
+      usd(federalOverYears - share) +
       ' is everything else. ' +
       item.note,
     item.source,

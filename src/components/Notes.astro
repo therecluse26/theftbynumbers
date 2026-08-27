@@ -34,7 +34,9 @@ const incidence = {
     </li>
     <li>
       <b>State tax is approximated</b> as a flat rate on gross income. Most states use
-      brackets and their own deductions, so treat this figure as a ballpark.{' '}
+      brackets and their own deductions, so treat this figure as a ballpark. Until you
+      pick a state, the page charges the median state rate, not zero. Pick your own
+      state to replace it.{' '}
       <a href={stateRates.url} target="_blank" rel="noopener noreferrer">
         {stateRates.label}
       </a>
@@ -63,11 +65,14 @@ const incidence = {
     <li>
       <b>A cumulative bill is priced against a single year of spending.</b> Every
       figure in section three divides by the same thing: the part of every federal
-      dollar you pay this year. That works cleanly for a yearly cost. It reads low
-      on an old bill. The wars since 2001 ran up $8tn over twenty-five years, when
-      the government spent far less each year than it does now, so measuring your
-      share against today's larger outlays shrinks it. The error runs one way. Your
-      real share of those bills is larger than the card says, not smaller.
+      dollar you pay this year. The two Afghanistan cards and the war card read low
+      because of it. Those bills were run up over two decades, when the government
+      spent far less each year than it does now, so measuring them against today's
+      larger outlays shrinks your share. Your real share of those three is larger
+      than the card says, not smaller. The other lump cards are not affected the
+      same way: the equipment left behind was a single month in 2021, the two
+      pandemic frauds fell in years whose outlays were close to today's, and the
+      F-35 total runs to 2088, so most of it has not been spent yet.
     </li>
     <li>
       <b>The Social Security card counts both halves of the payroll tax</b> &mdash; yours
@@ -97,13 +102,15 @@ const incidence = {
       </a>
     </li>
     <li>
-      <b>Your tax bill is wider than the spending it is divided into.</b> The bill above
-      counts federal, state and local tax together. Sections three and six divide it into
-      federal spending only, because Treasury publishes those accounts and no single
-      ledger adds up all fifty states. So a Californian's state tax is set against a
-      federal total here. It makes your share of each federal line look larger than it is.
-      Section six understates the road bill for the same reason: most roads are built and
-      maintained by states and counties, not by Washington.
+      <b>Sections three and six divide your federal tax only.</b> The bill at the top of
+      this page counts federal, state and local tax together. These two sections divide
+      federal spending, because Treasury publishes those accounts and no single ledger
+      adds up all fifty states. So they use the federal part of your bill: income tax,
+      both payroll taxes, and the employer's half when you count it. Your state, sales
+      and property tax is real money and it is in the total above, but it funded no
+      federal outlay and does not enlarge your share of one. Section six still understates
+      the road bill: most roads are built and maintained by states and counties, not by
+      Washington, and that spending is outside these accounts entirely.
     </li>
     <li>
       <b>Property tax is charged on the median home in the state you picked</b>, not on

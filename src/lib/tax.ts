@@ -59,6 +59,11 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
   const employmentTax = employeeTax + employerShare;
   const total = employmentTax + salesTax + propertyTax;
 
+  // The part of the bill that reaches Washington. State, sales and property tax
+  // are deliberately absent: they fund no federal outlay, so they cannot enlarge
+  // the reader's share of one. Sections three and six divide this, never total.
+  const federalTotal = federal + ss + med + employerShare;
+
   return {
     wage,
     base,
@@ -72,6 +77,7 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
     propertyTax,
     employeeTax,
     employmentTax,
+    federalTotal,
     total,
     // Sales tax comes out of this later. It is not withheld, so it does not
     // change what the paycheck nets.
@@ -120,6 +126,15 @@ export function investmentSeries(
   return out;
 }
 
+/**
+ * The opening state, before the reader touches a control.
+ *
+ * State index 0 is the national row. It carries the median state rate, not a
+ * zero, so a reader who never opens the picker is charged what a typical state
+ * charges. Sales and property tax start on for the same reason: both are owed
+ * in almost every state, so leaving them off opens on a bill that is too low.
+ * The employer's share starts off, because it never passes through the wage.
+ */
 export function defaultInputs(): Inputs {
   return {
     income: ASSUMPTIONS.income.defaultIncome,
@@ -129,8 +144,8 @@ export function defaultInputs(): Inputs {
     years: ASSUMPTIONS.horizon.defaultYears,
     returnPct: ASSUMPTIONS.investment.defaultAnnualReturnPct,
     countEmployerShare: false,
-    countSalesTax: false,
-    countPropertyTax: false,
+    countSalesTax: true,
+    countPropertyTax: true,
   };
 }
 

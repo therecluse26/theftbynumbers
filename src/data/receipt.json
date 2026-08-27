@@ -62,8 +62,8 @@
     },
     {
       "id": "good",
-      "title": "The defence they always make",
-      "lede": "The programmes people name first when they defend the tax. Here is what the people who run them publish about them."
+      "title": "The defense they always make",
+      "lede": "The programs people name first when they defend the tax. Here is what the people who run them publish about them."
     }
   ],
   "items": [
@@ -109,7 +109,7 @@
       "kind": "yearly",
       "annualCost": 186000000000,
       "label": "your share of the payments the government admits were wrong",
-      "note": "Fifteen agencies reported $186 billion of improper payments in 2025, across 64 programmes. The running total since 2003 is about $3 trillion.",
+      "note": "Fifteen agencies reported $186 billion of improper payments in 2025, across 64 programs. The running total since 2003 is about $3 trillion.",
       "source": {
         "label": "GAO-26-108694, Payment Integrity",
         "url": "https://www.gao.gov/products/gao-26-108694"
@@ -144,7 +144,7 @@
       "group": "waste",
       "kind": "fact",
       "figure": "$100bn+",
-      "label": "still on the table from duplicate and overlapping programmes",
+      "label": "still on the table from duplicate and overlapping programs",
       "note": "GAO has published a list of them every year since 2011. Acting on the earlier lists has already saved $725 billion. This much is left, named and costed, waiting for a Congress that wants it.",
       "source": {
         "label": "GAO, 2025 duplication and cost savings report",
@@ -169,7 +169,7 @@
       "kind": "lump",
       "total": 200000000000,
       "label": "your share of the pandemic business loans that went to fraudsters",
-      "note": "The Small Business Administration's own inspector general puts more than $200 billion of COVID business loans in the hands of potentially fraudulent actors. That is at least 17 cents of every dollar those programmes paid out. About $30 billion has been seized or returned.",
+      "note": "The Small Business Administration's own inspector general puts more than $200 billion of COVID business loans in the hands of potentially fraudulent actors. That is at least 17 cents of every dollar those programs paid out. About $30 billion has been seized or returned.",
       "source": {
         "label": "SBA OIG 23-09, COVID-19 Pandemic EIDL and PPP Loan Fraud Landscape",
         "url": "https://www.sba.gov/document/report-23-09-covid-19-pandemic-eidl-ppp-loan-fraud-landscape"
@@ -217,7 +217,7 @@
       "kind": "lump",
       "total": 7100000000,
       "label": "your share of the equipment handed to the Taliban",
-      "note": "About $7.1 billion of equipment bought for the Afghan forces was left behind in August 2021: rifles, night vision, armoured vehicles, aircraft. The same watchdog says it now forms the core of the Taliban's security apparatus.",
+      "note": "About $7.1 billion of equipment bought for the Afghan forces was left behind in August 2021: rifles, night vision, armored vehicles, aircraft. The same watchdog says it now forms the core of the Taliban's security apparatus.",
       "source": {
         "label": "SIGAR, Final Report, December 2025 (archived)",
         "url": "https://web.archive.org/web/20260121091143/https://www.sigar.mil/Portals/147/Files/Reports/sigar-final-report.pdf"
@@ -328,7 +328,7 @@
       "group": "name",
       "kind": "lump",
       "total": 2000000000000,
-      "label": "your share of the F-35 programme, from drawing board to scrapyard",
+      "label": "your share of the F-35 program, from drawing board to scrapyard",
       "note": "GAO now puts the lifetime cost above $2 trillion, up from $1.7 trillion, while the plan is to fly the fleet less than before. About $442 billion buys the aircraft. The other $1.6 trillion keeps them flying to 2088.",
       "source": {
         "label": "GAO, The F-35 Will Now Exceed $2 Trillion",

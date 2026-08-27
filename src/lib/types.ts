@@ -160,7 +160,7 @@ export interface LadderData {
  *
  * `lump` replaces `household` in turn. A flat split barely moved when the reader
  * changed their income, so half the receipt sat still while the other half
- * responded, and two neighbouring cards meant two different things by "your
+ * responded, and two neighboring cards meant two different things by "your
  * share". Every money card now divides by the same thing: the part of every
  * federal dollar this reader pays. See federalDollarShare() in render.ts.
  *
@@ -254,7 +254,7 @@ export interface CharityData {
  * The first version of this section had only `multiple`. That shape could not
  * hold the strongest answers to the question, which are not price comparisons
  * at all: that private companies built America's first roads, that Swedes still
- * maintain two thirds of theirs, and that transport is under two cents of the
+ * maintain two thirds of theirs, and that transportation is under two cents of the
  * federal dollar. Those are `record` cards now.
  */
 export type RoadsKind = 'multiple' | 'record' | 'reader';
@@ -366,6 +366,20 @@ export interface Breakdown {
    * your employer never pays it.
    */
   employmentTax: number;
+  /**
+   * Every tax on this page that reaches Washington: federal income tax, both
+   * payroll taxes, and the employer's half when that box is on.
+   *
+   * Not `federal`, which is income tax alone. Not `total`, which adds state,
+   * sales and property tax. Sections three and six divide federal spending, so
+   * this is the only honest numerator for them: a Californian's state tax
+   * funded no federal outlay and must not enlarge their share of one.
+   *
+   * `total` stays the numerator for the hero, the ledger, the basket, the
+   * invest chart and the ladder. Those describe the reader's whole bill and
+   * make no claim about where the money went.
+   */
+  federalTotal: number;
   total: number;
   /** What the paycheck nets: wage less withholdings. Sales tax is spent later. */
   takeHomePay: number;

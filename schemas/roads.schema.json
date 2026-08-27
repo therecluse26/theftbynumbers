@@ -81,7 +81,7 @@
           "publicPrice": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "description": "Multiple cards only. Dollars the state pays for one unit. Record the year in the note; a programme cost moves when the plan is revised, not on a schedule."
+            "description": "Multiple cards only. Dollars the state pays for one unit. Record the year in the note; a program cost moves when the plan is revised, not on a schedule."
           },
           "privatePrice": {
             "type": "number",

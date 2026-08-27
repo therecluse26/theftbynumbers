@@ -215,23 +215,44 @@ that: every one of their notes opens with `{price}`.
 ### One definition of "your share"
 
 `federalDollarShare()` in `src/lib/render.ts` is the part of every federal dollar
-this reader pays: their tax over `outlays.totalOutlays`. Every money card divides
-by it, so every figure on the receipt moves when the reader moves a slider.
+this reader pays: `breakdown.federalTotal` over `outlays.totalOutlays`. Every
+money card divides by it, so every figure on the receipt moves when the reader
+moves a slider.
 
 - A **yearly** cost is multiplied by the years slider as well. Twenty years of
   work fund twenty years of that waste.
 - A **lump** is counted once. The years slider must never multiply it. Nobody
   pays for the Afghanistan war twenty times.
 
-The denominator is federal outlays, while the reader's total counts state, sales
-and property tax too. That overstates their federal contribution a little. The
-donut legend and the roads card have always worked this way, so this is one
-arithmetic across the page rather than a second one.
+**Both halves must describe the same government.** `federalTotal` is federal
+income tax, both payroll taxes, and the employer's half when that box is on. It
+is not `federal`, which is income tax alone, and it is not `total`, which adds
+state, sales and property tax.
+
+This once divided `total` by federal outlays. A Californian at $85,000 with all
+three **Also count** boxes ticked saw every figure in sections three and six 53%
+too high, because $12,123 a year that never left the state was credited against
+Washington's spending. Under the old defaults the two numerators were equal, so
+the fault was invisible until the reader touched a control. The defaults now
+open with state, sales and property tax in `total`, so the two numerators differ
+from the first paint. Keep them apart.
+
+`total` stays the numerator everywhere that describes the whole bill and claims
+nothing about federal spending: the hero, the ribbon, the ledger, section two,
+`lifeCost`, section four and the ladder. Do not unify them.
 
 **A lump is measured against a single year of current outlays.** $8tn of war was
 run up over twenty-five years, when the government spent far less each year than
-$7.01tn. Dividing by today's larger figure therefore reads an old bill low. The
-notes section says so on the page. Do not adjust it quietly.
+$7.01tn. Dividing by today's larger figure therefore reads an old bill low. It
+bites on `afghan-waste`, `afghan-equipment` and `war-on-terror` only; the
+pandemic lumps fell in years close to today's outlays, and the F-35 total runs
+to 2088. The notes section says so on the page. Do not adjust it quietly.
+
+**Print a lump's horizon with `duration()`, never `toFixed()`.** Four of these
+bills are under a twentieth of a year. One decimal made every one of them read
+"0.0 years of all federal spending", which is the same nothing-figure that got
+the old `share` kind deleted. `duration()` gives 10 days, 5.2 days, 1.4 days and
+8.9 hours instead.
 
 ### The history of this
 
@@ -242,7 +263,7 @@ households and printing plain dollars.
 
 `lump` replaces `household` in turn, and the top-level `households` count is gone
 with it. The flat split barely moved when the reader changed their income, so half
-the receipt responded to the sliders and half sat still. Worse, two neighbouring
+the receipt responded to the sliders and half sat still. Worse, two neighboring
 cards meant different things by "your share": one the reader's own tax, one a flat
 national split. No reader could rank them against each other.
 
@@ -288,7 +309,7 @@ field carries the number.
 The first version of this section had only `multiple`. That shape could not hold
 the strongest answers to the question, because they are not price comparisons at
 all: private companies built America's first roads, Swedes still maintain two
-thirds of theirs, and transport is under two cents of the federal dollar. Those
+thirds of theirs, and transportation is under two cents of the federal dollar. Those
 are `record` cards.
 
 ```json
@@ -320,7 +341,7 @@ same job. Same statute. Same unit. Same buyer. Same beat. Same year.
 If you cannot write that sentence, you do not have a card. Find a narrower unit
 where the jobs really are identical, or drop it. That is how per-kilogram-to-orbit
 became per-astronaut-carried, and how cost-per-police-officer became the price of
-one hour of contracted patrol in one Houston neighbourhood.
+one hour of contracted patrol in one Houston neighborhood.
 
 `sameness` says what makes the sides **alike**. The `note` is where the remaining
 differences go. Both are still required.
@@ -337,7 +358,7 @@ Break any of them and `npm run build` refuses.
    only checkable if the reader can see the two numbers it came from.
 4. **A kind carries only its own fields.** A price on a `record` card is a number
    the reader can see no way to reach.
-5. **The section lede must use `{transportShare}`.** It prints the transport
+5. **The section lede must use `{transportShare}`.** It prints the transportation
    slice of `outlays.json`. Lose the token and the section opens by conceding.
 6. **Every group an item names must exist.**
 
@@ -367,8 +388,8 @@ each side. A reader who disbelieves this section will go and check.
   | Central Park Conservancy | The city owns the land and funds the rest under contract. A partnership, not a market |
   | Interstate cost overrun, as a ratio | $27bn in 1955 dollars over $114bn spent through 1991. Different dollars. The card now quotes the 16-year schedule slip, which needs no adjustment |
 
-  There is no clean **military** defence comparison in this section. Airport
-  screening and neighbourhood patrol are security, not defence. Do not stretch
+  There is no clean **military** defense comparison in this section. Airport
+  screening and neighborhood patrol are security, not defense. Do not stretch
   one to cover the other.
 
 `transportShare()` in `render.ts` reads `outlays.json`, never a number typed in
@@ -387,7 +408,8 @@ wrong. The label carries the wording; the code only prints the number.
 
 `states.json` carries `propertyTaxRatePct`, the state's effective rate on
 owner-occupied housing. The third **Also count** box charges it against the
-median home in the chosen state. It is off by default, like the other two.
+median home in the chosen state. It is on by default, as is the sales tax box.
+Only the employer's share starts off, because it never passes through the wage.
 
 It earns its place because it is the one tax on the page that never ends. The
 `home-owned` rung used to say *"Nobody takes it for a missed payment."* That is
@@ -398,6 +420,22 @@ house if it goes unpaid. Do not restore the old sentence.
 The source publishes no national figure, so the US row carries the median of the
 fifty-one published rates. That under-weights the populous high-rate states, so
 the national default is the mild end of the range. Say so if you quote it.
+
+### The national row
+
+`states.json` opens with the US row and the page defaults to it. That row is a
+stand-in for "no state picked", so every rate on it must describe a typical
+state. `incomeTaxRatePct` therefore carries the median of the fifty-one
+published rates, 4.4%, by the same rule `propertyTaxRatePct` already used. It
+was 0% before, which charged a reader who never opened the picker no state tax
+at all and read the whole bill low.
+
+The median, not the mean. Nine states levy no income tax, which drags the mean
+down to 3.84% and describes none of the fifty-one. The mode is 0% for the same
+reason, so it is useless here.
+
+Both medians are computed by hand and typed in. If you change a state's income
+tax or property tax rate, recompute the US row. Nothing checks it for you.
 
 ## What the scheduled job will do
 

@@ -19,7 +19,7 @@
       "title": "For someone else",
       "lede": "None of this is a thing you own. Every price here is worked out by an outside evaluator.",
       "includesCharity": true,
-      "footnote": "These are modelled averages from GiveWell, not price tags. A cost per life saved carries a wide band, and GiveWell expects every one of these figures to rise over time. GiveDirectly, which simply hands cash to people in extreme poverty, reports that about 89 cents of each dollar reaches the recipient.",
+      "footnote": "These are modeled averages from GiveWell, not price tags. A cost per life saved carries a wide band, and GiveWell expects every one of these figures to rise over time. GiveDirectly, which simply hands cash to people in extreme poverty, reports that about 89 cents of each dollar reaches the recipient.",
       "footnoteSource": {
         "label": "GiveDirectly, financials",
         "url": "https://www.givedirectly.org/financials"
@@ -147,7 +147,7 @@
       "singularInState": "Median home in {state}, owned outright",
       "pluralInState": "Median homes in {state}, owned outright",
       "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 1 },
-      "note": "{price}, Zillow median value. No mortgage, no lender, no instalments left. The property tax still arrives every year, and the county sells the house if you stop paying it. You buy the building outright. You rent the ground from the state for as long as you live.",
+      "note": "{price}, Zillow median value. No mortgage, no lender, no installments left. The property tax still arrives every year, and the county sells the house if you stop paying it. You buy the building outright. You rent the ground from the state for as long as you live.",
       "source": {
         "label": "Tyler v. Hennepin County, 598 U.S. 631 (2023)",
         "url": "https://supreme.justia.com/cases/federal/us/598/22-166/"

@@ -17,7 +17,7 @@
     "categories": {
       "type": "array",
       "minItems": 2,
-      "description": "Rendered in this order, largest first. The order also picks each slice's colour.",
+      "description": "Rendered in this order, largest first. The order also picks each slice's color.",
       "items": {
         "type": "object",
         "required": ["id", "name", "amount", "note"],

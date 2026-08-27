@@ -9,7 +9,7 @@
         "url": "https://oig.nasa.gov/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "Each item carries its own source. Prefer an inspector general, an auditor, or the agency's own published plan over a news report. A programme cost moves when the plan is revised, not on a schedule, so record the year in the note."
+        "note": "Each item carries its own source. Prefer an inspector general, an auditor, or the agency's own published plan over a news report. A program cost moves when the plan is revised, not on a schedule, so record the year in the note."
       },
       "privatePrice": {
         "updateMode": "manual",
@@ -45,7 +45,7 @@
     {
       "id": "commons",
       "title": "Who keeps the commons",
-      "lede": "Roads, parks, lighting, drainage and rubbish. The shared things nobody owns alone, which is meant to be the hardest case of all."
+      "lede": "Roads, parks, lighting, drainage and trash. The shared things nobody owns alone, which is meant to be the hardest case of all."
     },
     {
       "id": "guard",
@@ -76,8 +76,8 @@
       "group": "bill",
       "kind": "reader",
       "compute": "roads-share",
-      "label": "of everything you hand over, at the transport share",
-      "note": "This is the transport slice of the donut above, pulled out and set on its own. It is what the roads answer is actually worth as a defence of the rest of the bill.",
+      "label": "of everything you hand over, at the transportation share",
+      "note": "This is the transportation slice of the donut above, pulled out and set on its own. It is what the roads answer is actually worth as a defense of the rest of the bill.",
       "source": {
         "label": "Monthly Treasury Statement, table 5, FY2025",
         "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
@@ -101,7 +101,7 @@
       "kind": "record",
       "figure": "284,000 km",
       "label": "of Sweden's roads are private, against 98,000 km run by the state",
-      "note": "Around 60,000 private road associations own and maintain roughly two thirds of the Swedish road network. Neighbours organise, levy their own dues and hire the work. Some take a state subsidy in return for public access; most do not. This is not history. It is how Sweden runs today.",
+      "note": "Around 60,000 private road associations own and maintain roughly two thirds of the Swedish road network. Neighbors organize, levy their own dues and hire the work. Some take a state subsidy in return for public access; most do not. This is not history. It is how Sweden runs today.",
       "source": {
         "label": "Trafikverket, enskilda vägar",
         "url": "https://www.trafikverket.se/resa-och-trafik/vag/enskilda-vagar/"
@@ -113,7 +113,7 @@
       "kind": "record",
       "figure": "16 years",
       "label": "late, on the road network people name first when they defend the tax",
-      "note": "In 1955 the Bureau of Public Roads told Congress the Interstate system would cost $27 billion and open by 1975. The last stretch opened in 1991. This is not a market comparison and is not filed as one. It is the government's own promise against its own outcome. The card quotes the schedule, not a cost ratio, and the reason matters: the $27 billion was quoted in 1955 dollars and the $114 billion finally spent was counted as it was spent, through 1991. Those are not the same dollars, so dividing one by the other would overstate the overrun. The dates need no such adjustment. Both figures come from the FHWA's own history of the programme.",
+      "note": "In 1955 the Bureau of Public Roads told Congress the Interstate system would cost $27 billion and open by 1975. The last stretch opened in 1991. This is not a market comparison and is not filed as one. It is the government's own promise against its own outcome. The card quotes the schedule, not a cost ratio, and the reason matters: the $27 billion was quoted in 1955 dollars and the $114 billion finally spent was counted as it was spent, through 1991. Those are not the same dollars, so dividing one by the other would overstate the overrun. The dates need no such adjustment. Both figures come from the FHWA's own history of the program.",
       "source": {
         "label": "FHWA highway history, Target: $27 Billion, and the system as built",
         "url": "https://www.fhwa.dot.gov/infrastructure/target.cfm"
@@ -149,7 +149,7 @@
       "kind": "multiple",
       "publicPrice": 40,
       "privatePrice": 24,
-      "label": "as much, per hour of contracted neighbourhood patrol",
+      "label": "as much, per hour of contracted neighborhood patrol",
       "sameness": "One buyer, one beat, one job: the Sharpstown Civic Association in Houston pays for patrol of the same 7,000 homes, and in 2012 it changed supplier on price.",
       "note": "Harris County constables charged the association about {public} an hour. SEAL Security charged about {private} an hour, and the association got more officers on the street for less money. PolitiFact checked this and threw out the viral version: Sharpstown never fired a police force, and Houston police still answer its 911 calls. This is the fact-checked remainder, which is the only part worth quoting.",
       "publicSource": {
@@ -198,7 +198,7 @@
       "publicPrice": 586.41,
       "privatePrice": 369.44,
       "label": "as much, per hour of instrument-rules air traffic control",
-      "sameness": "The identical job on the identical unit: keeping aircraft apart under instrument rules, costed per flight hour, in two neighbouring countries whose controllers hand traffic to each other every day.",
+      "sameness": "The identical job on the identical unit: keeping aircraft apart under instrument rules, costed per flight hour, in two neighboring countries whose controllers hand traffic to each other every day.",
       "note": "Canada took air traffic control out of government hands in 1996. In 2022 NAV CANADA ran it at {private} a flight hour against the FAA's {public}, and it did so with a lower loss-of-separation rate: cheaper and safer on the measure that matters most. NAV CANADA is a non-profit owned by the people who use it rather than a company seeking a return, so this is the mildest version of the argument. It is also the largest test of it, being a whole country thirty years in.",
       "publicSource": {
         "label": "Federal Aviation Administration, Air Traffic Organization",

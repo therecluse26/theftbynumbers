@@ -9,7 +9,7 @@
         "url": "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "The IRS publishes one revenue procedure per tax year, usually in the autumn. Update taxYear, brackets, standardDeduction and payroll together."
+        "note": "The IRS publishes one revenue procedure per tax year, usually in the fall. Update taxYear, brackets, standardDeduction and payroll together."
       },
       "payroll.socialSecurity.wageBase": {
         "updateMode": "manual",

@@ -229,14 +229,14 @@ export function semanticErrors(entry, data) {
       }
     }
 
-    // The lede promises the reader the size of the transport bill before it
+    // The lede promises the reader the size of the transportation bill before it
     // asks who else could do the job. Lose the token and the section opens by
     // conceding the argument.
     if (!data.lede.includes('{transportShare}')) {
       errors.push('lede does not use {transportShare}; open with the size of the bill');
     }
 
-    // The lede computes the transport share from outlays.json. The card beside
+    // The lede computes the transportation share from outlays.json. The card beside
     // it types the same share as a string. Two copies of one number drift the
     // moment somebody refreshes the Treasury figures, and then the section
     // opens with one percentage and repeats a different one two lines down.

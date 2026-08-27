@@ -9,7 +9,7 @@
         "url": "https://taxfoundation.org/data/all/state/state-income-tax-rates/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
-        "note": "A flat approximation. Graduated states use the top rate a typical wage earner reaches, not the top bracket."
+        "note": "A flat approximation. Graduated states use the top rate a typical wage earner reaches, not the top bracket. The source publishes no national figure, so the US row carries the median of the fifty-one published rates, the same rule the property tax rate uses. The mean is 3.84%, but nine states levy no income tax at all, so the mean reads low for the forty-two that do."
       },
       "propertyTaxRatePct": {
         "updateMode": "manual",
@@ -30,7 +30,7 @@
     }
   },
   "states": [
-    { "id": "US", "name": "United States", "selectLabel": "United States (no state income tax assumed)", "isNational": true, "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.79, "medianHomeValue": 408800 },
+    { "id": "US", "name": "United States", "selectLabel": "United States (median state rates)", "isNational": true, "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.79, "medianHomeValue": 408800 },
     { "id": "AL", "name": "Alabama", "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.37, "medianHomeValue": 232106 },
     { "id": "AK", "name": "Alaska", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.94, "medianHomeValue": 380987 },
     { "id": "AZ", "name": "Arizona", "incomeTaxRatePct": 2.5, "propertyTaxRatePct": 0.48, "medianHomeValue": 420906 },
