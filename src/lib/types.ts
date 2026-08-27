@@ -115,6 +115,8 @@ export interface LadderGroup {
   includesCharity?: boolean;
   /** A caveat printed under this group's rungs. */
   footnote?: string;
+  /** The link that substantiates the footnote. Rendered at the end of it. */
+  footnoteSource?: { label: string; url: string };
 }
 
 export interface LadderItem {
@@ -127,6 +129,12 @@ export interface LadderItem {
   price?: number;
   priceFrom?: { ref: PriceRef; multiplier: number };
   note: string;
+  /**
+   * Who published the price, or the claim in the note. A rung with a priceFrom
+   * block takes its price from another file, which carries its own source, so
+   * it needs one here only when the note itself makes a claim.
+   */
+  source?: { label: string; url: string };
 }
 
 export interface LadderData {

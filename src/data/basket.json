@@ -20,7 +20,7 @@
       "plural": "Chipotle burritos",
       "price": 11.5,
       "note": "$11.50 each",
-      "source": { "label": "Chipotle menu, US average", "url": "https://www.chipotle.com/" }
+      "source": { "label": "Chipotle menu, price varies by location", "url": "https://www.chipotle.com/order" }
     },
     {
       "id": "rent-month",
@@ -60,7 +60,7 @@
       "plural": "Used cars, average price",
       "price": 26500,
       "note": "$26,500 each",
-      "source": { "label": "Cox Automotive used vehicle price index", "url": "https://www.coxautoinc.com/market-insights/" }
+      "source": { "label": "Cox Automotive, Q2 2026 Manheim used vehicle value index", "url": "https://www.coxautoinc.com/insights/q2-2026-muvvi/" }
     },
     {
       "id": "home-down-payment",
@@ -100,7 +100,7 @@
       "plural": "Funerals with viewing and burial",
       "price": 9170,
       "note": "$9,170, before the plot",
-      "source": { "label": "National Funeral Directors Association, cost of a funeral", "url": "https://www.nfda.org/news/statistics" }
+      "source": { "label": "NFDA 2023 General Price List Study", "url": "https://content.nfda.org/news/media-center/nfda-news-releases/id/8134/2023-nfda-general-price-list-study-shows-inflation-increasing-faster-than-the-cost-of-a-funeral" }
     },
     {
       "id": "health-premium-year",
@@ -108,7 +108,7 @@
       "plural": "Years of a household's share of health premiums",
       "price": 6850,
       "note": "$6,850 a year",
-      "source": { "label": "KFF Employer Health Benefits Survey", "url": "https://www.kff.org/health-costs/" }
+      "source": { "label": "KFF 2025 Employer Health Benefits Survey", "url": "https://www.kff.org/health-costs/2025-employer-health-benefits-survey/" }
     },
     {
       "id": "wedding",
@@ -116,7 +116,7 @@
       "plural": "Average American weddings",
       "price": 33000,
       "note": "$33,000 each",
-      "source": { "label": "The Knot Real Weddings Study", "url": "https://www.theknot.com/content/wedding-data-insights" }
+      "source": { "label": "The Knot 2026 Real Weddings Study", "url": "https://www.theknotww.com/press-releases/the-knot-worldwide-unveils-2026-real-weddings-study" }
     }
   ]
 }

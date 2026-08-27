@@ -5,7 +5,7 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, TAX, longDate } from './data';
+import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, STATES_DATA, TAX, longDate } from './data';
 import { career, commas, duration, escapeHtml, months, multiple, pct, usd } from './format';
 import { resolveLadderGroups } from './ladder';
 import type { ResolvedLadderItem } from './ladder';
@@ -490,6 +490,7 @@ export function basketHtml(total: number): string {
       unit,
       singular ? item.singular : item.plural,
       item.note.replace('{price}', usd(item.price)),
+      item.source,
     );
   }
   return html;
@@ -662,6 +663,7 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       escapeHtml(category.name) +
       '<span class="dn-note">' +
       escapeHtml(category.note) +
+      sourceLink(category.source) +
       '</span></span>' +
       '<span class="dn-pct num">' +
       pct(share) +
@@ -698,7 +700,8 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       OUTLAYS.fiscalYear +
       ', from Treasury’s closed accounts. "Yours" is your ' +
       usd(taxOverYears) +
-      ' split the same way. The last column is that slice, priced in your own working life.',
+      ' split the same way. The last column is that slice, priced in your own working life.' +
+      sourceLink(OUTLAYS.meta.fields['totalOutlays']),
   };
 }
 
@@ -1017,8 +1020,19 @@ export interface StackRender {
   lede: string;
 }
 
-/** The source link that hangs off a rung's note. Only the giving rungs carry one. */
-function tierSource(source?: { label: string; url: string }): string {
+/**
+ * The source link that hangs off the end of a note, a footnote or a hint.
+ *
+ * A card names its sources through `card()`. Everything else on the page that
+ * makes a claim in prose uses this: a rung, a donut slice, a group footnote and
+ * the checkbox hints. It takes a `{ label, url }`, which is the shape of both a
+ * data item's `source` and a meta block's field provenance, so a hint can link
+ * the same URL the updater fetches from.
+ *
+ * It is declared below its first caller and hoisted. It sits here because it is
+ * a sibling of the ladder renderers that used it first.
+ */
+function sourceLink(source?: { label: string; url: string }): string {
   if (!source) return '';
   return (
     ' <a href="' +
@@ -1055,7 +1069,7 @@ function tier(item: ResolvedLadderItem, count: number): string {
     escapeHtml(count === 1 ? item.singular : item.plural) +
     '<span class="tier-note">' +
     escapeHtml(item.note) +
-    tierSource(item.source) +
+    sourceLink(item.source) +
     '</span></span>' +
     '<span class="tier-price num">' +
     usd(item.price) +
@@ -1075,7 +1089,7 @@ function lockedTier(item: ResolvedLadderItem, balance: number): string {
     escapeHtml(item.singular) +
     '<span class="tier-note">' +
     escapeHtml(item.note) +
-    tierSource(item.source) +
+    sourceLink(item.source) +
     '</span></span>' +
     '<span class="tier-price num">' +
     usd(item.price) +
@@ -1153,7 +1167,10 @@ export function stack(
       rungs +
       '</div>' +
       (group.footnote
-        ? '<p class="hint stack-foot">' + escapeHtml(group.footnote) + '</p>'
+        ? '<p class="hint stack-foot">' +
+          escapeHtml(group.footnote) +
+          sourceLink(group.footnoteSource) +
+          '</p>'
         : '') +
       '</div>';
   }
@@ -1291,6 +1308,19 @@ export function roadsHtml(r: Breakdown, inputs: Inputs): string {
   return html;
 }
 
+/*
+ * The five functions below return HTML, not text.
+ *
+ * Each one states a figure, so each one names where the figure came from. The
+ * link is read out of the meta block of the file the figure lives in, so the
+ * reader is sent to the same page the updater fetches from. Their callers use
+ * set:html, and src/scripts/app.ts sets the donut note with innerHTML.
+ *
+ * Anything interpolated here must already be safe: usd(), pct() and longDate()
+ * emit digits and punctuation, and sourceLink() escapes its own label and URL.
+ * Never drop a raw data string into one of these without escapeHtml().
+ */
+
 /** The footnote under the ladder. Its date comes from the metals file. */
 export function stackFootnote(): string {
   return (
@@ -1302,7 +1332,9 @@ export function stackFootnote(): string {
     ' averages. The home is the median value in the state you picked above. ' +
     'Gold moves daily; this uses spot on ' +
     longDate(METALS.meta.updatedAt) +
-    '.'
+    '.' +
+    sourceLink(STATES_DATA.meta.fields['medianHomeValue']) +
+    sourceLink(METALS.meta.fields['gold.usdPerTroyOz'])
   );
 }
 
@@ -1314,7 +1346,9 @@ export function figuresFootnote(): string {
     usd(TAX.payroll.socialSecurity.wageBase) +
     ' Social Security wage base, and prices sampled from typical ' +
     TAX.taxYear +
-    ' US averages.'
+    ' US averages.' +
+    sourceLink(TAX.meta.fields['*']) +
+    sourceLink(TAX.meta.fields['payroll.socialSecurity.wageBase'])
   );
 }
 
@@ -1325,7 +1359,9 @@ export function salesTaxHint(): string {
     pct(ASSUMPTIONS.salesTax.spendShare, 0) +
     ' of take-home spent on taxable goods at a ' +
     pct(ASSUMPTIONS.salesTax.combinedRate, 1) +
-    ' combined rate.'
+    ' combined rate.' +
+    sourceLink(ASSUMPTIONS.meta.fields['salesTax.combinedRate']) +
+    sourceLink(ASSUMPTIONS.meta.fields['salesTax.spendShare'])
   );
 }
 
@@ -1339,7 +1375,8 @@ export function propertyTaxHint(inputs: Inputs): string {
     usd(row.medianHomeValue) +
     ' median home in ' +
     row.name +
-    '. It never ends, and owning the house outright does not stop it.'
+    '. It never ends, and owning the house outright does not stop it.' +
+    sourceLink(STATES_DATA.meta.fields['propertyTaxRatePct'])
   );
 }
 
@@ -1352,6 +1389,7 @@ export function employerHint(): string {
     "what you cost — so it's counted against your full compensation, not your salary. " +
     'The Social Security half stops at the wage base, so above ' +
     usd(TAX.payroll.socialSecurity.wageBase) +
-    ' the rate on your whole wage is lower. The ledger row shows your own.'
+    ' the rate on your whole wage is lower. The ledger row shows your own.' +
+    sourceLink(TAX.meta.fields['payroll.socialSecurity.wageBase'])
   );
 }

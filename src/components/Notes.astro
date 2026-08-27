@@ -1,6 +1,27 @@
 ---
-import { dataUpdatedAt, longDate } from '../lib/data';
+import { CHARITY, STATES_DATA, TAX, dataUpdatedAt, longDate } from '../lib/data';
 import { figuresFootnote } from '../lib/render';
+
+/*
+ * A note that states a fact carries a link to the page that states it.
+ *
+ * Where the fact is already a number in a data file, the link is read out of
+ * that file's meta block. The note and the figure then cite one page, and a
+ * refresh that moves the source moves both at once.
+ *
+ * Notes 1, 3, 4, 5, 9, 11 and 12 are caveats about the model. They state no
+ * figure, so they take no link.
+ */
+const stateRates = STATES_DATA.meta.fields['incomeTaxRatePct'];
+const propertyRates = STATES_DATA.meta.fields['propertyTaxRatePct'];
+const wageBase = TAX.meta.fields['payroll.socialSecurity.wageBase'];
+const giveWell = CHARITY.meta.fields['price'];
+
+/** Payroll tax incidence. No figure comes from it, so it has no meta entry. */
+const incidence = {
+  label: 'CBO Working Paper 2021-06, payroll tax pass-through',
+  url: 'https://www.cbo.gov/publication/57089',
+};
 ---
 
 <section class="notes">
@@ -13,7 +34,10 @@ import { figuresFootnote } from '../lib/render';
     </li>
     <li>
       <b>State tax is approximated</b> as a flat rate on gross income. Most states use
-      brackets and their own deductions, so treat this figure as a ballpark.
+      brackets and their own deductions, so treat this figure as a ballpark.{' '}
+      <a href={stateRates.url} target="_blank" rel="noopener noreferrer">
+        {stateRates.label}
+      </a>
     </li>
     <li>
       <b>This measures only what left your pocket</b>, not what came back. These taxes
@@ -41,18 +65,27 @@ import { figuresFootnote } from '../lib/render';
       and your employer's &mdash; on the same incidence argument used above. Whether the
       invested figure beats the benefit depends entirely on the years and return you
       pick; over a short run it does not. Your real benefit depends on an earnings
-      history this page never asks for.
+      history this page never asks for.{' '}
+      <a href={wageBase.url} target="_blank" rel="noopener noreferrer">
+        {wageBase.label}
+      </a>
     </li>
     <li>
       <b>Charity figures are estimates, not price tags.</b> A cost per life saved is a
       model with a wide band around it, and GiveWell expects every one of these figures
-      to rise over time. Read the linked analysis before you quote a number.
+      to rise over time. Read the linked analysis before you quote a number.{' '}
+      <a href={giveWell.url} target="_blank" rel="noopener noreferrer">
+        {giveWell.label}
+      </a>
     </li>
     <li>
       <b>The employer's share is counted as your money only if you accept the incidence
       argument</b> &mdash; that absent the tax, the same amount would have reached your
       wage. Most economists do; note that had it been paid to you as salary, income tax
-      would have applied to it too, which this page does not model.
+      would have applied to it too, which this page does not model.{' '}
+      <a href={incidence.url} target="_blank" rel="noopener noreferrer">
+        {incidence.label}
+      </a>
     </li>
     <li>
       <b>Your tax bill is wider than the spending it is divided into.</b> The bill above
@@ -69,7 +102,10 @@ import { figuresFootnote } from '../lib/render';
       housing. If you rent, you still pay it: the landlord owes it and prices it into the
       rent. If you own a cheaper or dearer home than the median, your own bill differs.
       This is the one tax on the page you keep paying after the thing is bought and paid
-      for, which is why it has its own row.
+      for, which is why it has its own row.{' '}
+      <a href={propertyRates.url} target="_blank" rel="noopener noreferrer">
+        {propertyRates.label}
+      </a>
     </li>
     <li>
       <b>Investment returns are not guaranteed.</b> This page assumes a steady annual
@@ -80,7 +116,7 @@ import { figuresFootnote } from '../lib/render';
       <b>Everything is in today's dollars</b> and holds your income flat, which keeps the
       comparison readable but is not how a career usually goes.
     </li>
-    <li><b>Figures used:</b> {figuresFootnote()}</li>
+    <li><b>Figures used:</b> <span set:html={figuresFootnote()} /></li>
     <li>
       <b>Data last refreshed {longDate(dataUpdatedAt())}.</b> Every rate and price on
       this page comes from a JSON file in the repository. Each file records its own

@@ -12,7 +12,8 @@
     "data:validate": "node scripts/validate-data.mjs",
     "data:check": "node scripts/update-data.mjs --check",
     "data:update": "node scripts/update-data.mjs",
-    "data:update:dry": "node scripts/update-data.mjs --dry-run"
+    "data:update:dry": "node scripts/update-data.mjs --dry-run",
+    "data:links": "node scripts/check-links.mjs"
   },
   "dependencies": {
     "astro": "^7.2.7"

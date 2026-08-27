@@ -164,7 +164,9 @@ function update(): void {
   const donut = outlaysDonut(breakdown, inputs);
   dom.donutSvg.innerHTML = donut.svg;
   dom.donutLegend.innerHTML = donut.legend;
-  dom.donutNote.textContent = donut.note;
+  // The note ends in a source link, so it is HTML. render.ts builds it from
+  // escaped data; nothing the reader types reaches it.
+  dom.donutNote.innerHTML = donut.note;
   // Both halves were just replaced. Put the reader's highlight back on them.
   refreshDonutHover();
 
@@ -221,7 +223,8 @@ dom.state.addEventListener('change', function () {
   inputs.stateRatePct = rate;
   dom.stateRate.value = String(rate);
   dom.stateRateVal.textContent = rate.toFixed(1) + '%';
-  dom.propertyHint.textContent = propertyTaxHint(inputs);
+  // Ends in a source link, like the donut note above.
+  dom.propertyHint.innerHTML = propertyTaxHint(inputs);
   update();
 });
 

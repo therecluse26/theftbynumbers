@@ -127,6 +127,9 @@ label,.field-label{
   text-transform:uppercase;color:var(--bone-50);margin-bottom:9px;
 }
 .hint{font-size:12.5px;color:var(--bone-50);margin:9px 0 0;line-height:1.4}
+/* Every footnote, hint and caveat now carries its source as a link. */
+.hint a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.hint a:hover{color:var(--yellow)}
 
 .money-input{display:flex;align-items:center;gap:5px;border-bottom:2px solid var(--yellow);padding-bottom:3px}
 .money-input span{
@@ -274,6 +277,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   display:block;font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   color:var(--bone-50);font-weight:400;margin-top:3px;line-height:1.45;
 }
+.dn-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.dn-note a:hover{color:var(--yellow)}
 .dn-pct,.dn-yours,.dn-life{font-family:var(--mono);font-size:12px;text-align:right}
 .dn-pct{color:var(--bone-50)}
 .dn-yours{color:var(--bone)}
@@ -450,6 +455,9 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 .notes ol{margin:0;padding-left:1.1em;columns:2;column-gap:44px}
 .notes li{font-size:13px;color:var(--bone-70);line-height:1.5;margin-bottom:12px;break-inside:avoid}
 .notes b{font-weight:700;color:var(--bone)}
+/* A note that states a fact ends in the link that substantiates it. */
+.notes a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.notes a:hover{color:var(--yellow)}
 
 .empty{margin:40px 0 60px;padding:36px 24px;border:1px dashed var(--rule-2)}
 .empty p{margin:0;font-size:15px;color:var(--bone-50)}

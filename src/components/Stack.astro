@@ -16,5 +16,9 @@ const { stack } = Astro.props;
   </div>
   <p class="stack-lede" id="stackLede">{stack.lede}</p>
   <div id="stack" set:html={stack.html} />
-  <p class="hint" style="margin-top:14px;max-width:62ch">{stackFootnote()}</p>
+  <p
+    class="hint"
+    style="margin-top:14px;max-width:62ch"
+    set:html={stackFootnote()}
+  />
 </section>

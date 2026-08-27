@@ -69,8 +69,8 @@
       "label": "of all federal spending",
       "note": "Outlays were $7.01 trillion in the 2025 fiscal year, from Treasury's own closed accounts. That is what your life's work bought at the till.",
       "source": {
-        "label": "Monthly Treasury Statement, total outlays, FY2025",
-        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+        "label": "Final Monthly Treasury Statement, FY2025, total outlays",
+        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
       }
     },
     {
@@ -155,8 +155,8 @@
       "plural": "155mm artillery shells",
       "note": "About {price} for a basic high-explosive round, the figure US officials give. A gun crew can fire this many in an afternoon.",
       "source": {
-        "label": "M795 155mm projectile",
-        "url": "https://en.wikipedia.org/wiki/M795"
+        "label": "FY2026 Procurement of Ammunition, Army, justification book",
+        "url": "https://www.asafm.army.mil/Portals/72/Documents/BudgetMaterial/2026/Discretionary%20Budget/Procurement/Procurement%20of%20Ammunition.pdf"
       }
     },
     {

@@ -5,11 +5,19 @@
     "fields": {
       "*": {
         "updateMode": "manual",
-        "label": "IRS annual inflation adjustments (Rev. Proc.)",
-        "url": "https://www.irs.gov/filing/federal-income-tax-rates-and-brackets",
+        "label": "IRS annual inflation adjustments, tax year 2026 (Rev. Proc. 2025-32)",
+        "url": "https://www.irs.gov/newsroom/irs-releases-tax-inflation-adjustments-for-tax-year-2026-including-amendments-from-the-one-big-beautiful-bill",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
         "note": "The IRS publishes one revenue procedure per tax year, usually in the autumn. Update taxYear, brackets, standardDeduction and payroll together."
+      },
+      "payroll.socialSecurity.wageBase": {
+        "updateMode": "manual",
+        "label": "SSA, Social Security contribution and benefit base",
+        "url": "https://www.ssa.gov/oact/cola/cbb.html",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "The wage base is set by the SSA, not the IRS, and is announced with the cost-of-living adjustment each October. The employer-share hint links this page, because that is where the cap the hint names is published."
       }
     }
   },

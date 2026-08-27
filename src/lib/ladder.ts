@@ -10,7 +10,7 @@
  * picked, or at the reader's own take-home. Add a new ref here and in
  * schemas/ladder.schema.json together.
  */
-import { CHARITY, LADDER, METALS, STATES, basketPrice } from './data';
+import { CHARITY, LADDER, METALS, STATES, STATES_DATA, basketPrice, basketSource } from './data';
 import { usd } from './format';
 import type { LadderGroup, LadderItem, PriceRef } from './types';
 
@@ -46,6 +46,37 @@ function priceFromRef(
     case 'reader.annualTakeHome':
       return annualTakeHome;
   }
+}
+
+/**
+ * Where the price of a `priceFrom` rung was published.
+ *
+ * The rung does not own its price, so it must not own its source either: it
+ * cites whatever the file it prices from cites. Change the basket's college
+ * source and the degree rung follows on the next build, with no second edit.
+ *
+ * A rung priced from the reader's own take-home has no source and never will.
+ * That figure is the reader's own money, and no publisher states it.
+ */
+function sourceFromRef(ref: PriceRef) {
+  switch (ref) {
+    case 'metals.gold.usdPerTroyOz':
+      return METALS.meta.fields['gold.usdPerTroyOz'];
+    case 'state.medianHomeValue':
+      return STATES_DATA.meta.fields['medianHomeValue'];
+    case 'basket.college-year':
+      return basketSource('college-year');
+    case 'basket.childcare-month':
+      return basketSource('childcare-month');
+    case 'reader.annualTakeHome':
+      return undefined;
+  }
+}
+
+/** The rung's own source, or the one it inherits from the file it prices from. */
+function sourceOf(item: LadderItem) {
+  if (item.source) return item.source;
+  return item.priceFrom ? sourceFromRef(item.priceFrom.ref) : undefined;
 }
 
 function priceOf(item: LadderItem, stateIndex: number, annualTakeHome: number): number {
@@ -90,12 +121,12 @@ export function resolveLadder(
       plural,
       price,
       note: item.note.replace('{price}', usd(price)),
+      source: sourceOf(item),
     };
   });
 
   // Charity items are rungs too. They carry no state wording and no priceFrom,
-  // so they need none of the work above. They do carry a source, which the other
-  // rungs do not: a number about saving a life must name who worked it out.
+  // so they need none of the work above.
   if (giving) {
     for (const item of CHARITY.items) {
       rungs.push({

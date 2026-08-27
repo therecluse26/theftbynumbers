@@ -56,6 +56,27 @@ Each file has a schema of the same name in `schemas/`.
 - `updateMode` is `fetch` or `manual`. A `fetch` field must name an `updater`.
 - A field key is a dotted path (`salesTax.spendShare`), a column of a list
   (`medianHomeValue`, across every state), or `*` for the whole file.
+- `url` must be a **deep link**: a page that states the figure. A publisher's
+  front door is not one. The reader sees these URLs now, not only the updater.
+  Several footnotes and hints render the meta `label` and `url` directly.
+
+## Sources
+
+Every claim on the page carries a link. `SOURCES.md` lists all of them, says
+which were checked against the publisher, and names the ones that do not match.
+
+A data item names its own source in a `source` block:
+
+```json
+"source": { "label": "GAO-24-106703, F-35 Sustainment", "url": "https://www.gao.gov/products/gao-24-106703" }
+```
+
+`roads.json` uses `publicSource` and `privateSource`, because one card carries
+two prices from two publishers. A ladder group uses `footnoteSource`.
+
+A rung with a `priceFrom` block takes its price from another file and inherits
+that file's source. Give it a `source` of its own only when its note makes a
+claim the price does not, such as a withdrawal rate.
 
 ## The commands
 
@@ -64,7 +85,13 @@ npm run data:validate     Check every file against its schema and rules
 npm run data:check        Report which fields are stale. Exit 1 if any are
 npm run data:update       Refresh every fetchable field
 npm run data:update:dry   Fetch and report, write nothing
+npm run data:links        Request every URL on the page and report the status
 ```
+
+`data:links` is deliberately **not** part of `npm run build`. A publisher being
+down for an afternoon must never stop a deploy. Run it by hand, or on a
+schedule. It exits 1 on a dead link and 0 on a link that merely refuses a
+script; those are reported apart and need a check in a browser.
 
 More options on the update command:
 

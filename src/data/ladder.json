@@ -6,7 +6,7 @@
       "price": {
         "updateMode": "manual",
         "label": "2025 and 2026 US average and median costs of living",
-        "url": "https://www.bls.gov/cex/",
+        "url": "https://www.bls.gov/cex/tables.htm",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
         "note": "Items with a priceFrom block take their price from another data file, or from the reader's own take-home. Those need no manual edit."
@@ -19,7 +19,11 @@
       "title": "For someone else",
       "lede": "None of this is a thing you own. Every price here is worked out by an outside evaluator.",
       "includesCharity": true,
-      "footnote": "These are modelled averages from GiveWell, not price tags. A cost per life saved carries a wide band, and GiveWell expects every one of these figures to rise over time. GiveDirectly, which simply hands cash to people in extreme poverty, reports that about 89 cents of each dollar reaches the recipient."
+      "footnote": "These are modelled averages from GiveWell, not price tags. A cost per life saved carries a wide band, and GiveWell expects every one of these figures to rise over time. GiveDirectly, which simply hands cash to people in extreme poverty, reports that about 89 cents of each dollar reaches the recipient.",
+      "footnoteSource": {
+        "label": "GiveDirectly, financials",
+        "url": "https://www.givedirectly.org/financials"
+      }
     },
     {
       "id": "family",
@@ -39,7 +43,11 @@
       "singular": "Scholarship in your name, one student a year, forever",
       "plural": "Scholarships in your name, one student a year, forever",
       "priceFrom": { "ref": "basket.college-year", "multiplier": 25 },
-      "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry."
+      "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry.",
+      "source": {
+        "label": "Bengen, Determining Withdrawal Rates Using Historical Data, 1994",
+        "url": "https://www.financialplanningassociation.org/sites/default/files/2021-04/MAR04%20Determining%20Withdrawal%20Rates%20Using%20Historical%20Data.pdf"
+      }
     },
     {
       "id": "childcare-year",
@@ -63,7 +71,11 @@
       "singular": "Year of a parent's care",
       "plural": "Years of a parent's care",
       "price": 74400,
-      "note": "{price} a year, the national median for assisted living. Somebody in your family will need it."
+      "note": "{price} a year, the national median for assisted living. Somebody in your family will need it.",
+      "source": {
+        "label": "CareScout 2025 Cost of Care Survey",
+        "url": "https://investor.genworth.com/news-events/press-releases/detail/1054/carescout-releases-2025-cost-of-care-survey-results"
+      }
     },
     {
       "id": "child-raised",
@@ -71,7 +83,11 @@
       "singular": "Child raised to eighteen, every cost paid",
       "plural": "Children raised to eighteen, every cost paid",
       "price": 332000,
-      "note": "{price}, the USDA figure carried to today's money. College is on top of it."
+      "note": "{price}, the USDA figure carried to today's money. College is on top of it.",
+      "source": {
+        "label": "USDA, the cost of raising a child ($233,610 in 2015 dollars)",
+        "url": "https://www.usda.gov/about-usda/news/blog/cost-raising-child"
+      }
     },
     {
       "id": "gold-ounce",
@@ -87,7 +103,11 @@
       "singular": "Emergency fund, three months of your pay",
       "plural": "Emergency funds",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 0.25 },
-      "note": "{price}, a quarter of what you keep in a year. Your own expenses may be lower than your pay. Most American households do not have this, and know it."
+      "note": "{price}, a quarter of what you keep in a year. Your own expenses may be lower than your pay. Most American households do not have this, and know it.",
+      "source": {
+        "label": "Federal Reserve, Economic Well-Being of U.S. Households in 2025",
+        "url": "https://www.federalreserve.gov/publications/2026-economic-well-being-of-us-households-in-2025-savings-investments.htm"
+      }
     },
     {
       "id": "used-car-owned",
@@ -95,7 +115,11 @@
       "singular": "Used car, owned outright",
       "plural": "Used cars, owned outright",
       "price": 26500,
-      "note": "{price}, the average used price. No payment, no lender, nothing to repossess."
+      "note": "{price}, the average used price. No payment, no lender, nothing to repossess.",
+      "source": {
+        "label": "Cox Automotive, Q2 2026 Manheim used vehicle value index",
+        "url": "https://www.coxautoinc.com/insights/q2-2026-muvvi/"
+      }
     },
     {
       "id": "year-back",
@@ -123,7 +147,11 @@
       "singularInState": "Median home in {state}, owned outright",
       "pluralInState": "Median homes in {state}, owned outright",
       "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 1 },
-      "note": "{price}, Zillow median value. No mortgage, no lender, no instalments left. The property tax still arrives every year, and the county sells the house if you stop paying it. You buy the building outright. You rent the ground from the state for as long as you live."
+      "note": "{price}, Zillow median value. No mortgage, no lender, no instalments left. The property tax still arrives every year, and the county sells the house if you stop paying it. You buy the building outright. You rent the ground from the state for as long as you live.",
+      "source": {
+        "label": "Tyler v. Hennepin County, 598 U.S. 631 (2023)",
+        "url": "https://supreme.justia.com/cases/federal/us/598/22-166/"
+      }
     },
     {
       "id": "never-work",
@@ -131,7 +159,11 @@
       "singular": "The rest of your life, not working",
       "plural": "Lifetimes of never working again",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 25 },
-      "note": "{price}. Draw a twenty-fifth a year and the pot is expected to outlive you."
+      "note": "{price}. Draw a twenty-fifth a year and the pot is expected to outlive you.",
+      "source": {
+        "label": "Bengen, Determining Withdrawal Rates Using Historical Data, 1994",
+        "url": "https://www.financialplanningassociation.org/sites/default/files/2021-04/MAR04%20Determining%20Withdrawal%20Rates%20Using%20Historical%20Data.pdf"
+      }
     }
   ]
 }

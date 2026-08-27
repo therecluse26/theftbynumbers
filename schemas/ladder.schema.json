@@ -28,6 +28,16 @@
             "type": "string",
             "minLength": 1,
             "description": "Caveat printed under this group's rungs. Use it where the prices need a warning the notes section cannot carry."
+          },
+          "footnoteSource": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "description": "The link that substantiates the footnote. Rendered at the end of it. Point it at the page that states the figure, not at the publisher's front door.",
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
           }
         }
       }
@@ -82,6 +92,16 @@
             "type": "string",
             "minLength": 1,
             "description": "Shown under the label. Supports the {price} token."
+          },
+          "source": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "description": "Who published the price, or the claim in the note. Rendered as a link at the end of the note. A rung with a priceFrom block takes its price from another file, which carries its own source; give it one here only when the note itself makes a claim. Point it at the page that states the figure, not at the publisher's front door.",
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
           }
         }
       }

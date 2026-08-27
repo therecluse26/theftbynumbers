@@ -46,6 +46,11 @@ export function basketPrice(id: string): number {
   return BASKET.items.find((item) => item.id === id)?.price ?? 0;
 }
 
+/** That same item's source, so a rung priced off it can cite the same page. */
+export function basketSource(id: string) {
+  return BASKET.items.find((item) => item.id === id)?.source;
+}
+
 /** The employer pays this share on top of your wage: 6.2% plus 1.45%. */
 export const EMPLOYER_SHARE_RATE =
   TAX.payroll.socialSecurity.rate + TAX.payroll.medicare.rate;

@@ -41,8 +41,6 @@ const invest = investText(breakdown, inputs);
   description="A calculator that shows what one year of US tax costs you, what it would have bought, and what it would be worth if you had invested it instead."
 >
   <Rail />
-  <Hero hero={hero} dial={dialSvg(breakdown.effectiveRate)} />
-  <Ribbon ribbon={ribbon(breakdown)} hero={hero} />
 
   <div class="wrap">
     <Controls inputs={inputs} />
@@ -50,6 +48,12 @@ const invest = investText(breakdown, inputs);
     <div class="empty" id="empty" hidden>
       <p>Enter an income above to see the breakdown.</p>
     </div>
+  </div>
+
+  <Hero hero={hero} dial={dialSvg(breakdown.effectiveRate)} />
+  <Ribbon ribbon={ribbon(breakdown)} hero={hero} />
+
+  <div class="wrap">
 
     <main class="results" id="results">
       <Ledger rows={ledgerHtml(breakdown, inputs)} />

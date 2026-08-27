@@ -50,7 +50,7 @@ const { life, donut, lede, groups } = Astro.props;
          carries the same pairing in text. -->
     <svg id="donutLink" class="dn-link" aria-hidden="true" focusable="false"></svg>
   </div>
-  <p class="hint" id="donutNote" style="max-width:70ch">{donut.note}</p>
+  <p class="hint" id="donutNote" style="max-width:70ch" set:html={donut.note} />
 
   <p class="rc-intro" id="receiptLede">{lede}</p>
   <div id="receiptGroups" set:html={groups} />

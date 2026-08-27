@@ -119,7 +119,14 @@ const { income, investment, horizon, stateRateSlider } = ASSUMPTIONS;
       />
       <p class="hint">
         {investment.defaultAnnualReturnPct}% is roughly the long-run US market
-        average after inflation.
+        average after inflation.{' '}
+        <a
+          href={ASSUMPTIONS.meta.fields['investment.defaultAnnualReturnPct'].url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {ASSUMPTIONS.meta.fields['investment.defaultAnnualReturnPct'].label}
+        </a>
       </p>
     </div>
 
@@ -130,21 +137,21 @@ const { income, investment, horizon, stateRateSlider } = ASSUMPTIONS;
           <input type="checkbox" id="employer" checked={inputs.countEmployerShare} />
           <span class="check-body">
             <strong>The employer's half of payroll tax</strong>
-            <span>{employerHint()}</span>
+            <span set:html={employerHint()} />
           </span>
         </label>
         <label class="check">
           <input type="checkbox" id="sales" checked={inputs.countSalesTax} />
           <span class="check-body">
             <strong>Estimated sales tax</strong>
-            <span>{salesTaxHint()}</span>
+            <span set:html={salesTaxHint()} />
           </span>
         </label>
         <label class="check">
           <input type="checkbox" id="property" checked={inputs.countPropertyTax} />
           <span class="check-body">
             <strong>Property tax on a median home in your state</strong>
-            <span id="propertyHint">{propertyTaxHint(inputs)}</span>
+            <span id="propertyHint" set:html={propertyTaxHint(inputs)} />
           </span>
         </label>
       </div>
