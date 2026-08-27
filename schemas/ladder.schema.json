@@ -70,6 +70,7 @@
                   "metals.gold.usdPerTroyOz",
                   "state.medianHomeValue",
                   "basket.college-year",
+                  "basket.childcare-month",
                   "reader.annualTakeHome"
                 ],
                 "description": "Where the price comes from. A reader.* ref prices the rung from the reader's own take-home; use a fractional multiplier for less than a year. Add a case to src/lib/ladder.ts before adding a value here."

@@ -66,9 +66,9 @@
       "id": "home-down-payment",
       "singular": "Down payment on a median US home",
       "plural": "Down payments on a median US home",
-      "price": 41500,
-      "note": "10% of $415,000",
-      "source": { "label": "Derived from the median US home price", "url": "https://www.zillow.com/research/data/" }
+      "price": 40880,
+      "note": "10% of $408,800, the same US median used in section five",
+      "source": { "label": "Zillow Home Value Index, US median, the value in states.json", "url": "https://www.zillow.com/research/data/" }
     },
     {
       "id": "tank-of-gas",

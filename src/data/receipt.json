@@ -56,7 +56,7 @@
     },
     {
       "id": "good",
-      "title": "The good it does",
+      "title": "The defence they always make",
       "lede": "The programmes people name first when they defend the tax. Here is what the people who run them publish about them."
     }
   ],
@@ -79,7 +79,7 @@
       "kind": "duration",
       "annualCost": 970000000000,
       "label": "of interest on the national debt",
-      "note": "Net interest was about $970 billion in 2025, the first year it passed a trillion gross. It buys nothing. It is rent on money already spent.",
+      "note": "Three numbers describe this and they are not the same. Treasury as a department spent $1,458.9 billion, which is the slice you see in the donut above. Gross interest on the debt alone was $1,215.6 billion. Net of what the government pays its own trust funds, CBO puts the cost near $970 billion. This card uses the smallest of the three. Even at the smallest, it buys nothing. It is rent on money already spent.",
       "source": {
         "label": "CBO, Monthly Budget Review, fiscal year 2025",
         "url": "https://www.cbo.gov/publication/61307"
@@ -91,7 +91,7 @@
       "kind": "duration",
       "annualCost": 1800000000000,
       "label": "of the deficit on its own",
-      "note": "The 2025 shortfall was $1.8 trillion. Nobody has paid for that part yet. Somebody will.",
+      "note": "The 2025 shortfall was $1.8 trillion. That part was borrowed, not taxed, so no tax receipt covers it. It is deferred tax. The bill goes to whoever is working when it comes due, with interest on top, and many of them cannot vote yet. Read every share on this page as a share of what was spent, not of what was collected.",
       "source": {
         "label": "CBO, Monthly Budget Review, fiscal year 2025",
         "url": "https://www.cbo.gov/publication/61307"
@@ -110,18 +110,6 @@
       }
     },
     {
-      "id": "congress-pay",
-      "group": "waste",
-      "kind": "duration",
-      "annualCost": 93090000,
-      "label": "of the salaries of all 535 members of Congress",
-      "note": "535 voting members at $174,000 each. They set that figure themselves and have not moved it since January 2009.",
-      "source": {
-        "label": "CRS 97-1011, Salaries of Members of Congress",
-        "url": "https://www.congress.gov/crs-product/97-1011"
-      }
-    },
-    {
       "id": "ui-fraud",
       "group": "waste",
       "kind": "household",
@@ -131,18 +119,6 @@
       "source": {
         "label": "GAO-23-106696, Unemployment Insurance",
         "url": "https://www.gao.gov/products/gao-23-106696"
-      }
-    },
-    {
-      "id": "high-speed-rail",
-      "group": "waste",
-      "kind": "household",
-      "total": 126300000000,
-      "label": "your household's share of California's high-speed railway",
-      "note": "Voters were told $33 billion in 2008. The 2026 business plan says $126.3 billion. No passenger has ridden it.",
-      "source": {
-        "label": "California High-Speed Rail Authority, business plans",
-        "url": "https://hsr.ca.gov/about/business-plans/"
       }
     },
     {

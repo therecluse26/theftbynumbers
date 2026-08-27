@@ -1,7 +1,7 @@
 ---
 import { ASSUMPTIONS, STATES, TAX } from '../lib/data';
 import { commas } from '../lib/format';
-import { employerHint, salesTaxHint, statusEcho } from '../lib/render';
+import { employerHint, propertyTaxHint, salesTaxHint, statusEcho } from '../lib/render';
 import type { Inputs } from '../lib/types';
 
 interface Props {
@@ -138,6 +138,13 @@ const { income, investment, horizon, stateRateSlider } = ASSUMPTIONS;
           <span class="check-body">
             <strong>Estimated sales tax</strong>
             <span>{salesTaxHint()}</span>
+          </span>
+        </label>
+        <label class="check">
+          <input type="checkbox" id="property" checked={inputs.countPropertyTax} />
+          <span class="check-body">
+            <strong>Property tax on a median home in your state</strong>
+            <span id="propertyHint">{propertyTaxHint(inputs)}</span>
           </span>
         </label>
       </div>

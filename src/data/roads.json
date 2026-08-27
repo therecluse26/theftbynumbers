@@ -111,9 +111,9 @@
       "id": "interstate-overrun",
       "group": "ground",
       "kind": "record",
-      "figure": "4.2×",
-      "label": "what the Interstate cost, against what it was promised to cost",
-      "note": "In 1955 the Bureau of Public Roads told Congress the Interstate system would cost $27 billion and open by 1975. The last stretch opened in 1991, at $114 billion. This is not a market comparison and is not filed as one. It is the government's own estimate against its own outcome, on the road network people name first when they defend the tax. Both figures come from the FHWA's own history of the programme.",
+      "figure": "16 years",
+      "label": "late, on the road network people name first when they defend the tax",
+      "note": "In 1955 the Bureau of Public Roads told Congress the Interstate system would cost $27 billion and open by 1975. The last stretch opened in 1991. This is not a market comparison and is not filed as one. It is the government's own promise against its own outcome. The card quotes the schedule, not a cost ratio, and the reason matters: the $27 billion was quoted in 1955 dollars and the $114 billion finally spent was counted as it was spent, through 1991. Those are not the same dollars, so dividing one by the other would overstate the overrun. The dates need no such adjustment. Both figures come from the FHWA's own history of the programme.",
       "source": {
         "label": "FHWA highway history, Target: $27 Billion, and the system as built",
         "url": "https://www.fhwa.dot.gov/infrastructure/target.cfm"
@@ -124,23 +124,11 @@
       "group": "commons",
       "kind": "record",
       "figure": "78.1 million",
-      "label": "Americans live where the commons are privately maintained",
-      "note": "373,000 community associations raise $112 billion a year from their own members and spend it on roads, drainage, lighting, parks, water and security. Nobody is taxed for it and nobody is conscripted into it. You buy in, or you do not.",
+      "label": "Americans already chose who maintains their commons",
+      "note": "You read the dues before you buy, and you can sell and leave. Tax offers neither choice. 373,000 community associations raise $112 billion a year from their own members and spend it on roads, drainage, lighting, parks, water and security. Say the weakness plainly: once you own, the dues are compulsory, the association can place a lien on your home, and it exists under a state enabling statute. The claim here is narrow. It is about consent at the door, not about a gentler collector.",
       "source": {
         "label": "Foundation for Community Association Research, 2025 Statistical Review",
         "url": "https://foundation.caionline.org/publications/factbook/statistical-review/"
-      }
-    },
-    {
-      "id": "central-park",
-      "group": "commons",
-      "kind": "record",
-      "figure": "75%",
-      "label": "of Central Park's budget is raised privately, not by the city",
-      "note": "New York owned Central Park and let it rot through the 1970s. A private non-profit was formed in 1980 to fix it. The Central Park Conservancy now raises about three quarters of the park's operating budget and employs most of its maintenance staff. The city still owns the land.",
-      "source": {
-        "label": "Central Park Conservancy",
-        "url": "https://centralpark.org/central-park-conservancy/"
       }
     },
     {
@@ -161,7 +149,7 @@
       "kind": "multiple",
       "publicPrice": 40,
       "privatePrice": 24,
-      "label": "more, per hour of contracted neighbourhood patrol",
+      "label": "as much, per hour of contracted neighbourhood patrol",
       "sameness": "One buyer, one beat, one job: the Sharpstown Civic Association in Houston pays for patrol of the same 7,000 homes, and in 2012 it changed supplier on price.",
       "note": "Harris County constables charged the association about {public} an hour. SEAL Security charged about {private} an hour, and the association got more officers on the street for less money. PolitiFact checked this and threw out the viral version: Sharpstown never fired a police force, and Houston police still answer its 911 calls. This is the fact-checked remainder, which is the only part worth quoting.",
       "publicSource": {
@@ -179,7 +167,7 @@
       "kind": "multiple",
       "publicPrice": 90600000,
       "privatePrice": 52000000,
-      "label": "more, per year to screen one large airport",
+      "label": "as much, per year to screen one large airport",
       "sameness": "Congress wrote one screening standard and the TSA certifies every screener against it. Los Angeles uses federal staff, San Francisco uses a contractor under the TSA's own Screening Partnership Program, and the committee found screening quality about the same at both.",
       "note": "LAX cost {public} a year. San Francisco's contractor screened 65 percent more passengers per screener, and at that productivity LAX would cost {private}. Two warnings. The second figure is the committee's extrapolation from San Francisco's measured throughput, not a bill anyone paid. And the TSA's own accounting reaches the opposite answer, putting contract screening about 3 percent dearer, because it loads federal overheads onto the private airports and not onto its own. Figures are 2011.",
       "publicSource": {
@@ -197,7 +185,7 @@
       "kind": "record",
       "figure": "95%",
       "label": "of weapons the government's own testers walked past its screeners",
-      "note": "In 2015 the Homeland Security inspector general sent auditors through TSA checkpoints with weapons and mock explosives. They got through 67 times out of 70. A 2017 re-test put the failure rate near 80 percent; the exact number is classified. Of nine vulnerabilities that covert testing found from 2015 onward, the GAO reported that none had been formally resolved by September 2018. This is what the premium on the card beside this one buys.",
+      "note": "This card is about price against result, not about who fails less. In 2015 the Homeland Security inspector general sent auditors through TSA checkpoints with weapons and mock explosives. They got through 67 times out of 70. A 2017 re-test put the failure rate near 80 percent; the exact number is classified. Of nine vulnerabilities that covert testing found from 2015 onward, the GAO reported that none had been formally resolved by September 2018. This is what the premium on the card beside this one buys. Say the weakness plainly: screening before 2001 was contracted to private firms, and it failed too. The narrow claim stands. You are charged more and the result did not improve.",
       "source": {
         "label": "GAO-19-374, Aviation Security, TSA covert testing",
         "url": "https://www.gao.gov/products/gao-19-374"
@@ -209,7 +197,7 @@
       "kind": "multiple",
       "publicPrice": 586.41,
       "privatePrice": 369.44,
-      "label": "more, per hour of instrument-rules air traffic control",
+      "label": "as much, per hour of instrument-rules air traffic control",
       "sameness": "The identical job on the identical unit: keeping aircraft apart under instrument rules, costed per flight hour, in two neighbouring countries whose controllers hand traffic to each other every day.",
       "note": "Canada took air traffic control out of government hands in 1996. In 2022 NAV CANADA ran it at {private} a flight hour against the FAA's {public}, and it did so with a lower loss-of-separation rate: cheaper and safer on the measure that matters most. NAV CANADA is a non-profit owned by the people who use it rather than a company seeking a return, so this is the mildest version of the argument. It is also the largest test of it, being a whole country thirty years in.",
       "publicSource": {
@@ -227,7 +215,7 @@
       "kind": "multiple",
       "publicPrice": 170000000,
       "privatePrice": 55000000,
-      "label": "more, per astronaut carried to orbit and home again",
+      "label": "as much, per astronaut carried to orbit and home again",
       "sameness": "One customer buying one thing: NASA putting a NASA astronaut into low Earth orbit and returning them alive. Same agency, same crew, same destination, same human rating, bought first from itself and now from a contractor.",
       "note": "A seat on the Space Shuttle cost about {public} in today's money. NASA pays SpaceX about {private} a seat on Crew Dragon, the figure its own inspector general uses. For the years between the two it paid Russia about $86 million a seat, more than either. The Shuttle also carried cargo on the same flight, which no per-seat figure can separate cleanly.",
       "publicSource": {

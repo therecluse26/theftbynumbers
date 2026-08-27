@@ -5,7 +5,7 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, TAX, longDate } from './data';
+import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, TAX, longDate } from './data';
 import { career, commas, duration, escapeHtml, months, multiple, pct, usd } from './format';
 import { resolveLadderGroups } from './ladder';
 import type { ResolvedLadderItem } from './ladder';
@@ -237,13 +237,14 @@ export interface RibbonRender {
 
 export function ribbon(r: Breakdown): RibbonRender {
   const parts: Array<[string, string, number, string, string]> = [
-    ['Kept', 'Take-home', r.kept, '#2C2B27', BONE],
+    ['Kept', 'What you keep', r.kept, '#2C2B27', BONE],
     ['Federal', 'Box 2', r.federal, '#FFD400', INK],
     ['Soc. Sec.', 'Box 4', r.socialSecurity, '#E0B905', INK],
     ['Medicare', 'Box 6', r.medicare, '#C29F0C', INK],
     ['State', 'Box 17', r.state, '#A38512', INK],
     ['Employer', 'Not on it', r.employerShare, '#7C6415', BONE],
     ['Sales', 'Not on it', r.salesTax, '#5C4A16', BONE],
+    ['Property', 'Not on it', r.propertyTax, '#453814', BONE],
   ];
 
   const total = r.base || 1;
@@ -357,7 +358,7 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
       amount: r.employerShare,
       note:
         'Another ' +
-        employerSharePctLabel() +
+        employerSharePctLabel(r.wage) +
         ' your employer pays on top of your wage. It never enters your paycheck, ' +
         'so it does not reduce your take-home; it raises what you cost.',
     });
@@ -369,6 +370,18 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
       name: 'Sales tax, estimated',
       amount: r.salesTax,
       note: 'Collected a few dollars at a time, never totalled anywhere.',
+    });
+  }
+  if (r.propertyTax > 0) {
+    rows.push({
+      box: 'Not on it',
+      onForm: false,
+      name: 'Property tax, estimated',
+      amount: r.propertyTax,
+      note:
+        'A year of tax on the median home in the state you picked. Owed on a ' +
+        'home already paid off, every year, for as long as you hold it. Stop ' +
+        'paying and the county sells the house.',
     });
   }
   return rows;
@@ -753,7 +766,10 @@ function receiptCard(
   }
 
   // Computed: worked out from the reader's own figures, not from a fixed price.
-  //
+  // The kind names a function here, so read the name rather than assuming there
+  // is only ever one. A second computed card used to render as this one.
+  if (item.compute !== 'social-security') return '';
+
   // Both halves of the payroll tax. Box 4 is only the half your paycheck feels;
   // the employer pays the same again. This page already argues that half is your
   // money, so counting one half here would contradict its own ledger.
@@ -776,8 +792,10 @@ function receiptCard(
       plural(inputs.years, 'year') +
       ' at ' +
       inputs.returnPct.toFixed(1) +
-      '%, it would be this, and drawing four percent of it would pay you ' +
-      usd(final * 0.04) +
+      '%, it would be this, and drawing ' +
+      pct(ASSUMPTIONS.investment.safeWithdrawalRate, 0) +
+      ' of it would pay you ' +
+      usd(final * ASSUMPTIONS.investment.safeWithdrawalRate) +
       ' a year without touching the pot. ' +
       note +
       ' A benefit stops when you die. A balance passes to your children.',
@@ -1078,7 +1096,8 @@ const LOCKED_PER_GROUP = 2;
  * and a single price-ordered list makes them look like the same question.
  *
  * The rungs measure freedom, not objects, so several of them are priced from the
- * reader's own take-home. That is why this needs the take-home passed in.
+ * reader's own kept pay: wage less every tax on this page. Not takeHomePay,
+ * which is only net of withholdings. That is why this needs the figure passed in.
  */
 export function stack(
   balance: number,
@@ -1214,7 +1233,9 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
 
   // Reader: the transport share of this reader's own tax, over their own years.
   // The same slice the donut already shows them, lifted out and set alone under
-  // the question it answers.
+  // the question it answers. Read the compute name; do not assume one exists.
+  if (item.compute !== 'roads-share') return '';
+
   const share = r.total * inputs.years * transportShare();
   return card(
     'rc',
@@ -1273,7 +1294,9 @@ export function roadsHtml(r: Breakdown, inputs: Inputs): string {
 /** The footnote under the ladder. Its date comes from the metals file. */
 export function stackFootnote(): string {
   return (
-    'A rung about your own time is priced at your take-home, held flat. ' +
+    'A rung about your own time is priced at what you keep after every tax on ' +
+    'this page, held flat. That is a smaller number than your paycheck, because ' +
+    'sales tax and property tax come out of the paycheck later. ' +
     'Other prices are ' +
     TAX.taxYear +
     ' averages. The home is the median value in the state you picked above. ' +
@@ -1306,12 +1329,29 @@ export function salesTaxHint(): string {
   );
 }
 
+/** The wording on the property tax checkbox, built from the states file. */
+export function propertyTaxHint(inputs: Inputs): string {
+  const row = STATES[inputs.stateIndex];
+  if (!row) return '';
+  return (
+    pct(row.propertyTaxRatePct / 100, 2) +
+    ' a year on the ' +
+    usd(row.medianHomeValue) +
+    ' median home in ' +
+    row.name +
+    '. It never ends, and owning the house outright does not stop it.'
+  );
+}
+
 /** The wording on the employer share checkbox. */
 export function employerHint(): string {
   return (
     'Another ' +
     employerSharePctLabel() +
     " paid on top of your wage. It doesn't shrink your paycheck, it raises " +
-    "what you cost — so it's counted against your full compensation, not your salary."
+    "what you cost — so it's counted against your full compensation, not your salary. " +
+    'The Social Security half stops at the wage base, so above ' +
+    usd(TAX.payroll.socialSecurity.wageBase) +
+    ' the rate on your whole wage is lower. The ledger row shows your own.'
   );
 }

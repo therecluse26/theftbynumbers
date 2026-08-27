@@ -29,7 +29,7 @@
     {
       "id": "you",
       "title": "For you",
-      "lede": "Your own time and your own property, owned outright, with nothing owed on any of it."
+      "lede": "Your own time and your own property, bought outright, with no lender left to pay. Only the tax on it never ends."
     }
   ],
   "items": [
@@ -46,8 +46,8 @@
       "group": "family",
       "singular": "Year of childcare for one child",
       "plural": "Years of childcare for one child",
-      "price": 13184,
-      "note": "{price} a year, the 2025 national average. It is why one parent stops working."
+      "priceFrom": { "ref": "basket.childcare-month", "multiplier": 12 },
+      "note": "{price} a year, twelve months at the price in section two. It is why one parent stops working."
     },
     {
       "id": "degree-paid",
@@ -84,10 +84,10 @@
     {
       "id": "emergency-fund",
       "group": "you",
-      "singular": "Emergency fund, three months of expenses",
+      "singular": "Emergency fund, three months of your pay",
       "plural": "Emergency funds",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 0.25 },
-      "note": "{price}. Most American households do not have this, and know it."
+      "note": "{price}, a quarter of what you keep in a year. Your own expenses may be lower than your pay. Most American households do not have this, and know it."
     },
     {
       "id": "used-car-owned",
@@ -123,7 +123,7 @@
       "singularInState": "Median home in {state}, owned outright",
       "pluralInState": "Median homes in {state}, owned outright",
       "priceFrom": { "ref": "state.medianHomeValue", "multiplier": 1 },
-      "note": "{price}, Zillow median value. No mortgage. Nobody takes it for a missed payment."
+      "note": "{price}, Zillow median value. No mortgage, no lender, no instalments left. The property tax still arrives every year, and the county sells the house if you stop paying it. You buy the building outright. You rent the ground from the state for as long as you live."
     },
     {
       "id": "never-work",

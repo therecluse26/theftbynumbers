@@ -36,6 +36,14 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
     ? afterDirect * ASSUMPTIONS.salesTax.spendShare * ASSUMPTIONS.salesTax.combinedRate
     : 0;
 
+  // Property tax on the median home in the chosen state. It is not withheld and
+  // it never ends: it is owed every year on a home already owned outright. Like
+  // sales tax, it is paid out of the wage, so it does not enlarge the base.
+  const stateRow = STATES[inputs.stateIndex];
+  const propertyTax = inputs.countPropertyTax && stateRow
+    ? stateRow.medianHomeValue * (stateRow.propertyTaxRatePct / 100)
+    : 0;
+
   // The employer's share never passes through your wage. On the standard
   // incidence argument it is money that would otherwise have been paid to you,
   // so it enlarges the base rather than shrinking the take-home.
@@ -49,7 +57,7 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
   // on purpose: your employer never pays it, so it cannot be a share of what
   // you cost them.
   const employmentTax = employeeTax + employerShare;
-  const total = employmentTax + salesTax;
+  const total = employmentTax + salesTax + propertyTax;
 
   return {
     wage,
@@ -61,13 +69,14 @@ export function computeBreakdown(inputs: Inputs): Breakdown {
     state,
     employerShare,
     salesTax,
+    propertyTax,
     employeeTax,
     employmentTax,
     total,
     // Sales tax comes out of this later. It is not withheld, so it does not
     // change what the paycheck nets.
     takeHomePay: afterDirect,
-    kept: Math.max(0, wage - employeeTax - salesTax),
+    kept: Math.max(0, wage - employeeTax - salesTax - propertyTax),
     effectiveRate: base > 0 ? total / base : 0,
     employmentRate: base > 0 ? employmentTax / base : 0,
   };
@@ -121,10 +130,25 @@ export function defaultInputs(): Inputs {
     returnPct: ASSUMPTIONS.investment.defaultAnnualReturnPct,
     countEmployerShare: false,
     countSalesTax: false,
+    countPropertyTax: false,
   };
 }
 
-/** 0.0765 becomes "7.65%". Used in the copy about the employer's share. */
-export function employerSharePctLabel(): string {
-  return (EMPLOYER_SHARE_RATE * 100).toFixed(2).replace(/0$/, '') + '%';
+/**
+ * 0.0765 becomes "7.65%". Used in the copy about the employer's share.
+ *
+ * The statutory rate is 7.65%, but the Social Security half stops at the wage
+ * base. Above that, the employer pays less than 7.65% of the whole wage, so a
+ * flat label would overstate the rate for a high earner. Pass the wage and the
+ * label reports what the employer actually paid on it.
+ */
+export function employerSharePctLabel(wage?: number): string {
+  const { socialSecurity, medicare } = TAX.payroll;
+  let rate = EMPLOYER_SHARE_RATE;
+  if (wage && wage > socialSecurity.wageBase) {
+    const paid =
+      socialSecurity.wageBase * socialSecurity.rate + wage * medicare.rate;
+    rate = paid / wage;
+  }
+  return (rate * 100).toFixed(2).replace(/0$/, '') + '%';
 }

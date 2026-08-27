@@ -218,6 +218,32 @@ export function semanticErrors(entry, data) {
     if (!data.lede.includes('{transportShare}')) {
       errors.push('lede does not use {transportShare}; open with the size of the bill');
     }
+
+    // The lede computes the transport share from outlays.json. The card beside
+    // it types the same share as a string. Two copies of one number drift the
+    // moment somebody refreshes the Treasury figures, and then the section
+    // opens with one percentage and repeats a different one two lines down.
+    const shareCard = data.items.find((i) => i.id === 'transport-share');
+    if (shareCard) {
+      try {
+        const outlays = readJson(dataPath(findDataFile('outlays')));
+        const transport = outlays.categories.find((c) => c.id === 'transportation');
+        if (!transport) {
+          errors.push('outlays.json has no transportation category to agree with');
+        } else {
+          const computed = (transport.amount / outlays.totalOutlays) * 100;
+          const typed = parseFloat(String(shareCard.figure).replace('%', ''));
+          if (!Number.isFinite(typed) || Math.abs(typed - computed) > 0.01) {
+            errors.push(
+              `transport-share figure "${shareCard.figure}" does not match ` +
+                `outlays.json, which computes ${computed.toFixed(2)}%`,
+            );
+          }
+        }
+      } catch (error) {
+        errors.push(`could not check transport-share against outlays: ${error.message}`);
+      }
+    }
   }
 
   if (entry.id === 'outlays') {

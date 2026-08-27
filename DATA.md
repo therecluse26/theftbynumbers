@@ -19,7 +19,7 @@ threshold is written in the code. This document explains the parts.
 | File | Holds | Refreshed by |
 | --- | --- | --- |
 | `src/data/federal-tax.json` | Brackets, standard deductions, payroll rates, wage base | a person, yearly |
-| `src/data/states.json` | State income tax rate and median home value | rate by a person; home value by `zillow-zhvi` |
+| `src/data/states.json` | State income tax rate, property tax rate and median home value | rates by a person; home value by `zillow-zhvi` |
 | `src/data/metals.json` | Spot gold, dollars per troy ounce | `gold-spot` |
 | `src/data/basket.json` | Everyday purchase prices, section two | a person |
 | `src/data/receipt.json` | What the money was spent on, section three | a person |
@@ -182,6 +182,17 @@ the value to the enum in `schemas/receipt.schema.json` together.
 **Every receipt figure is a share, never a purchase.** Write card copy as "your
 share of", never "you bought". Money is fungible and the notes section says so.
 
+**Shares divide outlays, not receipts.** $1.8tn of the $7.01tn was borrowed. The
+`deficit` card says so and names it deferred tax, which is the stronger claim
+anyway. Do not quietly re-base the shares on revenue without changing that card.
+
+**A card must not argue the other side's case.** There used to be a `congress-pay`
+card. $93m is 0.0013% of $7.01tn, so it taught the reader that the graft is
+trivial, and its own note said the salary had not moved since 2009 — which is
+the argument a defender of Congress makes. It is gone. So is `high-speed-rail`,
+because section six already drops California HSR as unrepresentative and one
+project cannot be evidence in one section and not in the other.
+
 ## The roads comparison
 
 Section six answers the objection every reader raises last: the government builds
@@ -190,7 +201,7 @@ field carries the number.
 
 | Kind | Field | The card shows |
 | --- | --- | --- |
-| `multiple` | `publicPrice`, `privatePrice` | One unit bought twice. Prints how many times more the state paid |
+| `multiple` | `publicPrice`, `privatePrice` | One unit bought twice. Prints how many times as much the state paid |
 | `record` | `figure` | A count or share on its own, with no arithmetic |
 | `reader` | `compute` | Worked out in code from the reader's own tax |
 
@@ -273,6 +284,8 @@ each side. A reader who disbelieves this section will go and check.
   | Housing | RAND's published ratios do not reconcile from the summaries |
   | California high-speed rail | One state's worst project proves nothing about the state as such |
   | Somali piracy | "No ship with an armed team was ever hijacked" traces only to unnamed officials |
+  | Central Park Conservancy | The city owns the land and funds the rest under contract. A partnership, not a market |
+  | Interstate cost overrun, as a ratio | $27bn in 1955 dollars over $114bn spent through 1991. Different dollars. The card now quotes the 16-year schedule slip, which needs no adjustment |
 
   There is no clean **military** defence comparison in this section. Airport
   screening and neighbourhood patrol are security, not defence. Do not stretch
@@ -280,6 +293,31 @@ each side. A reader who disbelieves this section will go and check.
 
 `transportShare()` in `render.ts` reads `outlays.json`, never a number typed in
 code, so the donut in section three and the lede in section six cannot disagree.
+The `transport-share` card types the same share as a string, so a rule in
+`semanticErrors` checks the typed figure against the computed one and refuses a
+drift over a hundredth of a point.
+
+### Say the ratio the right way round
+
+A `multiple` label reads **"as much, per …"**, never "more, per …". 40 ÷ 24 is
+1.7 times as much, which is 67% more. "1.7× more" means 2.7× and is simply
+wrong. The label carries the wording; the code only prints the number.
+
+### Property tax
+
+`states.json` carries `propertyTaxRatePct`, the state's effective rate on
+owner-occupied housing. The third **Also count** box charges it against the
+median home in the chosen state. It is off by default, like the other two.
+
+It earns its place because it is the one tax on the page that never ends. The
+`home-owned` rung used to say *"Nobody takes it for a missed payment."* That is
+false, and it denied the premise of the whole site on the site's own ladder. A
+home bought outright still owes this tax every year, and the county sells the
+house if it goes unpaid. Do not restore the old sentence.
+
+The source publishes no national figure, so the US row carries the median of the
+fifty-one published rates. That under-weights the populous high-rate states, so
+the national default is the mild end of the range. Say so if you quote it.
 
 ## What the scheduled job will do
 

@@ -41,6 +41,8 @@ function priceFromRef(
       return (STATES[stateIndex] ?? STATES[0]!).medianHomeValue;
     case 'basket.college-year':
       return basketPrice('college-year');
+    case 'basket.childcare-month':
+      return basketPrice('childcare-month');
     case 'reader.annualTakeHome':
       return annualTakeHome;
   }

@@ -58,6 +58,8 @@ export interface StateRow {
   selectLabel?: string;
   isNational?: boolean;
   incomeTaxRatePct: number;
+  /** Yearly property tax as a percentage of home value. */
+  propertyTaxRatePct: number;
   medianHomeValue: number;
 }
 
@@ -89,6 +91,7 @@ export type PriceRef =
   | 'metals.gold.usdPerTroyOz'
   | 'state.medianHomeValue'
   | 'basket.college-year'
+  | 'basket.childcare-month'
   /**
    * The reader's own take-home. A rung priced this way costs them their own life.
    * Years only: a multiplier of 0.25 is three months. One time unit keeps the
@@ -286,6 +289,8 @@ export interface AssumptionsData {
     minAnnualReturnPct: number;
     maxAnnualReturnPct: number;
     stepAnnualReturnPct: number;
+    /** Share of a pot drawn each year without exhausting it. */
+    safeWithdrawalRate: number;
   };
   horizon: { defaultYears: number; minYears: number; maxYears: number };
   income: { defaultIncome: number; maxIncome: number };
@@ -302,6 +307,7 @@ export interface Inputs {
   returnPct: number;
   countEmployerShare: boolean;
   countSalesTax: boolean;
+  countPropertyTax: boolean;
 }
 
 /** One year of tax, worked out from the inputs. */
@@ -316,6 +322,11 @@ export interface Breakdown {
   state: number;
   employerShare: number;
   salesTax: number;
+  /**
+   * A year of property tax on the median home in the chosen state. Owed on a
+   * home owned outright, every year, for as long as you hold it.
+   */
+  propertyTax: number;
   /** The taxes your paycheck feels. */
   employeeTax: number;
   /**

@@ -23,6 +23,14 @@
         "url": "https://www.officialdata.org/us/stocks/s-p-500/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26"
+      },
+      "investment.safeWithdrawalRate": {
+        "updateMode": "manual",
+        "label": "Bengen, Determining Withdrawal Rates Using Historical Data, the four percent rule",
+        "url": "https://www.financialplanningassociation.org/article/journal/OCT96-determining-withdrawal-rates-using-historical-data",
+        "maxAgeDays": 1000,
+        "updatedAt": "2026-08-26",
+        "note": "A rule of thumb from one study of US market history, not a guarantee. It is used only to turn a pot into a yearly income on the Social Security card."
       }
     }
   },
@@ -34,7 +42,8 @@
     "defaultAnnualReturnPct": 7,
     "minAnnualReturnPct": 0,
     "maxAnnualReturnPct": 12,
-    "stepAnnualReturnPct": 0.1
+    "stepAnnualReturnPct": 0.1,
+    "safeWithdrawalRate": 0.04
   },
   "horizon": {
     "defaultYears": 20,

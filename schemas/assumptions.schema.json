@@ -22,14 +22,21 @@
         "defaultAnnualReturnPct",
         "minAnnualReturnPct",
         "maxAnnualReturnPct",
-        "stepAnnualReturnPct"
+        "stepAnnualReturnPct",
+        "safeWithdrawalRate"
       ],
       "additionalProperties": false,
       "properties": {
         "defaultAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
         "minAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
         "maxAnnualReturnPct": { "type": "number", "minimum": 0, "maximum": 100 },
-        "stepAnnualReturnPct": { "type": "number", "exclusiveMinimum": 0 }
+        "stepAnnualReturnPct": { "type": "number", "exclusiveMinimum": 0 },
+        "safeWithdrawalRate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1,
+          "description": "Share of a pot drawn each year without exhausting it. Used by the Social Security card."
+        }
       }
     },
     "horizon": {

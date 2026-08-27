@@ -16,6 +16,7 @@ import {
   ledgerHtml,
   lifeCost,
   outlaysDonut,
+  propertyTaxHint,
   receiptHtml,
   receiptLede,
   ribbon,
@@ -47,6 +48,8 @@ const dom = {
   rateVal: el('rateVal'),
   employer: el<HTMLInputElement>('employer'),
   sales: el<HTMLInputElement>('sales'),
+  property: el<HTMLInputElement>('property'),
+  propertyHint: el('propertyHint'),
   statusEcho: el('statusEcho'),
   heroLabel: el('heroLabel'),
   heroFig: el('heroFig'),
@@ -113,6 +116,7 @@ function readDom(): void {
   inputs.returnPct = parseFloat(dom.rate.value);
   inputs.countEmployerShare = dom.employer.checked;
   inputs.countSalesTax = dom.sales.checked;
+  inputs.countPropertyTax = dom.property.checked;
 }
 
 function update(): void {
@@ -217,6 +221,7 @@ dom.state.addEventListener('change', function () {
   inputs.stateRatePct = rate;
   dom.stateRate.value = String(rate);
   dom.stateRateVal.textContent = rate.toFixed(1) + '%';
+  dom.propertyHint.textContent = propertyTaxHint(inputs);
   update();
 });
 
@@ -245,6 +250,11 @@ dom.employer.addEventListener('change', function () {
 
 dom.sales.addEventListener('change', function () {
   inputs.countSalesTax = this.checked;
+  update();
+});
+
+dom.property.addEventListener('change', function () {
+  inputs.countPropertyTax = this.checked;
   update();
 });
 
