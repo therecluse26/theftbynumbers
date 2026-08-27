@@ -64,7 +64,11 @@ were already deep links and are unchanged.
 | GiveDirectly delivers 89 cents of the dollar | 89% | [GiveDirectly financials](https://www.givedirectly.org/financials) | `yes` | 89% of cash-transfer funds reached recipients since inception. |
 
 Rungs with a `priceFrom` block take their price from another file and inherit
-that file's source. They need none of their own.
+that file's source automatically, in `sourceOf()` at `src/lib/ladder.ts`. They
+need none of their own unless the note makes a claim the price does not.
+
+One rung carries no link and never will: "Years you never have to work" is
+priced at the reader's own take-home. No publisher states that figure.
 
 ## The give
 

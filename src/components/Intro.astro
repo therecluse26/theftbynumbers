@@ -1,0 +1,36 @@
+---
+/*
+ * The intro. It sits above the form, because the form now comes first and a
+ * bare income box explains nothing.
+ *
+ * Nothing here changes when the reader types. No props, no ids, no live
+ * figures. app.ts never touches this block.
+ */
+import { SECTIONS } from '../lib/sections';
+---
+
+<div class="wrap">
+  <section class="intro" aria-label="What this is">
+    <p class="eyebrow eyebrow-y">What this is</p>
+
+    <p class="intro-lede">
+      Every year you pay federal tax, payroll tax, state tax, sales tax and
+      property tax. No single statement adds them up.
+    </p>
+
+    <p class="intro-cue">Enter your income below. Then read:</p>
+
+    <ol class="intro-map">
+      {
+        SECTIONS.map((section, index) => (
+          <li>
+            <span class="intro-map-n num">
+              {String(index + 1).padStart(2, '0')}
+            </span>
+            {section.title}
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</div>

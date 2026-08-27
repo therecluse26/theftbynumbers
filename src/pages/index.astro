@@ -2,6 +2,7 @@
 import Basket from '../components/Basket.astro';
 import Controls from '../components/Controls.astro';
 import Hero from '../components/Hero.astro';
+import Intro from '../components/Intro.astro';
 import Invest from '../components/Invest.astro';
 import Ledger from '../components/Ledger.astro';
 import Notes from '../components/Notes.astro';
@@ -41,6 +42,7 @@ const invest = investText(breakdown, inputs);
   description="A calculator that shows what one year of US tax costs you, what it would have bought, and what it would be worth if you had invested it instead."
 >
   <Rail />
+  <Intro />
 
   <div class="wrap">
     <Controls inputs={inputs} />

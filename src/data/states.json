@@ -13,7 +13,7 @@
       },
       "propertyTaxRatePct": {
         "updateMode": "manual",
-        "label": "Tax Foundation, property taxes paid as a percentage of owner-occupied housing value, 2024",
+        "label": "",
         "url": "https://taxfoundation.org/data/all/state/property-taxes-by-state-county/",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",

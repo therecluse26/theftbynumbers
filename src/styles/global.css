@@ -54,6 +54,26 @@ body{
 }
 .wordmark span{color:var(--bone);font-variation-settings:"wdth" 74,"wght" 600}
 
+/* ---------- intro ---------- */
+/* Static prose above the form. It never redraws, so it carries no ids. */
+.intro{padding:26px 0 24px;border-bottom:1px solid var(--rule)}
+.intro-lede{margin:12px 0 0;font-size:17px;color:var(--bone-70);max-width:60ch;line-height:1.5}
+.intro-cue{
+  margin:20px 0 12px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--bone-50);
+}
+/* Two columns, but numbered down the left column first: 01-03, then 04-06. */
+.intro-map{
+  list-style:none;margin:0;padding:0;
+  display:grid;grid-auto-flow:column;grid-template-rows:repeat(3,auto);
+  grid-auto-columns:minmax(0,1fr);gap:9px 34px;
+}
+.intro-map li{display:flex;gap:10px;align-items:baseline;font-size:14.5px;color:var(--bone-70)}
+.intro-map-n{
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;
+  color:var(--yellow);flex:none;
+}
+
 /* ---------- hero ---------- */
 .hero{
   margin-top:0;border-left:5px solid var(--yellow);
@@ -486,6 +506,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   .cmp-bar{height:38px}
   .cmp-seg .cmp-name,.cmp-seg .cmp-val{display:none}
   .cmp-legend-total{margin-left:0}
+  .intro-map{grid-auto-flow:row;grid-template-rows:none}
   .hero{grid-template-columns:1fr;gap:24px;padding:28px 20px 26px}
   .dial{width:140px;height:140px;justify-self:start}
   .ribbon{height:88px}
