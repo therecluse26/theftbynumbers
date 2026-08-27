@@ -1,4 +1,4 @@
-# Withheld
+# Theft by Numbers
 
 A single-page calculator. It shows what one year of US tax costs a wage earner,
 what that money would have bought, what the government spent it on, and what it

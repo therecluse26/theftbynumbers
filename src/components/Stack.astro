@@ -15,6 +15,6 @@ const { stack } = Astro.props;
     <h2>What it buys back</h2>
   </div>
   <p class="stack-lede" id="stackLede">{stack.lede}</p>
-  <div class="stack" id="stack" set:html={stack.html} />
+  <div id="stack" set:html={stack.html} />
   <p class="hint" style="margin-top:14px;max-width:62ch">{stackFootnote()}</p>
 </section>

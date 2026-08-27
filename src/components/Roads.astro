@@ -1,0 +1,28 @@
+---
+/*
+ * Section six. The objection every reader raises last, answered with numbers.
+ *
+ * Most of this section is the same at every income. One card is not: it shows
+ * the reader the transport slice of their own tax. So the ids below are here
+ * for app.ts, exactly as the other results sections do it.
+ */
+import { ROADS } from '../lib/data';
+
+interface Props {
+  lede: string;
+  groups: string;
+}
+
+const { lede, groups } = Astro.props;
+---
+
+<section class="section">
+  <div class="section-head">
+    <p class="eyebrow">Section six</p>
+    <h2>But what about the roads?</h2>
+  </div>
+
+  <p class="rc-intro" id="roadsLede">{lede}</p>
+  <div id="roadsGroups" set:html={groups} />
+  <p class="hint" style="margin-top:14px;max-width:70ch">{ROADS.caveat}</p>
+</section>

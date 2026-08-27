@@ -24,8 +24,9 @@ threshold is written in the code. This document explains the parts.
 | `src/data/basket.json` | Everyday purchase prices, section two | a person |
 | `src/data/receipt.json` | What the money was spent on, section three | a person |
 | `src/data/outlays.json` | Federal spending by category, the donut in section three | a person |
-| `src/data/ladder.json` | The ladder, section five | a person |
-| `src/data/charity.json` | Dollars per unit of good, section six | a person |
+| `src/data/ladder.json` | The ladder and its groups, section five | a person |
+| `src/data/charity.json` | Dollars per unit of good, one group of the ladder | a person |
+| `src/data/roads.json` | One unit bought twice, public against private, section six | a person |
 | `src/data/assumptions.json` | Sales tax estimate, slider ranges, defaults | a person |
 
 Each file has a schema of the same name in `schemas/`.
@@ -109,6 +110,33 @@ sets exit code 1.
 3. Point the field's meta block at it: `"updateMode": "fetch"`, `"updater": "<name>"`.
 4. Run `node scripts/update-data.mjs --only=<name> --dry-run`.
 
+## The ladder groups
+
+Section five used to be two sections: the ladder, then the give. Both answered
+the same question, so they are now one ladder in three groups. A group sorts by
+**who a rung is for**, never by what it costs. Within a group the rungs run
+cheapest first.
+
+`ladder.json` holds the groups. Every item names one with its `group` field.
+
+```json
+"groups": [
+  { "id": "others", "title": "For someone else", "lede": "…", "includesCharity": true },
+  { "id": "family", "title": "For your family",  "lede": "…" },
+  { "id": "you",    "title": "For you",          "lede": "…" }
+]
+```
+
+**`includesCharity` is how `charity.json` reaches the page.** Every item in that
+file joins the group that sets the flag, and is priced in beside its rungs.
+Exactly one group may set it. Set it nowhere and `charity.json` renders nowhere,
+silently; set it twice and the same rungs print twice. `semanticErrors` refuses
+both.
+
+A group may carry a `footnote`, printed under its own rungs. The giving group
+uses it for the GiveWell caveat, which belongs beside those prices rather than at
+the foot of a section it does not describe.
+
 ## Adding a ladder item priced from another file
 
 A ladder item takes a fixed `price`, or a `priceFrom` block:
@@ -124,6 +152,11 @@ A `reader.*` ref prices a rung from the reader's own take-home, so the rung cost
 them their own time rather than a shop price. A rung that resolves to zero is
 dropped, which is what happens to every `reader.*` rung when the income box is
 empty.
+
+**Never price a rung from `charity.*`.** There used to be a `charity.life-amf`
+ref, back when the give was its own section. Charity items are rungs of this same
+ladder now, so such a ref would put one figure on the page twice. A rule refuses
+it.
 
 ## The receipt card kinds
 
@@ -148,6 +181,105 @@ the value to the enum in `schemas/receipt.schema.json` together.
 
 **Every receipt figure is a share, never a purchase.** Write card copy as "your
 share of", never "you bought". Money is fungible and the notes section says so.
+
+## The roads comparison
+
+Section six answers the objection every reader raises last: the government builds
+the roads. `roads.json` holds one `kind` per card, and the kind decides which
+field carries the number.
+
+| Kind | Field | The card shows |
+| --- | --- | --- |
+| `multiple` | `publicPrice`, `privatePrice` | One unit bought twice. Prints how many times more the state paid |
+| `record` | `figure` | A count or share on its own, with no arithmetic |
+| `reader` | `compute` | Worked out in code from the reader's own tax |
+
+The first version of this section had only `multiple`. That shape could not hold
+the strongest answers to the question, because they are not price comparisons at
+all: private companies built America's first roads, Swedes still maintain two
+thirds of theirs, and transport is under two cents of the federal dollar. Those
+are `record` cards.
+
+```json
+{
+  "id": "astronaut-seat", "group": "air", "kind": "multiple",
+  "label": "more, per astronaut carried to orbit and home again",
+  "publicPrice": 170000000, "privatePrice": 55000000,
+  "sameness": "One customer buying one thing: NASA putting a NASA astronaut into
+               low Earth orbit and returning them alive. …",
+  "note": "A seat on the Space Shuttle cost about {public} … about {private} …",
+  "publicSource":  { "label": "…", "url": "…" },
+  "privateSource": { "label": "…", "url": "…" }
+}
+```
+
+### The sameness sentence
+
+**Every `multiple` card must carry one, and it prints before the prices.**
+
+There used to be a card claiming police cost 5.3× more per officer. Its own note
+then said: *"These are not the same job: a guard cannot arrest you, investigate a
+killing or answer a 911 call."* A critic reads that and answers **"exactly, it is
+NOT the same job."** The card handed over the argument it was written to win.
+
+Honesty was not the problem. The unit was. `sameness` forces the author to earn
+the comparison before making it: one sentence naming what makes the two sides the
+same job. Same statute. Same unit. Same buyer. Same beat. Same year.
+
+If you cannot write that sentence, you do not have a card. Find a narrower unit
+where the jobs really are identical, or drop it. That is how per-kilogram-to-orbit
+became per-astronaut-carried, and how cost-per-police-officer became the price of
+one hour of contracted patrol in one Houston neighbourhood.
+
+`sameness` says what makes the sides **alike**. The `note` is where the remaining
+differences go. Both are still required.
+
+### Rules `semanticErrors` enforces
+
+Break any of them and `npm run build` refuses.
+
+1. **Every `multiple` carries a `sameness`.** See above.
+2. **On a `multiple`, `privatePrice` must be below `publicPrice`.** A card
+   reading "0.8× more" contradicts the heading above it. If a real comparison
+   comes out that way, it does not belong in this section.
+3. **A `multiple` note must use both `{public}` and `{private}`.** The ratio is
+   only checkable if the reader can see the two numbers it came from.
+4. **A kind carries only its own fields.** A price on a `record` card is a number
+   the reader can see no way to reach.
+5. **The section lede must use `{transportShare}`.** It prints the transport
+   slice of `outlays.json`. Lose the token and the section opens by conceding.
+6. **Every group an item names must exist.**
+
+Every card names a publisher and links to it. A `multiple` names two, one for
+each side. A reader who disbelieves this section will go and check.
+
+### Two rules the code cannot check
+
+- **Put the remaining weakness in the note, after the sameness sentence.** The
+  $52m at LAX is an extrapolation, and the TSA's own accounting disagrees. The
+  Shuttle carried cargo on the same flight as its crew. NAV CANADA is a
+  non-profit. Say each one. A card that hides its weakness is worth less than no
+  card. A card that leads with its weakness is worth nothing at all.
+- **A comparison that fails like-for-like is dropped, not shaded.** The list of
+  what was tried and thrown out is itself a guard rail; do not re-add these
+  without new evidence.
+
+  | Dropped | Why |
+  | --- | --- |
+  | Letter post | A stamp beats every courier. The market loses this one |
+  | Courts against arbitration | One figure is the cost of the forum, the other is what the parties pay their lawyers |
+  | Cost per police officer | No narrower unit rescued it; replaced by the patrol hour |
+  | Subscription fire | Rural/Metro publishes no flat fee |
+  | Housing | RAND's published ratios do not reconcile from the summaries |
+  | California high-speed rail | One state's worst project proves nothing about the state as such |
+  | Somali piracy | "No ship with an armed team was ever hijacked" traces only to unnamed officials |
+
+  There is no clean **military** defence comparison in this section. Airport
+  screening and neighbourhood patrol are security, not defence. Do not stretch
+  one to cover the other.
+
+`transportShare()` in `render.ts` reads `outlays.json`, never a number typed in
+code, so the donut in section three and the lede in section six cannot disagree.
 
 ## What the scheduled job will do
 

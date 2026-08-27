@@ -89,7 +89,6 @@ export type PriceRef =
   | 'metals.gold.usdPerTroyOz'
   | 'state.medianHomeValue'
   | 'basket.college-year'
-  | 'charity.life-amf'
   /**
    * The reader's own take-home. A rung priced this way costs them their own life.
    * Years only: a multiplier of 0.25 is three months. One time unit keeps the
@@ -97,8 +96,27 @@ export type PriceRef =
    */
   | 'reader.annualTakeHome';
 
+/**
+ * A band of the ladder. Groups sort by who the rung is for, not by what it costs,
+ * so a saved life and a paid-off home never sit next to each other by accident.
+ *
+ * There used to be a `charity.life-amf` price ref, so one rung of the ladder was
+ * priced from the give file. The give is now a group of this same ladder, which
+ * means the ref would have put the same figure on the page twice.
+ */
+export interface LadderGroup {
+  id: string;
+  title: string;
+  lede: string;
+  /** When true, every charity item joins this group, priced in with its rungs. */
+  includesCharity?: boolean;
+  /** A caveat printed under this group's rungs. */
+  footnote?: string;
+}
+
 export interface LadderItem {
   id: string;
+  group: string;
   singular: string;
   plural: string;
   singularInState?: string;
@@ -110,6 +128,7 @@ export interface LadderItem {
 
 export interface LadderData {
   meta: DataMeta;
+  groups: LadderGroup[];
   items: LadderItem[];
 }
 
@@ -189,6 +208,74 @@ export interface CharityItem {
 export interface CharityData {
   meta: DataMeta;
   items: CharityItem[];
+}
+
+/**
+ * A section six card. The kind decides which fields carry the number.
+ *
+ *   multiple  one unit bought twice; prints how many times more the state paid
+ *   record    one figure that stands on its own, with no arithmetic
+ *   reader    worked out in code from the reader's own tax
+ *
+ * The first version of this section had only `multiple`. That shape could not
+ * hold the strongest answers to the question, which are not price comparisons
+ * at all: that private companies built America's first roads, that Swedes still
+ * maintain two thirds of theirs, and that transport is under two cents of the
+ * federal dollar. Those are `record` cards now.
+ */
+export type RoadsKind = 'multiple' | 'record' | 'reader';
+
+/** Names a function in render.ts. Add the case there before adding a value here. */
+export type RoadsCompute = 'roads-share';
+
+export interface RoadsItem {
+  id: string;
+  group: string;
+  kind: RoadsKind;
+  /** Reads after the figure: "18× | more, per kilogram carried to low Earth orbit". */
+  label: string;
+  /**
+   * Multiple cards. privatePrice must be the lower of the two; validation
+   * refuses the other way round, because a card reading "0.8× more" contradicts
+   * the heading above it.
+   */
+  publicPrice?: number;
+  privatePrice?: number;
+  /**
+   * Multiple cards, and required on every one. One sentence naming what makes
+   * the two sides the same job. It prints first, ahead of the prices.
+   *
+   * A card once said police cost 5.3× more per officer, then conceded in its own
+   * note that a guard cannot arrest anyone. The critic answers "exactly, it is
+   * not the same job" and wins. This field forces the author to earn the
+   * comparison before making it. If the sentence cannot be written, the unit is
+   * wrong; find a narrower one or drop the card.
+   */
+  sameness?: string;
+  /** Record cards. Printed exactly as written. No arithmetic is applied. */
+  figure?: string;
+  /** Reader cards. */
+  compute?: RoadsCompute;
+  /** Shown under the sameness sentence. Multiple cards use {public} and {private}. */
+  note: string;
+  source?: { label: string; url: string };
+  publicSource?: { label: string; url: string };
+  privateSource?: { label: string; url: string };
+}
+
+export interface RoadsGroup {
+  id: string;
+  title: string;
+  lede: string;
+}
+
+export interface RoadsData {
+  meta: DataMeta;
+  lede: string;
+  /** The honest limits of the comparison, printed under the last group. */
+  caveat: string;
+  groups: RoadsGroup[];
+  items: RoadsItem[];
 }
 
 export interface AssumptionsData {

@@ -1,23 +1,52 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "The ladder",
-  "description": "Section five: what the invested balance buys back. An item has a fixed price or a priceFrom block, never both. Every rung is ONE indivisible thing; the site multiplies it. Never price a rung as a bundle of N things, or the plural becomes a tally of sets: 'Sets of three paid-off homes'. If you want three homes, price one home and let the count say 3x.",
+  "description": "Section five: what the invested balance buys back, in three groups. An item has a fixed price or a priceFrom block, never both. Every rung is ONE indivisible thing; the site multiplies it. Never price a rung as a bundle of N things, or the plural becomes a tally of sets: 'Sets of three paid-off homes'. If you want three homes, price one home and let the count say 3x.",
   "type": "object",
-  "required": ["meta", "items"],
+  "required": ["meta", "groups", "items"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Rendered in this order. Each group is its own price-ordered ladder.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "lede"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "lede": { "type": "string", "minLength": 1, "description": "One line under the group title." },
+          "includesCharity": {
+            "type": "boolean",
+            "description": "When true, every item in charity.json joins this group and is priced in alongside its rungs. Exactly one group must set this, or charity.json renders nowhere."
+          },
+          "footnote": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Caveat printed under this group's rungs. Use it where the prices need a warning the notes section cannot carry."
+          }
+        }
+      }
+    },
     "items": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
-        "required": ["id", "singular", "plural", "note"],
+        "required": ["id", "group", "singular", "plural", "note"],
         "additionalProperties": false,
         "oneOf": [{ "required": ["price"] }, { "required": ["priceFrom"] }],
         "properties": {
           "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "group": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "Must name a group above. Groups are about who the rung is for, not what it costs."
+          },
           "singular": { "type": "string", "minLength": 1, "description": "One of the thing. Not a bundle of several." },
           "plural": {
             "type": "string",
@@ -41,7 +70,6 @@
                   "metals.gold.usdPerTroyOz",
                   "state.medianHomeValue",
                   "basket.college-year",
-                  "charity.life-amf",
                   "reader.annualTakeHome"
                 ],
                 "description": "Where the price comes from. A reader.* ref prices the rung from the reader's own take-home; use a fractional multiplier for less than a year. Add a case to src/lib/ladder.ts before adding a value here."

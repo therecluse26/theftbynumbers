@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "The give",
-  "description": "Section six: what the same money does when you hand it over yourself. Cheapest first is not required; the site sorts.",
+  "description": "What the same money does when you hand it over yourself. These items are rungs of the ladder in section five: they join the group in ladder.json that sets includesCharity, and are priced in alongside its rungs. Cheapest first is not required; the site sorts. Because they render as ladder rungs, singular and plural follow the ladder's rules: capitalised, one indivisible thing, and readable aloud after a number.",
   "type": "object",
   "required": ["meta", "items"],
   "additionalProperties": false,

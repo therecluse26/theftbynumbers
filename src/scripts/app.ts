@@ -11,8 +11,6 @@ import {
   basketHtml,
   dialSvg,
   emptyHeroText,
-  giveHtml,
-  giveLede,
   heroText,
   investText,
   ledgerHtml,
@@ -21,16 +19,21 @@ import {
   receiptHtml,
   receiptLede,
   ribbon,
+  roadsHtml,
+  roadsLede,
   stack,
   statusEcho,
 } from '../lib/render';
 import { computeBreakdown, defaultInputs } from '../lib/tax';
 import type { Inputs, StatusId } from '../lib/types';
+import { initDonutHover, refreshDonutHover } from './donut';
 
-function el<T extends HTMLElement>(id: string): T {
+/* `Element`, not `HTMLElement`: the chart and its connector layer are SVG. */
+function el<T extends Element = HTMLElement>(id: string): T {
   const node = document.getElementById(id);
   if (!node) throw new Error('Missing element: ' + id);
-  return node as T;
+  // getElementById is typed HTMLElement, but an SVG node is not one.
+  return node as unknown as T;
 }
 
 const dom = {
@@ -61,13 +64,13 @@ const dom = {
   lifeNote: el('lifeNote'),
   lifeWeek: el('lifeWeek'),
   lifeWeekNote: el('lifeWeekNote'),
-  donutSvg: el('donutSvg'),
-  donutLegend: el('donutLegend'),
+  donutHost: el<HTMLElement>('donutHost'),
+  donutSvg: el<SVGSVGElement>('donutSvg'),
+  donutLegend: el<HTMLElement>('donutLegend'),
+  donutLink: el<SVGSVGElement>('donutLink'),
   donutNote: el('donutNote'),
   receiptLede: el('receiptLede'),
   receiptGroups: el('receiptGroups'),
-  giveLede: el('giveLede'),
-  giveGrid: el('giveGrid'),
   yearsEcho: el('yearsEcho'),
   fvFig: el('fvFig'),
   fvNote: el('fvNote'),
@@ -78,6 +81,8 @@ const dom = {
   cmpBody: el('cmpBody'),
   stackLede: el('stackLede'),
   stack: el('stack'),
+  roadsLede: el('roadsLede'),
+  roadsGroups: el('roadsGroups'),
 };
 
 const statusButtons = Array.from(
@@ -124,6 +129,8 @@ function update(): void {
     dom.heroFig.textContent = hero.figure;
     dom.heroFoot.innerHTML = hero.foot;
     dom.dial.innerHTML = dialSvg(0);
+    // Section three is hidden now. Drop any highlight the reader was holding.
+    refreshDonutHover();
     return;
   }
 
@@ -154,12 +161,11 @@ function update(): void {
   dom.donutSvg.innerHTML = donut.svg;
   dom.donutLegend.innerHTML = donut.legend;
   dom.donutNote.textContent = donut.note;
+  // Both halves were just replaced. Put the reader's highlight back on them.
+  refreshDonutHover();
 
   dom.receiptLede.textContent = receiptLede(breakdown, inputs);
   dom.receiptGroups.innerHTML = receiptHtml(breakdown, inputs);
-
-  dom.giveLede.textContent = giveLede(breakdown, inputs);
-  dom.giveGrid.innerHTML = giveHtml(breakdown.total * inputs.years);
 
   const invest = investText(breakdown, inputs);
   dom.yearsEcho.textContent = String(inputs.years);
@@ -174,6 +180,11 @@ function update(): void {
   const ladder = stack(invest.balanceValue, inputs, breakdown.kept);
   dom.stack.innerHTML = ladder.html;
   dom.stackLede.textContent = ladder.lede;
+
+  // Only one card in section six moves with the reader. Re-rendering the whole
+  // section costs nothing and keeps one code path instead of two.
+  dom.roadsLede.textContent = roadsLede();
+  dom.roadsGroups.innerHTML = roadsHtml(breakdown, inputs);
 }
 
 dom.income.addEventListener('input', function () {
@@ -236,6 +247,8 @@ dom.sales.addEventListener('change', function () {
   inputs.countSalesTax = this.checked;
   update();
 });
+
+initDonutHover(dom.donutHost, dom.donutSvg, dom.donutLegend, dom.donutLink);
 
 readDom();
 update();

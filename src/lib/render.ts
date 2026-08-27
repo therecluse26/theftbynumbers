@@ -5,20 +5,12 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import {
-  ASSUMPTIONS,
-  BASKET,
-  CHARITY,
-  METALS,
-  OUTLAYS,
-  RECEIPT,
-  TAX,
-  longDate,
-} from './data';
-import { career, commas, duration, escapeHtml, months, pct, usd } from './format';
-import { resolveLadder } from './ladder';
+import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, TAX, longDate } from './data';
+import { career, commas, duration, escapeHtml, months, multiple, pct, usd } from './format';
+import { resolveLadderGroups } from './ladder';
+import type { ResolvedLadderItem } from './ladder';
 import { employerSharePctLabel, investmentSeries } from './tax';
-import type { Breakdown, Inputs, ReceiptItem } from './types';
+import type { Breakdown, Inputs, ReceiptItem, RoadsItem } from './types';
 
 const INK = '#0B0B0A';
 const BONE = '#EDEAE3';
@@ -125,12 +117,14 @@ function point(radius: number, deg: number): [string, string] {
   return [(radius * Math.cos(a)).toFixed(2), (radius * Math.sin(a)).toFixed(2)];
 }
 
+/** `attrs` rides on the path untouched, for callers that need a hook on a slice. */
 function arc(
   radius: number,
   a0: number,
   a1: number,
   width: number,
   colour: string,
+  attrs = '',
 ): string {
   const p0 = point(radius, a0);
   const p1 = point(radius, a1);
@@ -154,7 +148,9 @@ function arc(
     colour +
     '" stroke-width="' +
     width +
-    '" stroke-linecap="butt"/>'
+    '" stroke-linecap="butt"' +
+    (attrs ? ' ' + attrs : '') +
+    '/>'
   );
 }
 
@@ -419,15 +415,37 @@ function countText(count: number): { shown: string; unit: string; singular: bool
   return { shown: count.toFixed(2), unit: 'of one', singular: true };
 }
 
-/** One card. Every string from a data file arrives escaped by the caller. */
+interface Source {
+  label: string;
+  url: string;
+}
+
+/**
+ * One card. Every string from a data file arrives escaped by the caller.
+ *
+ * A card takes one source, or several. Section six compares one unit bought
+ * twice, so both prices must name their own publisher on the same card.
+ */
 function card(
   extraClass: string,
   figure: string,
   unit: string,
   label: string,
   note: string,
-  source?: { label: string; url: string },
+  source?: Source | Source[],
 ): string {
+  const sources = source ? (Array.isArray(source) ? source : [source]) : [];
+  const links = sources
+    .map(
+      (s) =>
+        '<a href="' +
+        escapeHtml(s.url) +
+        '" target="_blank" rel="noopener noreferrer">' +
+        escapeHtml(s.label) +
+        '</a>',
+    )
+    .join(' &middot; ');
+
   return (
     '<div class="buy' +
     (extraClass ? ' ' + extraClass : '') +
@@ -442,13 +460,7 @@ function card(
     '<p class="buy-price">' +
     escapeHtml(note) +
     '</p>' +
-    (source
-      ? '<p class="buy-src"><a href="' +
-        escapeHtml(source.url) +
-        '" target="_blank" rel="noopener noreferrer">' +
-        escapeHtml(source.label) +
-        '</a></p>'
-      : '') +
+    (links ? '<p class="buy-src">' + links + '</p>' : '') +
     '</div>'
   );
 }
@@ -548,6 +560,20 @@ export interface DonutRender {
   note: string;
 }
 
+/** Ring geometry. The browser draws its connectors against the same numbers. */
+const DONUT_RADIUS = 62;
+const DONUT_WIDTH = 30;
+
+/** A lit slice thickens. Keep this equal to `.dn-slice.is-on` in global.css. */
+const DONUT_LIT_WIDTH = 38;
+
+/**
+ * Where a connector meets the ring: the outer edge of a lit slice, since a
+ * connector is only ever drawn on one. Exported so the drawing code and the
+ * hover code can never drift apart.
+ */
+export const DONUT_ANCHOR_R = DONUT_RADIUS + DONUT_LIT_WIDTH / 2;
+
 /**
  * Where the money goes, and what each slice cost the reader in months of work.
  *
@@ -559,8 +585,8 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
   const total = OUTLAYS.totalOutlays || 1;
   const taxOverYears = r.total * inputs.years;
 
-  const RADIUS = 62;
-  const WIDTH = 30;
+  const RADIUS = DONUT_RADIUS;
+  const WIDTH = DONUT_WIDTH;
 
   let svg = '';
   let legend = '';
@@ -571,13 +597,25 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
     const sweep = share * 360;
     const colour = SLICE_COLOURS[index % SLICE_COLOURS.length]!;
 
+    // The pair of hooks that ties one slice to one legend row: which category
+    // it is, and the angle a connector should leave the ring at.
+    const mid = angle + sweep / 2;
+    const hooks =
+      'data-slice="' +
+      escapeHtml(category.id) +
+      '" data-mid="' +
+      mid.toFixed(3) +
+      '"';
+
     // A slice under a fifth of a degree draws as a dot and reads as dirt.
     if (sweep > 0.2) {
       // A single arc cannot span a full circle; its two ends would meet and
       // the path would collapse to nothing.
       if (sweep >= 359.9) {
         svg +=
-          '<circle r="' +
+          '<circle class="dn-slice" ' +
+          hooks +
+          ' r="' +
           RADIUS +
           '" fill="none" stroke="' +
           colour +
@@ -585,7 +623,14 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
           WIDTH +
           '"/>';
       } else {
-        svg += arc(RADIUS, angle, angle + sweep, WIDTH, colour);
+        svg += arc(
+          RADIUS,
+          angle,
+          angle + sweep,
+          WIDTH,
+          colour,
+          'class="dn-slice" ' + hooks,
+        );
       }
     }
     angle += sweep;
@@ -594,7 +639,9 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
     const monthsOfLife = r.effectiveRate * inputs.years * share * 12;
 
     legend +=
-      '<div class="dn-row">' +
+      '<div class="dn-row" tabindex="0" ' +
+      hooks +
+      '>' +
       '<i class="dn-dot" style="background:' +
       colour +
       '"></i>' +
@@ -785,43 +832,6 @@ export function receiptLede(r: Breakdown, inputs: Inputs): string {
   );
 }
 
-/* ---------- give ---------- */
-
-export function giveHtml(taxOverYears: number): string {
-  let html = '';
-  for (const item of CHARITY.items) {
-    const { shown, unit, singular } = countText(taxOverYears / item.price);
-    html += card(
-      'gv',
-      shown,
-      unit,
-      singular ? item.singular : item.plural,
-      item.note.replace('{price}', usd(item.price)),
-      item.source,
-    );
-  }
-  return html;
-}
-
-/**
- * The lede above the give. The two halves of the sentence are the whole argument.
- * The federal figure comes from the receipt file, never from a number typed here.
- */
-export function giveLede(r: Breakdown, inputs: Inputs): string {
-  const taxOverYears = r.total * inputs.years;
-  const federal = RECEIPT.items.find((item) => item.id === 'federal-spending');
-  const seconds = federal?.annualCost
-    ? (taxOverYears / federal.annualCost) * SECONDS_IN_YEAR
-    : 0;
-  return (
-    'The same ' +
-    usd(taxOverYears) +
-    '. To the federal government it bought ' +
-    duration(seconds) +
-    '. Handed over by you instead, it buys this.'
-  );
-}
-
 /* ---------- invest ---------- */
 
 export interface InvestText {
@@ -989,9 +999,83 @@ export interface StackRender {
   lede: string;
 }
 
+/** The source link that hangs off a rung's note. Only the giving rungs carry one. */
+function tierSource(source?: { label: string; url: string }): string {
+  if (!source) return '';
+  return (
+    ' <a href="' +
+    escapeHtml(source.url) +
+    '" target="_blank" rel="noopener noreferrer">' +
+    escapeHtml(source.label) +
+    '</a>'
+  );
+}
+
 /**
- * The ladder, cheapest first, with a waterline marking where the balance lands.
- * Everything above the line is bought back outright; the next few are shown short.
+ * The count column is a fixed width, so the numbers line up down the page.
+ * A dollar rung counted against a large balance gives "1,724,324,275x", which
+ * would run straight through the name beside it and scroll the whole page
+ * sideways. Step the size down rather than break the alignment.
+ */
+function countClass(shown: string): string {
+  if (shown.length >= 11) return ' tier-count-xs';
+  if (shown.length >= 8) return ' tier-count-sm';
+  return '';
+}
+
+/** One rung the balance clears outright. */
+function tier(item: ResolvedLadderItem, count: number): string {
+  const shown = commas(count);
+  return (
+    '<div class="tier">' +
+    '<span class="tier-count num' +
+    countClass(shown) +
+    '">' +
+    shown +
+    '<small>x</small></span>' +
+    '<span class="tier-name">' +
+    escapeHtml(count === 1 ? item.singular : item.plural) +
+    '<span class="tier-note">' +
+    escapeHtml(item.note) +
+    tierSource(item.source) +
+    '</span></span>' +
+    '<span class="tier-price num">' +
+    usd(item.price) +
+    '</span>' +
+    '</div>'
+  );
+}
+
+/** One rung the balance does not reach, with the gap named. */
+function lockedTier(item: ResolvedLadderItem, balance: number): string {
+  return (
+    '<div class="tier locked">' +
+    '<span class="tier-count">short ' +
+    usd(item.price - balance) +
+    '</span>' +
+    '<span class="tier-name">' +
+    escapeHtml(item.singular) +
+    '<span class="tier-note">' +
+    escapeHtml(item.note) +
+    tierSource(item.source) +
+    '</span></span>' +
+    '<span class="tier-price num">' +
+    usd(item.price) +
+    '</span>' +
+    '</div>'
+  );
+}
+
+/** Locked rungs shown per group. Past this it is a wall of grey, not an argument. */
+const LOCKED_PER_GROUP = 2;
+
+/**
+ * What the invested balance buys back, in three groups: for someone else, for
+ * your family, for you. Within a group the rungs run cheapest first.
+ *
+ * The groups sort by who a rung is for, not by what it costs. That is the whole
+ * point of grouping: a saved life and a paid-off home answer different questions,
+ * and a single price-ordered list makes them look like the same question.
  *
  * The rungs measure freedom, not objects, so several of them are priced from the
  * reader's own take-home. That is why this needs the take-home passed in.
@@ -1001,9 +1085,14 @@ export function stack(
   inputs: Inputs,
   annualTakeHome: number,
 ): StackRender {
-  const items = resolveLadder(inputs.stateIndex, annualTakeHome);
-  const waterline =
-    '<div class="waterline">' +
+  const groups = resolveLadderGroups(inputs.stateIndex, annualTakeHome);
+
+  // The balance is stated once, at the top. It used to be a waterline drawn
+  // where the ladder ran out. Grouped rungs are no longer in price order across
+  // the whole section, so "everything above this line is yours" stopped being
+  // true and the line had to become a plain heading.
+  let html =
+    '<div class="balance-bar">' +
     '<span>Your balance after ' +
     inputs.years +
     ' ' +
@@ -1014,66 +1103,171 @@ export function stack(
     '</span>' +
     '</div>';
 
-  let html = '';
   let cleared = 0;
-  let shownLocked = 0;
+  let total = 0;
 
-  for (const item of items) {
-    const count = Math.floor(balance / item.price);
+  for (const group of groups) {
+    let rungs = '';
+    let shownLocked = 0;
 
-    if (count >= 1) {
-      cleared++;
-      html +=
-        '<div class="tier">' +
-        '<span class="tier-count num">' +
-        commas(count) +
-        '<small>x</small></span>' +
-        '<span class="tier-name">' +
-        escapeHtml(count === 1 ? item.singular : item.plural) +
-        '<span class="tier-note">' +
-        escapeHtml(item.note) +
-        '</span></span>' +
-        '<span class="tier-price num">' +
-        usd(item.price) +
-        '</span>' +
-        '</div>';
-      continue;
+    for (const item of group.items) {
+      total++;
+      const count = Math.floor(balance / item.price);
+      if (count >= 1) {
+        cleared++;
+        rungs += tier(item, count);
+      } else if (shownLocked < LOCKED_PER_GROUP) {
+        rungs += lockedTier(item, balance);
+        shownLocked++;
+      }
     }
 
-    if (shownLocked === 0) html += waterline;
-    if (shownLocked < 3) {
-      html +=
-        '<div class="tier locked">' +
-        '<span class="tier-count">short ' +
-        usd(item.price - balance) +
-        '</span>' +
-        '<span class="tier-name">' +
-        escapeHtml(item.singular) +
-        '<span class="tier-note">' +
-        escapeHtml(item.note) +
-        '</span></span>' +
-        '<span class="tier-price num">' +
-        usd(item.price) +
-        '</span>' +
-        '</div>';
-      shownLocked++;
-    }
+    html +=
+      '<div class="rc-group">' +
+      '<h3 class="rc-title">' +
+      escapeHtml(group.title) +
+      '</h3>' +
+      '<p class="rc-lede">' +
+      escapeHtml(group.lede) +
+      '</p>' +
+      '<div class="stack">' +
+      rungs +
+      '</div>' +
+      (group.footnote
+        ? '<p class="hint stack-foot">' + escapeHtml(group.footnote) + '</p>'
+        : '') +
+      '</div>';
   }
-
-  // Balance clears the whole ladder, so the waterline goes at the top.
-  if (shownLocked === 0) html = waterline + html;
 
   return {
     html,
     lede:
       cleared === 0
         ? 'Not yet enough for anything on this list. Raise the income, the years, or the return.'
-        : 'Invested instead of paid, the balance buys back ' +
+        : 'Invested instead of paid, ' +
+          usd(balance) +
+          ' buys back ' +
           cleared +
           ' of the ' +
-          items.length +
-          ' rungs below.',
+          total +
+          ' rungs below. ' +
+          federalSecondsSentence(balance),
   };
+}
+
+/**
+ * How long the federal government takes to spend the reader's whole balance.
+ * The federal figure comes from the receipt file, never from a number typed here.
+ */
+function federalSecondsSentence(balance: number): string {
+  const federal = RECEIPT.items.find((item) => item.id === 'federal-spending');
+  if (!federal?.annualCost) return '';
+  const seconds = (balance / federal.annualCost) * SECONDS_IN_YEAR;
+  return 'The federal government spends that much in ' + duration(seconds) + '.';
+}
+
+/* ---------- but what about the roads? ---------- */
+
+/**
+ * The transport slice of federal spending, as a share of the whole.
+ *
+ * This is the first answer section six gives, and the hardest one to argue
+ * with. It comes from outlays.json, never from a number typed here, so the
+ * donut in section three and the lede in section six can never disagree.
+ */
+function transportShare(): number {
+  const transport = OUTLAYS.categories.find((c) => c.id === 'transportation');
+  if (!transport) return 0;
+  return transport.amount / OUTLAYS.totalOutlays;
+}
+
+/** The paragraph above the groups. It names the size of the bill first. */
+export function roadsLede(): string {
+  return ROADS.lede.replace('{transportShare}', pct(transportShare(), 2));
+}
+
+/** One section six card. The kind decides which field carries the number. */
+function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
+  if (item.kind === 'multiple') {
+    // The sameness sentence prints first, ahead of the prices. A reader who
+    // doubts the card asks "is that the same job?" before anything else, so the
+    // card answers that question before it quotes a number.
+    return card(
+      'rc',
+      multiple(item.publicPrice! / item.privatePrice!),
+      '',
+      item.label,
+      item.sameness +
+        ' ' +
+        item.note
+          .replace('{public}', usd(item.publicPrice!))
+          .replace('{private}', usd(item.privatePrice!)),
+      [item.publicSource!, item.privateSource!],
+    );
+  }
+
+  if (item.kind === 'record') {
+    // No arithmetic. The figure is printed as the file wrote it, so it can
+    // carry its own unit: "284,000 km", "1.9 to 1", "1.82%".
+    return card('rc rc-fact', escapeHtml(item.figure!), '', item.label, item.note, item.source);
+  }
+
+  // Reader: the transport share of this reader's own tax, over their own years.
+  // The same slice the donut already shows them, lifted out and set alone under
+  // the question it answers.
+  const share = r.total * inputs.years * transportShare();
+  return card(
+    'rc',
+    usd(share),
+    '',
+    item.label,
+    'Over ' +
+      inputs.years +
+      ' ' +
+      plural(inputs.years, 'year') +
+      ' you hand over ' +
+      usd(r.total * inputs.years) +
+      '. At the transport share, ' +
+      usd(share) +
+      ' of it is the roads answer. The other ' +
+      usd(r.total * inputs.years - share) +
+      ' is everything else. ' +
+      item.note,
+    item.source,
+  );
+}
+
+/**
+ * Section six: every group, in file order, each with its own grid.
+ *
+ * One card moves with the reader's inputs, so this takes the breakdown like
+ * every other builder here and the browser script re-runs it on each keystroke.
+ * The rest of the section is the same at every income; re-rendering it costs
+ * nothing and keeps one code path instead of two.
+ */
+export function roadsHtml(r: Breakdown, inputs: Inputs): string {
+  let html = '';
+  for (const group of ROADS.groups) {
+    const items = ROADS.items.filter((item) => item.group === group.id);
+    if (items.length === 0) continue;
+
+    let cards = '';
+    for (const item of items) cards += roadsCard(item, r, inputs);
+
+    html +=
+      '<div class="rc-group">' +
+      '<h3 class="rc-title">' +
+      escapeHtml(group.title) +
+      '</h3>' +
+      '<p class="rc-lede">' +
+      escapeHtml(group.lede) +
+      '</p>' +
+      '<div class="buy-grid">' +
+      cards +
+      '</div>' +
+      '</div>';
+  }
+  return html;
 }
 
 /** The footnote under the ladder. Its date comes from the metals file. */

@@ -1,7 +1,6 @@
 ---
 import Basket from '../components/Basket.astro';
 import Controls from '../components/Controls.astro';
-import Give from '../components/Give.astro';
 import Hero from '../components/Hero.astro';
 import Invest from '../components/Invest.astro';
 import Ledger from '../components/Ledger.astro';
@@ -9,13 +8,12 @@ import Notes from '../components/Notes.astro';
 import Rail from '../components/Rail.astro';
 import Receipt from '../components/Receipt.astro';
 import Ribbon from '../components/Ribbon.astro';
+import Roads from '../components/Roads.astro';
 import Stack from '../components/Stack.astro';
 import Base from '../layouts/Base.astro';
 import {
   basketHtml,
   dialSvg,
-  giveHtml,
-  giveLede,
   heroText,
   investText,
   ledgerHtml,
@@ -24,6 +22,8 @@ import {
   receiptHtml,
   receiptLede,
   ribbon,
+  roadsHtml,
+  roadsLede,
   stack,
 } from '../lib/render';
 import { computeBreakdown, defaultInputs } from '../lib/tax';
@@ -34,11 +34,10 @@ const inputs = defaultInputs();
 const breakdown = computeBreakdown(inputs);
 const hero = heroText(breakdown, inputs);
 const invest = investText(breakdown, inputs);
-const taxOverYears = breakdown.total * inputs.years;
 ---
 
 <Base
-  title="Withheld - What your taxes cost, and what they could have been"
+  title="Theft by Numbers - What your taxes cost, and what they could have been"
   description="A calculator that shows what one year of US tax costs you, what it would have bought, and what it would be worth if you had invested it instead."
 >
   <Rail />
@@ -63,7 +62,7 @@ const taxOverYears = breakdown.total * inputs.years;
       />
       <Invest invest={invest} years={inputs.years} />
       <Stack stack={stack(invest.balanceValue, inputs, breakdown.kept)} />
-      <Give lede={giveLede(breakdown, inputs)} cards={giveHtml(taxOverYears)} />
+      <Roads lede={roadsLede()} groups={roadsHtml(breakdown, inputs)} />
       <Notes />
     </main>
   </div>

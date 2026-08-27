@@ -1,0 +1,144 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "But what about the roads?",
+  "description": "Section six. Every reader who reaches the end of this page raises the same objection: the government builds the roads. Groups order the page. Every item names its own group and its own card kind. A comparison must be like for like: the same unit, the same year, the same country. Where it is not, say so in the note. A comparison that cannot be sourced on both sides is dropped, not shaded.",
+  "type": "object",
+  "required": ["meta", "lede", "caveat", "groups", "items"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "meta": { "$ref": "meta.schema.json" },
+    "lede": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The paragraph above the groups. Supports the {transportShare} token, which prints the transport slice of outlays.json as a percentage."
+    },
+    "caveat": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Printed under the last group, in the hint style. The honest limits of every comparison above it. This is not optional decoration; the section is dishonest without it."
+    },
+    "groups": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Rendered in this order. An item points at one of these by id.",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "lede"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "title": { "type": "string", "minLength": 1 },
+          "lede": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "group", "kind", "label", "note"],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": { "properties": { "kind": { "const": "multiple" } }, "required": ["kind"] },
+            "then": {
+              "required": [
+                "publicPrice",
+                "privatePrice",
+                "sameness",
+                "publicSource",
+                "privateSource"
+              ]
+            }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "record" } }, "required": ["kind"] },
+            "then": { "required": ["figure", "source"] }
+          },
+          {
+            "if": { "properties": { "kind": { "const": "reader" } }, "required": ["kind"] },
+            "then": { "required": ["compute"] }
+          }
+        ],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "group": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$",
+            "description": "The id of a group above. Validation refuses a group that does not exist."
+          },
+          "kind": {
+            "enum": ["multiple", "record", "reader"],
+            "description": "multiple: one unit bought twice, the card prints how many times more the public price was. record: one figure that stands on its own, with no arithmetic. reader: worked out in code from the reader's own tax."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The line under the figure. On a multiple card it reads straight after the ratio, so it starts lower case and names the unit: \"more, per kilogram carried to low Earth orbit\"."
+          },
+          "publicPrice": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Multiple cards only. Dollars the state pays for one unit. Record the year in the note; a programme cost moves when the plan is revised, not on a schedule."
+          },
+          "privatePrice": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "description": "Multiple cards only. Dollars a market actor charges for the same one unit. Must be below publicPrice. A card reading \"0.8× more\" contradicts its own heading, and validation refuses it."
+          },
+          "figure": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Record cards only. Printed exactly as written: \"373,000\", \"1.82%\", \"10,000 miles\". No arithmetic is applied to it."
+          },
+          "compute": {
+            "enum": ["roads-share"],
+            "description": "Reader cards only. Names a function in src/lib/render.ts. Add the case there before adding a value here."
+          },
+          "sameness": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Multiple cards only, and required on every one. ONE SENTENCE naming what makes the two sides the same job: same statute, same unit, same buyer, same beat, same year. It is printed first, ahead of the prices. A card that fails to earn this sentence is a card whose critic answers \"exactly, it is not the same job\" and wins. If you cannot write it, find a narrower unit where the jobs really are identical, or drop the card. Say what makes the sides ALIKE here; the note below is where differences go."
+          },
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Shown under the sameness sentence. A multiple card must use both the {public} and {private} tokens, so a reader can divide them and get the ratio back. Name any remaining way in which the two sides are not alike, and name the year of each figure."
+          },
+          "source": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "description": "Record and reader cards. Who published the figure.",
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          },
+          "publicSource": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "description": "Multiple cards. Who published the government price. Prefer an inspector general, an auditor, or the agency's own plan over a news report.",
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          },
+          "privateSource": {
+            "type": "object",
+            "required": ["label", "url"],
+            "additionalProperties": false,
+            "description": "Multiple cards. Who published the market price. Prefer a published price list over an estimate.",
+            "properties": {
+              "label": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "format": "uri" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -96,9 +96,37 @@ export function semanticErrors(entry, data) {
 
   if (entry.id === 'ladder') {
     duplicate(data.items.map((i) => i.id), 'ladder item');
+    duplicate(data.groups.map((g) => g.id), 'ladder group');
+    const groups = new Set(data.groups.map((g) => g.id));
     for (const item of data.items) {
+      if (!groups.has(item.group)) {
+        errors.push(`${item.id} points at group "${item.group}", which does not exist`);
+      }
       if (item.price && item.priceFrom) {
         errors.push(`${item.id} has both price and priceFrom; pick one`);
+      }
+    }
+
+    // The give is a group of this ladder, not a section of its own. No group
+    // claims it and charity.json renders nowhere, silently. Two groups claim it
+    // and the same rungs appear twice on the page.
+    const giving = data.groups.filter((g) => g.includesCharity);
+    if (giving.length !== 1) {
+      errors.push(
+        `exactly one group must set includesCharity, so charity.json has a home; ` +
+          `${giving.length} do`,
+      );
+    }
+
+    // The ladder used to price a rung from charity.life-amf. That rung and the
+    // give section then printed the same figure in two places. Now that the give
+    // IS a group here, the ref would put every charity price on the page twice.
+    for (const item of data.items) {
+      if (item.priceFrom?.ref?.startsWith('charity.')) {
+        errors.push(
+          `${item.id} prices from "${item.priceFrom.ref}"; charity items are ` +
+            `already rungs of this ladder, so the figure would appear twice`,
+        );
       }
     }
   }
@@ -125,6 +153,72 @@ export function semanticErrors(entry, data) {
   }
 
   if (entry.id === 'charity') duplicate(data.items.map((i) => i.id), 'charity item');
+
+  if (entry.id === 'roads') {
+    duplicate(data.items.map((i) => i.id), 'roads item');
+    duplicate(data.groups.map((g) => g.id), 'roads group');
+    const groups = new Set(data.groups.map((g) => g.id));
+    for (const item of data.items) {
+      if (!groups.has(item.group)) {
+        errors.push(`${item.id} points at group "${item.group}", which does not exist`);
+      }
+
+      if (item.kind === 'multiple') {
+        // The section claims the market does the same job for less. A card whose
+        // private price is the higher one prints "0.8× more" under a heading that
+        // says the opposite, and hands the argument to the other side. If a real
+        // comparison comes out that way, it does not belong in this section.
+        if (item.privatePrice >= item.publicPrice) {
+          errors.push(
+            `${item.id} has a private price of ${item.privatePrice} at or above its ` +
+              `public price of ${item.publicPrice}; section six only holds units the ` +
+              `market buys cheaper`,
+          );
+        }
+
+        // Both tokens are the point of the note. A note that names one price
+        // leaves the reader unable to check the multiple printed above it.
+        for (const token of ['{public}', '{private}']) {
+          if (!item.note.includes(token)) {
+            errors.push(`${item.id} note does not use ${token}; state both prices`);
+          }
+        }
+
+        // A comparison must earn itself before it is made. There used to be a
+        // card claiming police cost 5.3x more per officer, which then conceded
+        // in its own note that a guard cannot arrest anyone. The critic answers
+        // "exactly, it is not the same job" and the card has lost. Writing this
+        // sentence is what proves the unit was chosen well.
+        if (!item.sameness || !item.sameness.trim()) {
+          errors.push(
+            `${item.id} has no sameness sentence; say what makes the two sides ` +
+              `the same job, or pick a narrower unit where they are`,
+          );
+        }
+      }
+
+      if (item.kind !== 'multiple' && item.sameness) {
+        errors.push(`${item.id} is a ${item.kind} card and carries sameness; drop it`);
+      }
+
+      // A record card applies no arithmetic, so a price on one is a number the
+      // reader can see no way to reach. It means the card was written as one
+      // kind and edited into another.
+      if (item.kind !== 'multiple' && (item.publicPrice || item.privatePrice)) {
+        errors.push(`${item.id} is a ${item.kind} card and carries a price; drop it`);
+      }
+      if (item.kind !== 'record' && item.figure) {
+        errors.push(`${item.id} is a ${item.kind} card and carries a figure; drop it`);
+      }
+    }
+
+    // The lede promises the reader the size of the transport bill before it
+    // asks who else could do the job. Lose the token and the section opens by
+    // conceding the argument.
+    if (!data.lede.includes('{transportShare}')) {
+      errors.push('lede does not use {transportShare}; open with the size of the bill');
+    }
+  }
 
   if (entry.id === 'outlays') {
     duplicate(data.categories.map((c) => c.id), 'outlay category');

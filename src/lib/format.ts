@@ -6,8 +6,22 @@ const USD = new Intl.NumberFormat('en-US', {
   maximumFractionDigits: 0,
 });
 
-/** "$16,373". Always whole dollars. */
+const USD_CENTS = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
+/**
+ * "$16,373". Whole dollars, except where whole dollars would be a lie.
+ *
+ * Safe water costs about $1.50 a person a year. Rounded, that reads "$2", which
+ * is a third more than the source says and prints a figure nobody published.
+ * Under ten dollars the cents carry real weight, so keep them.
+ */
 export function usd(n: number): string {
+  if (Math.abs(n) < 10 && !Number.isInteger(n)) return USD_CENTS.format(n);
   return USD.format(Math.round(n));
 }
 
@@ -74,6 +88,19 @@ export function career(years: number): string {
   if (restMonths > 0) parts.push(restMonths + (restMonths === 1 ? ' month' : ' months'));
   if (parts.length === 0) return 'less than a month';
   return parts.join(' and ');
+}
+
+/**
+ * "3.7×", "24×". How many times one price is the other.
+ *
+ * Section six divides a government unit price by a market one. The rounding
+ * follows countText(): below ten a decimal carries real weight, above ten it is
+ * noise. Never print "1.0×"; a card that says a thing costs the same as itself
+ * has no business on the page, and validation refuses one.
+ */
+export function multiple(n: number): string {
+  if (!isFinite(n) || n <= 0) return '0×';
+  return (n >= 10 ? String(Math.round(n)) : n.toFixed(1)) + '×';
 }
 
 /*

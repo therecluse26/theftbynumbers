@@ -25,7 +25,7 @@ const { life, donut, lede, groups } = Astro.props;
     <p class="hint" id="lifeWeekNote">{life.weekNote}</p>
   </div>
 
-  <div class="donut">
+  <div class="donut" id="donutHost">
     <div class="dn-chart">
       <svg
         id="donutSvg"
@@ -46,6 +46,9 @@ const { life, donut, lede, groups } = Astro.props;
       </div>
       <div id="donutLegend" set:html={donut.legend} />
     </div>
+    <!-- The connector between a lit row and its slice. Decorative; the legend
+         carries the same pairing in text. -->
+    <svg id="donutLink" class="dn-link" aria-hidden="true" focusable="false"></svg>
   </div>
   <p class="hint" id="donutNote" style="max-width:70ch">{donut.note}</p>
 

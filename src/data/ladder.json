@@ -13,37 +13,85 @@
       }
     }
   },
+  "groups": [
+    {
+      "id": "others",
+      "title": "For someone else",
+      "lede": "None of this is a thing you own. Every price here is worked out by an outside evaluator.",
+      "includesCharity": true,
+      "footnote": "These are modelled averages from GiveWell, not price tags. A cost per life saved carries a wide band, and GiveWell expects every one of these figures to rise over time. GiveDirectly, which simply hands cash to people in extreme poverty, reports that about 89 cents of each dollar reaches the recipient."
+    },
+    {
+      "id": "family",
+      "title": "For your family",
+      "lede": "The bills that decide what your children get to do, and who looks after your parents."
+    },
+    {
+      "id": "you",
+      "title": "For you",
+      "lede": "Your own time and your own property, owned outright, with nothing owed on any of it."
+    }
+  ],
   "items": [
     {
-      "id": "gold-ounce",
-      "singular": "One-ounce gold bar",
-      "plural": "One-ounce gold bars",
-      "priceFrom": { "ref": "metals.gold.usdPerTroyOz", "multiplier": 1 },
-      "note": "spot, {price} an ounce. The money nobody can print more of."
-    },
-    {
-      "id": "life-saved",
-      "singular": "Life saved from malaria",
-      "plural": "Lives saved from malaria",
-      "priceFrom": { "ref": "charity.life-amf", "multiplier": 1 },
-      "note": "{price} at GiveWell's estimate, which carries a wide band. This rung is not a thing you own."
-    },
-    {
-      "id": "emergency-fund",
-      "singular": "Emergency fund, three months of expenses",
-      "plural": "Emergency funds",
-      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 0.25 },
-      "note": "{price}. Most American households do not have this, and know it."
+      "id": "scholarship",
+      "group": "others",
+      "singular": "Scholarship in your name, one student a year, forever",
+      "plural": "Scholarships in your name, one student a year, forever",
+      "priceFrom": { "ref": "basket.college-year", "multiplier": 25 },
+      "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry."
     },
     {
       "id": "childcare-year",
+      "group": "family",
       "singular": "Year of childcare for one child",
       "plural": "Years of childcare for one child",
       "price": 13184,
       "note": "{price} a year, the 2025 national average. It is why one parent stops working."
     },
     {
+      "id": "degree-paid",
+      "group": "family",
+      "singular": "Four-year degree, paid in cash",
+      "plural": "Four-year degrees, paid in cash",
+      "priceFrom": { "ref": "basket.college-year", "multiplier": 4 },
+      "note": "{price} for four years in-state. No loan, no interest, no thirty-year repayment."
+    },
+    {
+      "id": "parent-care-year",
+      "group": "family",
+      "singular": "Year of a parent's care",
+      "plural": "Years of a parent's care",
+      "price": 74400,
+      "note": "{price} a year, the national median for assisted living. Somebody in your family will need it."
+    },
+    {
+      "id": "child-raised",
+      "group": "family",
+      "singular": "Child raised to eighteen, every cost paid",
+      "plural": "Children raised to eighteen, every cost paid",
+      "price": 332000,
+      "note": "{price}, the USDA figure carried to today's money. College is on top of it."
+    },
+    {
+      "id": "gold-ounce",
+      "group": "you",
+      "singular": "One-ounce gold bar",
+      "plural": "One-ounce gold bars",
+      "priceFrom": { "ref": "metals.gold.usdPerTroyOz", "multiplier": 1 },
+      "note": "spot, {price} an ounce. The money nobody can print more of."
+    },
+    {
+      "id": "emergency-fund",
+      "group": "you",
+      "singular": "Emergency fund, three months of expenses",
+      "plural": "Emergency funds",
+      "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 0.25 },
+      "note": "{price}. Most American households do not have this, and know it."
+    },
+    {
       "id": "used-car-owned",
+      "group": "you",
       "singular": "Used car, owned outright",
       "plural": "Used cars, owned outright",
       "price": 26500,
@@ -51,20 +99,15 @@
     },
     {
       "id": "year-back",
+      "group": "you",
       "singular": "Year you never have to work",
       "plural": "Years you never have to work",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 1 },
       "note": "{price}, one year of your own take-home. A year of your life, bought back."
     },
     {
-      "id": "parent-care-year",
-      "singular": "Year of a parent's care",
-      "plural": "Years of a parent's care",
-      "price": 74400,
-      "note": "{price} a year, the national median for assisted living. Somebody in your family will need it."
-    },
-    {
       "id": "home-deposit",
+      "group": "you",
       "singular": "Deposit on a median US home",
       "plural": "Deposits on a median US home",
       "singularInState": "Deposit on the median home in {state}",
@@ -73,14 +116,8 @@
       "note": "{price} down, a fifth of the value. Enough to end the mortgage insurance."
     },
     {
-      "id": "degree-paid",
-      "singular": "Four-year degree, paid in cash",
-      "plural": "Four-year degrees, paid in cash",
-      "priceFrom": { "ref": "basket.college-year", "multiplier": 4 },
-      "note": "{price} for four years in-state. No loan, no interest, no thirty-year repayment."
-    },
-    {
       "id": "home-owned",
+      "group": "you",
       "singular": "Median US home, owned outright",
       "plural": "Median US homes, owned outright",
       "singularInState": "Median home in {state}, owned outright",
@@ -89,21 +126,8 @@
       "note": "{price}, Zillow median value. No mortgage. Nobody takes it for a missed payment."
     },
     {
-      "id": "child-raised",
-      "singular": "Child raised to eighteen, every cost paid",
-      "plural": "Children raised to eighteen, every cost paid",
-      "price": 332000,
-      "note": "{price}, the USDA figure carried to today's money. College is on top of it."
-    },
-    {
-      "id": "scholarship",
-      "singular": "Scholarship in your name, one student a year, forever",
-      "plural": "Scholarships in your name, one student a year, forever",
-      "priceFrom": { "ref": "basket.college-year", "multiplier": 25 },
-      "note": "{price}. Draw four percent a year and it pays one in-state tuition, and never runs dry."
-    },
-    {
       "id": "never-work",
+      "group": "you",
       "singular": "The rest of your life, not working",
       "plural": "Lifetimes of never working again",
       "priceFrom": { "ref": "reader.annualTakeHome", "multiplier": 25 },

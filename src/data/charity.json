@@ -16,8 +16,8 @@
   "items": [
     {
       "id": "deworming",
-      "singular": "child dewormed for a year",
-      "plural": "children dewormed for a year",
+      "singular": "Child dewormed for a year",
+      "plural": "Children dewormed for a year",
       "price": 1,
       "note": "About {price} a child. Worms keep children out of school and out of work for life.",
       "source": {
@@ -27,8 +27,8 @@
     },
     {
       "id": "vitamin-a",
-      "singular": "vitamin A supplement",
-      "plural": "vitamin A supplements",
+      "singular": "Vitamin A supplement, delivered",
+      "plural": "Vitamin A supplements, delivered",
       "price": 1,
       "note": "About {price} to deliver one dose. Vitamin A deficiency blinds and kills small children.",
       "source": {
@@ -37,20 +37,9 @@
       }
     },
     {
-      "id": "malaria-net",
-      "singular": "insecticide-treated bed net",
-      "plural": "insecticide-treated bed nets",
-      "price": 6,
-      "note": "About {price} a net, delivered and hung. It covers a bed for years.",
-      "source": {
-        "label": "GiveWell, how much does it cost to save a life",
-        "url": "https://www.givewell.org/how-much-does-it-cost-to-save-a-life"
-      }
-    },
-    {
       "id": "safe-water",
-      "singular": "person given safe drinking water for a year",
-      "plural": "people given safe drinking water for a year",
+      "singular": "Person given safe drinking water for a year",
+      "plural": "People given safe drinking water for a year",
       "price": 1.5,
       "note": "About {price} a person a year, by putting chlorine dispensers at the water source. Dirty water kills small children first.",
       "source": {
@@ -59,9 +48,20 @@
       }
     },
     {
+      "id": "malaria-net",
+      "singular": "Insecticide-treated bed net, hung",
+      "plural": "Insecticide-treated bed nets, hung",
+      "price": 6,
+      "note": "About {price} a net, delivered and hung. It covers a bed for years.",
+      "source": {
+        "label": "GiveWell, how much does it cost to save a life",
+        "url": "https://www.givewell.org/how-much-does-it-cost-to-save-a-life"
+      }
+    },
+    {
       "id": "child-fed",
-      "singular": "starving child fed back to health",
-      "plural": "starving children fed back to health",
+      "singular": "Starving child fed back to health",
+      "plural": "Starving children fed back to health",
       "price": 150,
       "note": "About {price} for the full six to eight week course of therapeutic food, delivery and staff included. Most children recover completely.",
       "source": {
@@ -70,33 +70,11 @@
       }
     },
     {
-      "id": "life-vitamin-a",
-      "singular": "life saved with vitamin A",
-      "plural": "lives saved with vitamin A",
-      "price": 3500,
-      "note": "GiveWell's estimated average, about {price} a life. The real range runs from roughly $1,000 to $8,500.",
-      "source": {
-        "label": "GiveWell, Helen Keller Intl vitamin A supplementation",
-        "url": "https://www.givewell.org/research/grants/Helen-Keller-Intl-Vitamin-A-Supplementation-December-2024"
-      }
-    },
-    {
-      "id": "life-smc",
-      "singular": "life saved from malaria with seasonal medicine",
-      "plural": "lives saved from malaria with seasonal medicine",
-      "price": 4000,
-      "note": "GiveWell's estimated average for the Malaria Consortium, about {price} a life.",
-      "source": {
-        "label": "GiveWell, top charities",
-        "url": "https://www.givewell.org/charities/top-charities"
-      }
-    },
-    {
       "id": "life-amf",
-      "singular": "life saved from malaria with nets",
-      "plural": "lives saved from malaria with nets",
+      "singular": "Life saved from malaria",
+      "plural": "Lives saved from malaria",
       "price": 5500,
-      "note": "GiveWell's estimated average for the Against Malaria Foundation, about {price} a life.",
+      "note": "About {price} a life through the Against Malaria Foundation, GiveWell's estimated average. Their other top charities save one for roughly $3,500 to $4,000.",
       "source": {
         "label": "GiveWell, top charities",
         "url": "https://www.givewell.org/charities/top-charities"

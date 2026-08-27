@@ -5,7 +5,7 @@ import { defineConfig } from 'astro/config';
 // time from the JSON files in src/data. A data update therefore needs a
 // rebuild, which is what the scheduled job will trigger.
 export default defineConfig({
-  site: 'https://endthetheft.com',
+  site: 'https://theftbynumbers.com',
   output: 'static',
   build: {
     inlineStylesheets: 'always',

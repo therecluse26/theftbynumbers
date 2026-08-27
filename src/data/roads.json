@@ -1,0 +1,243 @@
+{
+  "$schema": "../../schemas/roads.schema.json",
+  "meta": {
+    "updatedAt": "2026-08-26",
+    "fields": {
+      "publicPrice": {
+        "updateMode": "manual",
+        "label": "What the state pays for one unit, from the audit or the agency's own plan",
+        "url": "https://oig.nasa.gov/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "Each item carries its own source. Prefer an inspector general, an auditor, or the agency's own published plan over a news report. A programme cost moves when the plan is revised, not on a schedule, so record the year in the note."
+      },
+      "privatePrice": {
+        "updateMode": "manual",
+        "label": "What a market actor charges for the same one unit",
+        "url": "https://www.spacex.com/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "Each item carries its own source. Prefer a published price list over an estimate. Where the private actor took public money, say so in the note; do not quietly net it out."
+      },
+      "figure": {
+        "updateMode": "manual",
+        "label": "Counts and shares that stand on their own, with no arithmetic applied",
+        "url": "https://foundation.caionline.org/publications/factbook/statistical-review/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-26",
+        "note": "Printed exactly as written. Each item carries its own source. Re-sample when the publisher issues a new edition, not on the calendar."
+      }
+    }
+  },
+  "lede": "You asked about the roads. Start with the size of the bill: roads, rail and air together were {transportShare} of federal spending last year. Then ask who else has ever done these jobs. In every case below, somebody already has.",
+  "caveat": "These are not laboratory comparisons, and this page will not pretend otherwise. Two projects are never built to one specification, on one terrain, under one set of rules. A public price usually carries costs a private one does not: land taken by force of law, wages set by statute, and the review process that permits the work. A private price sometimes rests on public money, public research, or a public launch pad. Private roads and private guards mostly serve the people who pay for them, which is the whole objection to them. Every note above names the specific weakness in its own comparison. The claim here is narrow and it is the only one worth making: none of these jobs needs a state to get done, and the state does not do them cheaply.",
+  "groups": [
+    {
+      "id": "bill",
+      "title": "The roads are not the bill",
+      "lede": "Before asking who would build them, look at what share of your money goes anywhere near them."
+    },
+    {
+      "id": "ground",
+      "title": "Who builds the roads",
+      "lede": "The question in its original form. It was answered once in America and is being answered now in Sweden. The state's own flagship road answered it a third way."
+    },
+    {
+      "id": "commons",
+      "title": "Who keeps the commons",
+      "lede": "Roads, parks, lighting, drainage and rubbish. The shared things nobody owns alone, which is meant to be the hardest case of all."
+    },
+    {
+      "id": "guard",
+      "title": "Who stands guard",
+      "lede": "Protection is the one job almost everybody grants the state. Americans already buy most of theirs on the open market."
+    },
+    {
+      "id": "air",
+      "title": "Running the sky",
+      "lede": "Air traffic control and access to orbit. Two jobs written off as too big, too dangerous and too unprofitable for anyone but a state."
+    }
+  ],
+  "items": [
+    {
+      "id": "transport-share",
+      "group": "bill",
+      "kind": "record",
+      "figure": "1.82%",
+      "label": "of all federal spending went to roads, rail and air",
+      "note": "The Department of Transportation spent $127.6 billion of the $7.01 trillion that went out in the 2025 fiscal year. Everything people picture when they say roads and bridges is under two cents of the dollar.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5, FY2025",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "your-roads-share",
+      "group": "bill",
+      "kind": "reader",
+      "compute": "roads-share",
+      "label": "of everything you hand over, at the transport share",
+      "note": "This is the transport slice of the donut above, pulled out and set on its own. It is what the roads answer is actually worth as a defence of the rest of the bill.",
+      "source": {
+        "label": "Monthly Treasury Statement, table 5, FY2025",
+        "url": "https://fiscaldata.treasury.gov/datasets/monthly-treasury-statement/outlays-of-the-u-s-government"
+      }
+    },
+    {
+      "id": "turnpikes",
+      "group": "ground",
+      "kind": "record",
+      "figure": "2,000+",
+      "label": "private companies built America's first road network",
+      "note": "Between the 1790s and the 1840s more than two thousand private turnpike companies laid over 10,000 miles of road across the eastern states. They were financed by subscription, not by tax. This is how America got its roads before anyone thought to ask who else would.",
+      "source": {
+        "label": "Klein and Majewski, Turnpikes and Toll Roads in Nineteenth-Century America, EH.net",
+        "url": "https://eh.net/encyclopedia/turnpikes-and-toll-roads-in-nineteenth-century-america/"
+      }
+    },
+    {
+      "id": "sweden-private-roads",
+      "group": "ground",
+      "kind": "record",
+      "figure": "284,000 km",
+      "label": "of Sweden's roads are private, against 98,000 km run by the state",
+      "note": "Around 60,000 private road associations own and maintain roughly two thirds of the Swedish road network. Neighbours organise, levy their own dues and hire the work. Some take a state subsidy in return for public access; most do not. This is not history. It is how Sweden runs today.",
+      "source": {
+        "label": "Trafikverket, enskilda vägar",
+        "url": "https://www.trafikverket.se/resa-och-trafik/vag/enskilda-vagar/"
+      }
+    },
+    {
+      "id": "interstate-overrun",
+      "group": "ground",
+      "kind": "record",
+      "figure": "4.2×",
+      "label": "what the Interstate cost, against what it was promised to cost",
+      "note": "In 1955 the Bureau of Public Roads told Congress the Interstate system would cost $27 billion and open by 1975. The last stretch opened in 1991, at $114 billion. This is not a market comparison and is not filed as one. It is the government's own estimate against its own outcome, on the road network people name first when they defend the tax. Both figures come from the FHWA's own history of the programme.",
+      "source": {
+        "label": "FHWA highway history, Target: $27 Billion, and the system as built",
+        "url": "https://www.fhwa.dot.gov/infrastructure/target.cfm"
+      }
+    },
+    {
+      "id": "community-associations",
+      "group": "commons",
+      "kind": "record",
+      "figure": "78.1 million",
+      "label": "Americans live where the commons are privately maintained",
+      "note": "373,000 community associations raise $112 billion a year from their own members and spend it on roads, drainage, lighting, parks, water and security. Nobody is taxed for it and nobody is conscripted into it. You buy in, or you do not.",
+      "source": {
+        "label": "Foundation for Community Association Research, 2025 Statistical Review",
+        "url": "https://foundation.caionline.org/publications/factbook/statistical-review/"
+      }
+    },
+    {
+      "id": "central-park",
+      "group": "commons",
+      "kind": "record",
+      "figure": "75%",
+      "label": "of Central Park's budget is raised privately, not by the city",
+      "note": "New York owned Central Park and let it rot through the 1970s. A private non-profit was formed in 1980 to fix it. The Central Park Conservancy now raises about three quarters of the park's operating budget and employs most of its maintenance staff. The city still owns the land.",
+      "source": {
+        "label": "Central Park Conservancy",
+        "url": "https://centralpark.org/central-park-conservancy/"
+      }
+    },
+    {
+      "id": "guards-outnumber-police",
+      "group": "guard",
+      "kind": "record",
+      "figure": "1.9 to 1",
+      "label": "private security officers outnumber sworn police",
+      "note": "The Bureau of Labor Statistics counts 1,272,400 security guards against 674,910 police officers. Most of the protection Americans actually receive, at the shop, the office, the hospital and the gated street, is already bought rather than taxed for.",
+      "source": {
+        "label": "BLS, Occupational Employment and Wage Statistics",
+        "url": "https://www.bls.gov/news.release/ocwage.t01.htm"
+      }
+    },
+    {
+      "id": "patrol-hour",
+      "group": "guard",
+      "kind": "multiple",
+      "publicPrice": 40,
+      "privatePrice": 24,
+      "label": "more, per hour of contracted neighbourhood patrol",
+      "sameness": "One buyer, one beat, one job: the Sharpstown Civic Association in Houston pays for patrol of the same 7,000 homes, and in 2012 it changed supplier on price.",
+      "note": "Harris County constables charged the association about {public} an hour. SEAL Security charged about {private} an hour, and the association got more officers on the street for less money. PolitiFact checked this and threw out the viral version: Sharpstown never fired a police force, and Houston police still answer its 911 calls. This is the fact-checked remainder, which is the only part worth quoting.",
+      "publicSource": {
+        "label": "PolitiFact, Not so fast: cops fired, private security hired, March 2015",
+        "url": "https://politifact.com/article/2015/mar/08/not-so-fast-cops-fired-private-security-hired-crim/"
+      },
+      "privateSource": {
+        "label": "Texas Monthly, on the Sharpstown security contract",
+        "url": "https://www.texasmonthly.com/the-daily-post/no-sharpstown-texas-did-not-fire-its-police-force-and-bring-about-a-huge-drop-in-crime/"
+      }
+    },
+    {
+      "id": "airport-screening",
+      "group": "guard",
+      "kind": "multiple",
+      "publicPrice": 90600000,
+      "privatePrice": 52000000,
+      "label": "more, per year to screen one large airport",
+      "sameness": "Congress wrote one screening standard and the TSA certifies every screener against it. Los Angeles uses federal staff, San Francisco uses a contractor under the TSA's own Screening Partnership Program, and the committee found screening quality about the same at both.",
+      "note": "LAX cost {public} a year. San Francisco's contractor screened 65 percent more passengers per screener, and at that productivity LAX would cost {private}. Two warnings. The second figure is the committee's extrapolation from San Francisco's measured throughput, not a bill anyone paid. And the TSA's own accounting reaches the opposite answer, putting contract screening about 3 percent dearer, because it loads federal overheads onto the private airports and not onto its own. Figures are 2011.",
+      "publicSource": {
+        "label": "GAO-16-19, Screening Partnership Program, TSA cost estimates",
+        "url": "https://www.gao.gov/products/gao-16-19"
+      },
+      "privateSource": {
+        "label": "House Transportation and Infrastructure Committee staff, LAX and SFO screening, 2011",
+        "url": "https://reason.org/airport-policy/airport-policy-and-security-news-70/"
+      }
+    },
+    {
+      "id": "screening-failure",
+      "group": "guard",
+      "kind": "record",
+      "figure": "95%",
+      "label": "of weapons the government's own testers walked past its screeners",
+      "note": "In 2015 the Homeland Security inspector general sent auditors through TSA checkpoints with weapons and mock explosives. They got through 67 times out of 70. A 2017 re-test put the failure rate near 80 percent; the exact number is classified. Of nine vulnerabilities that covert testing found from 2015 onward, the GAO reported that none had been formally resolved by September 2018. This is what the premium on the card beside this one buys.",
+      "source": {
+        "label": "GAO-19-374, Aviation Security, TSA covert testing",
+        "url": "https://www.gao.gov/products/gao-19-374"
+      }
+    },
+    {
+      "id": "air-traffic-control",
+      "group": "air",
+      "kind": "multiple",
+      "publicPrice": 586.41,
+      "privatePrice": 369.44,
+      "label": "more, per hour of instrument-rules air traffic control",
+      "sameness": "The identical job on the identical unit: keeping aircraft apart under instrument rules, costed per flight hour, in two neighbouring countries whose controllers hand traffic to each other every day.",
+      "note": "Canada took air traffic control out of government hands in 1996. In 2022 NAV CANADA ran it at {private} a flight hour against the FAA's {public}, and it did so with a lower loss-of-separation rate: cheaper and safer on the measure that matters most. NAV CANADA is a non-profit owned by the people who use it rather than a company seeking a return, so this is the mildest version of the argument. It is also the largest test of it, being a whole country thirty years in.",
+      "publicSource": {
+        "label": "Federal Aviation Administration, Air Traffic Organization",
+        "url": "https://www.faa.gov/about/office_org/headquarters_offices/ato"
+      },
+      "privateSource": {
+        "label": "Reason Foundation, Canada offers important lessons for US air traffic control",
+        "url": "https://reason.org/commentary/canada-offers-important-lessons-for-u-s-air-traffic-control/"
+      }
+    },
+    {
+      "id": "astronaut-seat",
+      "group": "air",
+      "kind": "multiple",
+      "publicPrice": 170000000,
+      "privatePrice": 55000000,
+      "label": "more, per astronaut carried to orbit and home again",
+      "sameness": "One customer buying one thing: NASA putting a NASA astronaut into low Earth orbit and returning them alive. Same agency, same crew, same destination, same human rating, bought first from itself and now from a contractor.",
+      "note": "A seat on the Space Shuttle cost about {public} in today's money. NASA pays SpaceX about {private} a seat on Crew Dragon, the figure its own inspector general uses. For the years between the two it paid Russia about $86 million a seat, more than either. The Shuttle also carried cargo on the same flight, which no per-seat figure can separate cleanly.",
+      "publicSource": {
+        "label": "Estimated cost per seat on selected spacecraft",
+        "url": "https://statista.com/chart/21904/estimated-cost-per-seat-on-selected-spacecraft"
+      },
+      "privateSource": {
+        "label": "NASA Office of Inspector General, IG-20-005, NASA's Management of Crew Transportation",
+        "url": "https://oig.nasa.gov/wp-content/uploads/2024/02/IG-20-005.pdf"
+      }
+    }
+  ]
+}
