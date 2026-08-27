@@ -25,6 +25,42 @@ export function usd(n: number): string {
   return USD.format(Math.round(n));
 }
 
+/**
+ * A national sum, short enough to sit under a card's headline figure:
+ * "$7.01tn", "$8tn", "$233bn", "$7.1bn", "$42.7m", "$25,000".
+ *
+ * Every money card prints two numbers: the reader's share, and the published
+ * figure it came from. The published figure is always large, and usd() renders
+ * $8,000,000,000,000 as thirteen digits that nobody can read at a glance.
+ *
+ * Three significant figures, then trailing zeros go. A round two trillion prints
+ * "$2tn" rather than "$2.00tn", and the military's $868.4116bn prints "$868bn"
+ * rather than a six-digit string in an 84px column.
+ *
+ * Three is what the notes on this page already write by hand: "$127.6 billion",
+ * "$7.01 trillion", "$42.7m", "$4.1bn". Keeping the same precision means a sub
+ * line and the prose beside it never quote one figure two ways.
+ */
+export function usdShort(n: number): string {
+  if (!isFinite(n)) return usd(0);
+
+  const scaled = (value: number, suffix: string): string => {
+    const places = value >= 100 ? 0 : value >= 10 ? 1 : 2;
+    const text = value.toFixed(places);
+    // Only ever strip zeros that sit after a decimal point. Stripping them from
+    // a whole number turns $970bn into $97bn.
+    const trimmed = text.includes('.') ? text.replace(/\.?0+$/, '') : text;
+    return '$' + trimmed + suffix;
+  };
+
+  const size = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (size >= 1e12) return sign + scaled(size / 1e12, 'tn');
+  if (size >= 1e9) return sign + scaled(size / 1e9, 'bn');
+  if (size >= 1e6) return sign + scaled(size / 1e6, 'm');
+  return usd(n);
+}
+
 /** 0.193 becomes "19.3%". */
 export function pct(n: number, places = 1): string {
   return (n * 100).toFixed(places) + '%';
@@ -106,8 +142,9 @@ export function multiple(n: number): string {
 /*
  * There was a tinyPct() here, for shares too small for pct() to print without
  * exponent notation. The receipt used it to show a reader's tax as a fraction of
- * a national lump sum. "0.0000041%" told nobody anything, so those cards now
- * divide the lump sum across every household instead, and print plain dollars.
+ * a national lump sum. "0.0000041%" told nobody anything. Those cards divided
+ * the lump sum across every US household for a while; they now apply the
+ * reader's own share of the federal dollar to it. Either way, plain dollars.
  */
 
 /** Guards every value that reaches innerHTML from a data file. */

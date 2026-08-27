@@ -147,16 +147,35 @@ export interface LadderData {
  * A receipt card. The kind decides which fields carry the number.
  *
  *   duration   your tax funds this yearly cost for a length of time
+ *   yearly     your share of a yearly national cost, over your years
  *   unit       how many of these your tax comes to
- *   household  one lump sum, split evenly across every US household
+ *   lump       your share of one cumulative total, counted once
  *   fact       no arithmetic; a finding that stands on its own
  *   computed   worked out in code from the reader's own figures
  *
  * There used to be a `share` kind: the reader's tax as a percentage of a
  * national lump sum. It printed things like "0.0000041%", which tells nobody
- * anything. `household` replaces it with a dollar figure a person can picture.
+ * anything. A `household` kind replaced it, dividing the lump sum evenly across
+ * every US household.
+ *
+ * `lump` replaces `household` in turn. A flat split barely moved when the reader
+ * changed their income, so half the receipt sat still while the other half
+ * responded, and two neighbouring cards meant two different things by "your
+ * share". Every money card now divides by the same thing: the part of every
+ * federal dollar this reader pays. See federalDollarShare() in render.ts.
+ *
+ * `duration` survives only in the `scale` group, where the second is the unit
+ * the group lede declares. Elsewhere it produced cards reading "2.5 minutes of
+ * the money stolen every year", which parses as minutes of money. A rule in
+ * semanticErrors refuses one in any other group.
  */
-export type ReceiptKind = 'duration' | 'unit' | 'household' | 'fact' | 'computed';
+export type ReceiptKind =
+  | 'duration'
+  | 'yearly'
+  | 'unit'
+  | 'lump'
+  | 'fact'
+  | 'computed';
 
 /** Names a function in render.ts. Add the case there before adding a value here. */
 export type ReceiptCompute = 'social-security';
@@ -168,8 +187,10 @@ export interface ReceiptItem {
   label?: string;
   singular?: string;
   plural?: string;
+  /** Dollars a year. On a duration card and on a yearly card. */
   annualCost?: number;
   price?: number;
+  /** One cumulative total, not a yearly rate. Only on a lump card. */
   total?: number;
   figure?: string;
   compute?: ReceiptCompute;
@@ -183,10 +204,12 @@ export interface ReceiptGroup {
   lede: string;
 }
 
+/*
+ * There used to be a `households` count here, the denominator for every
+ * household card. Nothing divides by it now; see the note on ReceiptKind.
+ */
 export interface ReceiptData {
   meta: DataMeta;
-  /** US households. The denominator for every household card. */
-  households: number;
   groups: ReceiptGroup[];
   items: ReceiptItem[];
 }

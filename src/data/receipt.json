@@ -25,19 +25,10 @@
         "url": "https://costsofwar.watson.brown.edu/costs",
         "maxAgeDays": 400,
         "updatedAt": "2026-08-27",
-        "note": "These are cumulative totals, not yearly rates. They only grow. The site divides them across every US household."
-      },
-      "households": {
-        "updateMode": "manual",
-        "label": "Number of US households, Census Bureau",
-        "url": "https://www.census.gov/topics/families/families-and-households.html",
-        "maxAgeDays": 400,
-        "updatedAt": "2026-08-26",
-        "note": "The denominator for every household-share card. Families and Living Arrangements tables, table HH-1."
+        "note": "These are cumulative totals, not yearly rates. They only grow. A lump card prices the reader's share of one at the rate they pay into the federal dollar."
       }
     }
   },
-  "households": 134790000,
   "groups": [
     {
       "id": "scale",
@@ -115,9 +106,9 @@
     {
       "id": "improper-payments",
       "group": "waste",
-      "kind": "duration",
+      "kind": "yearly",
       "annualCost": 186000000000,
-      "label": "of payments the government admits were wrong",
+      "label": "your share of the payments the government admits were wrong",
       "note": "Fifteen agencies reported $186 billion of improper payments in 2025, across 64 programmes. The running total since 2003 is about $3 trillion.",
       "source": {
         "label": "GAO-26-108694, Payment Integrity",
@@ -163,9 +154,9 @@
     {
       "id": "fraud-estimate",
       "group": "fraud",
-      "kind": "duration",
+      "kind": "yearly",
       "annualCost": 233000000000,
-      "label": "of the money stolen from the government every year",
+      "label": "your share of the money stolen from the government every year",
       "note": "GAO made the first government-wide estimate of fraud in 2024, on 2018 to 2022 data. The answer was $233 billion to $521 billion a year: three to seven cents of every federal dollar. This card uses the low end.",
       "source": {
         "label": "GAO-24-105833, Fraud Risk Management",
@@ -175,9 +166,9 @@
     {
       "id": "pandemic-loans",
       "group": "fraud",
-      "kind": "household",
+      "kind": "lump",
       "total": 200000000000,
-      "label": "your household's share of the pandemic business loans that went to fraudsters",
+      "label": "your share of the pandemic business loans that went to fraudsters",
       "note": "The Small Business Administration's own inspector general puts more than $200 billion of COVID business loans in the hands of potentially fraudulent actors. That is at least 17 cents of every dollar those programmes paid out. About $30 billion has been seized or returned.",
       "source": {
         "label": "SBA OIG 23-09, COVID-19 Pandemic EIDL and PPP Loan Fraud Landscape",
@@ -187,9 +178,9 @@
     {
       "id": "ui-fraud",
       "group": "fraud",
-      "kind": "household",
+      "kind": "lump",
       "total": 100000000000,
-      "label": "your household's share of the unemployment money that was simply stolen",
+      "label": "your share of the unemployment money that was simply stolen",
       "note": "GAO puts pandemic unemployment fraud between $100 billion and $135 billion. This card uses the low end. States have clawed back about $1.2 billion of it.",
       "source": {
         "label": "GAO-23-106696, Unemployment Insurance",
@@ -211,9 +202,9 @@
     {
       "id": "afghan-waste",
       "group": "unaccounted",
-      "kind": "household",
+      "kind": "lump",
       "total": 26000000000,
-      "label": "your household's share of what was wasted rebuilding Afghanistan",
+      "label": "your share of what was wasted rebuilding Afghanistan",
       "note": "The Afghanistan watchdog shut for good on 31 January 2026. Its final report counted 1,327 instances of waste, fraud and abuse, and at least $26 billion lost, out of $148.21 billion appropriated.",
       "source": {
         "label": "SIGAR, Final Report, December 2025 (archived)",
@@ -223,9 +214,9 @@
     {
       "id": "afghan-equipment",
       "group": "unaccounted",
-      "kind": "household",
+      "kind": "lump",
       "total": 7100000000,
-      "label": "your household's share of the equipment handed to the Taliban",
+      "label": "your share of the equipment handed to the Taliban",
       "note": "About $7.1 billion of equipment bought for the Afghan forces was left behind in August 2021: rifles, night vision, armoured vehicles, aircraft. The same watchdog says it now forms the core of the Taliban's security apparatus.",
       "source": {
         "label": "SIGAR, Final Report, December 2025 (archived)",
@@ -335,9 +326,9 @@
     {
       "id": "f35-program",
       "group": "name",
-      "kind": "household",
+      "kind": "lump",
       "total": 2000000000000,
-      "label": "your household's share of the F-35 programme, from drawing board to scrapyard",
+      "label": "your share of the F-35 programme, from drawing board to scrapyard",
       "note": "GAO now puts the lifetime cost above $2 trillion, up from $1.7 trillion, while the plan is to fly the fleet less than before. About $442 billion buys the aircraft. The other $1.6 trillion keeps them flying to 2088.",
       "source": {
         "label": "GAO, The F-35 Will Now Exceed $2 Trillion",
@@ -359,10 +350,10 @@
     {
       "id": "war-on-terror",
       "group": "name",
-      "kind": "household",
+      "kind": "lump",
       "total": 8000000000000,
-      "label": "your household's share of the wars fought since 2001",
-      "note": "About $8 trillion. At least 940,000 people died in the direct violence: civilians, soldiers on every side, contractors, journalists and aid workers.",
+      "label": "your share of the wars fought since 2001",
+      "note": "At least 940,000 people died in the direct violence: civilians, soldiers on every side, contractors, journalists and aid workers.",
       "source": {
         "label": "Costs of War, Brown University",
         "url": "https://costsofwar.watson.brown.edu/costs"

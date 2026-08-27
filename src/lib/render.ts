@@ -6,7 +6,17 @@
  * so the first paint and the first update always agree.
  */
 import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, STATES_DATA, TAX, longDate } from './data';
-import { career, commas, duration, escapeHtml, months, multiple, pct, usd } from './format';
+import {
+  career,
+  commas,
+  duration,
+  escapeHtml,
+  months,
+  multiple,
+  pct,
+  usd,
+  usdShort,
+} from './format';
 import { resolveLadderGroups } from './ladder';
 import type { ResolvedLadderItem } from './ladder';
 import { employerSharePctLabel, investmentSeries } from './tax';
@@ -438,11 +448,17 @@ interface Source {
  *
  * A card takes one source, or several. Section six compares one unit bought
  * twice, so both prices must name their own publisher on the same card.
+ *
+ * `sub` is the second number: the published national figure the headline share
+ * was worked out from. A card that states the reader's share must show what it
+ * is a share of, or the reader has to hunt for it in the note. Pass '' where
+ * the headline figure IS the published one, as on a `fact` card.
  */
 function card(
   extraClass: string,
   figure: string,
   unit: string,
+  sub: string,
   label: string,
   note: string,
   source?: Source | Source[],
@@ -467,6 +483,7 @@ function card(
     figure +
     (unit ? '<small>' + escapeHtml(unit) + '</small>' : '') +
     '</span>' +
+    (sub ? '<p class="buy-sub">' + escapeHtml(sub) + '</p>' : '') +
     '<p class="buy-label">' +
     escapeHtml(label) +
     '</p>' +
@@ -484,10 +501,13 @@ export function basketHtml(total: number): string {
   let html = '';
   for (const item of BASKET.items) {
     const { shown, unit, singular } = countText(total / item.price);
+    // No sub-line here. A basket note is the unit price and nothing else, so the
+    // card already carries both numbers.
     html += card(
       '',
       shown,
       unit,
+      '',
       singular ? item.singular : item.plural,
       item.note.replace('{price}', usd(item.price)),
       item.source,
@@ -665,6 +685,11 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       escapeHtml(category.note) +
       sourceLink(category.source) +
       '</span></span>' +
+      // What the category itself cost. The legend used to give a share, the
+      // reader's slice and their months of life, but never the sum being split.
+      '<span class="dn-spent num">' +
+      usdShort(category.amount) +
+      '</span>' +
       '<span class="dn-pct num">' +
       pct(share) +
       '</span>' +
@@ -708,6 +733,24 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
 /** Seconds in a year, averaged over the leap cycle. */
 const SECONDS_IN_YEAR = 31_557_600;
 
+/**
+ * The part of every federal dollar this reader pays.
+ *
+ * One ratio, and every money card on the receipt divides by it. The receipt used
+ * to hold two ideas of "your share" at once: a card priced off the reader's own
+ * tax, and a card priced off a flat split across every US household. Adjacent
+ * cards therefore meant different things by the same word, and half of them
+ * barely moved when the reader changed their income.
+ *
+ * The denominator is federal outlays, while `r.total` counts state, sales and
+ * property tax too. That overstates the reader's federal contribution a little.
+ * The donut legend and the roads card have always worked this way; this keeps
+ * one arithmetic across the page rather than adding a second.
+ */
+function federalDollarShare(r: Breakdown): number {
+  return OUTLAYS.totalOutlays > 0 ? r.total / OUTLAYS.totalOutlays : 0;
+}
+
 /** One receipt card. The kind decides which field carries the number. */
 function receiptCard(
   item: ReceiptItem,
@@ -725,47 +768,82 @@ function receiptCard(
       'rc',
       text.slice(0, at),
       text.slice(at + 1),
+      usdShort(item.annualCost!) + ' a year',
       item.label!,
       note,
       item.source,
     );
   }
 
+  if (item.kind === 'yearly') {
+    // A yearly national cost, run for as long as the reader works. The years
+    // slider belongs here: twenty years of work fund twenty years of the waste.
+    const yours = federalDollarShare(r) * item.annualCost! * inputs.years;
+    return card(
+      'rc',
+      usd(yours),
+      '',
+      usdShort(item.annualCost!) + ' a year',
+      item.label!,
+      note +
+        ' Your share is the part of every federal dollar you pay, over your ' +
+        inputs.years +
+        ' ' +
+        plural(inputs.years, 'year') +
+        '.',
+      item.source,
+    );
+  }
+
   if (item.kind === 'unit') {
+    // No sub-line. Every unit note opens with {price} in the item's own words:
+    // "an hour", "a kit", "a year". A sub-line would print the same figure twice
+    // and have to say "each", which is wrong for an hour of flying.
     const { shown, unit, singular } = countText(taxOverYears / item.price!);
     return card(
       'rc',
       shown,
       unit,
+      '',
       singular ? item.singular! : item.plural!,
       note,
       item.source,
     );
   }
 
-  if (item.kind === 'household') {
-    // A lump sum spread evenly over every household. The split is flat, not
-    // scaled to income, so say so. The second sentence is what makes the card
-    // move with the sliders: the same bill, priced in the reader's own tax.
-    const perHousehold = item.total! / RECEIPT.households;
-    const yearsOfTax = r.total > 0 ? perHousehold / r.total : 0;
+  if (item.kind === 'lump') {
+    // One cumulative total, counted once. The years slider must NOT multiply it;
+    // nobody pays for the Afghanistan war twenty times over.
+    //
+    // The lump is measured against a single year of current outlays, so a bill
+    // run up when the government was smaller reads low. The notes section says
+    // so. The trailing sentence names the horizon rather than hiding it.
+    const yours = federalDollarShare(r) * item.total!;
+    const yearsOfSpending = item.total! / OUTLAYS.totalOutlays;
     return card(
       'rc',
-      usd(perHousehold),
+      usd(yours),
       '',
+      usdShort(item.total!) + ' in total',
       item.label!,
       note +
-        ' Split evenly across ' +
-        commas(RECEIPT.households) +
-        ' US households. At your income that is ' +
-        career(yearsOfTax) +
-        ' of tax.',
+        ' Your share is the part of every federal dollar you pay. This bill is ' +
+        yearsOfSpending.toFixed(1) +
+        ' years of all federal spending.',
       item.source,
     );
   }
 
   if (item.kind === 'fact') {
-    return card('rc rc-fact', escapeHtml(item.figure!), '', item.label!, note, item.source);
+    return card(
+      'rc rc-fact',
+      escapeHtml(item.figure!),
+      '',
+      '',
+      item.label!,
+      note,
+      item.source,
+    );
   }
 
   // Computed: worked out from the reader's own figures, not from a fixed price.
@@ -783,9 +861,12 @@ function receiptCard(
   const bothHalves = r.socialSecurity * 2;
   const series = investmentSeries(bothHalves, inputs.returnPct, inputs.years, 0);
   const final = series[inputs.years]!.balance;
+  // No sub-line. The note opens with the same yearly figure and then explains
+  // why it counts both halves, which a four-word sub-line cannot do.
   return card(
     'rc rc-wide',
     usd(final),
+    '',
     '',
     item.label!,
     usd(bothHalves) +
@@ -1232,6 +1313,7 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
       'rc',
       multiple(item.publicPrice! / item.privatePrice!),
       '',
+      '',
       item.label,
       item.sameness +
         ' ' +
@@ -1245,7 +1327,15 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
   if (item.kind === 'record') {
     // No arithmetic. The figure is printed as the file wrote it, so it can
     // carry its own unit: "284,000 km", "1.9 to 1", "1.82%".
-    return card('rc rc-fact', escapeHtml(item.figure!), '', item.label, item.note, item.source);
+    return card(
+      'rc rc-fact',
+      escapeHtml(item.figure!),
+      '',
+      '',
+      item.label,
+      item.note,
+      item.source,
+    );
   }
 
   // Reader: the transport share of this reader's own tax, over their own years.
@@ -1254,9 +1344,13 @@ function roadsCard(item: RoadsItem, r: Breakdown, inputs: Inputs): string {
   if (item.compute !== 'roads-share') return '';
 
   const share = r.total * inputs.years * transportShare();
+  // No sub-line. The transport-share card sits directly above this one and its
+  // note already states the national figure, so a second copy of it here would
+  // print one number twice, in two roundings, on one screen.
   return card(
     'rc',
     usd(share),
+    '',
     '',
     item.label,
     'Over ' +

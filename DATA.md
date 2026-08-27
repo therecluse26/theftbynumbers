@@ -192,16 +192,65 @@ field carries the number.
 
 | Kind | Field | The card shows |
 | --- | --- | --- |
-| `duration` | `annualCost` | How long the reader's tax funds that yearly cost |
+| `duration` | `annualCost` | How long the reader's tax funds that yearly cost. The `scale` group only |
+| `yearly` | `annualCost` | The reader's share of a yearly national cost, over their years |
 | `unit` | `price` | How many of them the tax comes to |
-| `household` | `total` | One lump sum, split evenly across every US household |
+| `lump` | `total` | The reader's share of one cumulative total, counted once |
 | `fact` | `figure` | A finding on its own, with no arithmetic |
 | `computed` | `compute` | A figure worked out in code from the reader's own numbers |
 
+If a figure is not a sum of money at all, such as a count of failed audits or a
+markup, it is a `fact` and no arithmetic applies.
+
+### Two numbers on every money card
+
+A money card prints the reader's share big, and the published figure it came from
+underneath, in `.buy-sub`. `usdShort()` in `src/lib/format.ts` writes the second
+one: `$7.01tn`, `$233bn`, `$42.7m`.
+
+Leave the sub-line empty where the note already carries the same figure in the
+item's own words. `unit`, `computed` and the whole of section two do exactly
+that: every one of their notes opens with `{price}`.
+
+### One definition of "your share"
+
+`federalDollarShare()` in `src/lib/render.ts` is the part of every federal dollar
+this reader pays: their tax over `outlays.totalOutlays`. Every money card divides
+by it, so every figure on the receipt moves when the reader moves a slider.
+
+- A **yearly** cost is multiplied by the years slider as well. Twenty years of
+  work fund twenty years of that waste.
+- A **lump** is counted once. The years slider must never multiply it. Nobody
+  pays for the Afghanistan war twenty times.
+
+The denominator is federal outlays, while the reader's total counts state, sales
+and property tax too. That overstates their federal contribution a little. The
+donut legend and the roads card have always worked this way, so this is one
+arithmetic across the page rather than a second one.
+
+**A lump is measured against a single year of current outlays.** $8tn of war was
+run up over twenty-five years, when the government spent far less each year than
+$7.01tn. Dividing by today's larger figure therefore reads an old bill low. The
+notes section says so on the page. Do not adjust it quietly.
+
+### The history of this
+
 There used to be a `share` kind: the reader's tax as a percentage of a national
-lump sum. It printed figures like `0.0000041%`, which tells a reader nothing.
-`household` replaced it. If a figure is not a sum of money at all, such as a count
-of failed audits or a markup, it is a `fact` and no arithmetic applies.
+lump sum. It printed figures like `0.0000041%`, which tells a reader nothing. A
+`household` kind replaced it, dividing the lump sum evenly across 134,790,000 US
+households and printing plain dollars.
+
+`lump` replaces `household` in turn, and the top-level `households` count is gone
+with it. The flat split barely moved when the reader changed their income, so half
+the receipt responded to the sliders and half sat still. Worse, two neighbouring
+cards meant different things by "your share": one the reader's own tax, one a flat
+national split. No reader could rank them against each other.
+
+`duration` was cut back to the `scale` group at the same time. Elsewhere it
+produced cards reading **"2.5 minutes of the money stolen from the government
+every year"**, which parses as minutes of money and means nothing. In `scale` the
+second is the unit the group lede declares, and the card is the strongest on the
+page. `semanticErrors` refuses a `duration` card in any other group.
 
 There used to be a `forfeiture` card, on civil asset forfeiture. It was removed on
 27 August 2026. The money was never tax money, so no share of it belonged on a tax

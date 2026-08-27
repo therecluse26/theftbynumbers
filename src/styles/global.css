@@ -247,6 +247,13 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--yellow);
 }
 .buy-count small{font-size:.4em;font-variation-settings:"wdth" 100,"wght" 600;letter-spacing:.02em;margin-left:6px;color:var(--bone-50)}
+/* The second number: the published figure the headline is a share of. It sits
+   between the two, brighter and a step larger than the note below it, so the
+   pair reads as one thought rather than as figure-then-prose. */
+.buy-sub{
+  font-family:var(--mono);font-size:12px;color:var(--bone-70);
+  margin:5px 0 0;letter-spacing:.04em;font-variant-numeric:tabular-nums;
+}
 .buy-label{margin:9px 0 0;font-size:14.5px;line-height:1.35;font-weight:600;color:var(--bone)}
 .buy-price{font-family:var(--mono);font-size:11px;color:var(--bone-50);margin:5px 0 0;letter-spacing:.04em}
 .buy-src{margin:7px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:.05em}
@@ -280,7 +287,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 .dn-chart svg{width:100%;height:auto;display:block}
 .dn-legend{min-width:0}
 .dn-row{
-  display:grid;grid-template-columns:12px 1fr 52px 84px 116px;gap:10px;
+  display:grid;grid-template-columns:12px 1fr 68px 52px 84px 116px;gap:10px;
   align-items:baseline;padding:8px 0;border-bottom:1px solid var(--rule);
 }
 .dn-row:last-child{border-bottom:0}
@@ -289,7 +296,7 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
   color:var(--bone-50);
 }
-.dn-head .dn-name,.dn-head .dn-pct,.dn-head .dn-yours,.dn-head .dn-life{font-weight:400}
+.dn-head .dn-name,.dn-head .dn-spent,.dn-head .dn-pct,.dn-head .dn-yours,.dn-head .dn-life{font-weight:400}
 .dn-dot{width:12px;height:12px;border-radius:50%;display:block;transform:translateY(2px)}
 .dn-dot-blank{background:none}
 .dn-name{font-size:14px;font-weight:600;color:var(--bone);line-height:1.3;min-width:0}
@@ -299,7 +306,8 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 }
 .dn-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
 .dn-note a:hover{color:var(--yellow)}
-.dn-pct,.dn-yours,.dn-life{font-family:var(--mono);font-size:12px;text-align:right}
+.dn-spent,.dn-pct,.dn-yours,.dn-life{font-family:var(--mono);font-size:12px;text-align:right}
+.dn-spent{color:var(--bone-50)}
 .dn-pct{color:var(--bone-50)}
 .dn-yours{color:var(--bone)}
 .dn-life{color:var(--yellow)}
@@ -490,9 +498,21 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   /* Stacked, a connector would run down the page. Dim and highlight still work. */
   .dn-link{display:none}
   .dn-chart{max-width:220px;margin:0 auto}
+  /*
+   * Six columns do not fit a phone, so the legend keeps four and wraps the two
+   * softest numbers onto a second row: what the category cost, and what that
+   * cost the reader in months. Every cell is placed by hand. Auto-placement
+   * cannot be trusted here, because .dn-spent sits before .dn-pct in the markup
+   * but belongs below it on the page.
+   */
   .dn-row{grid-template-columns:12px 1fr 48px 88px}
-  .dn-life{grid-column:2/-1;text-align:left;font-size:11px}
-  .dn-head .dn-life{display:none}
+  .dn-dot{grid-column:1;grid-row:1}
+  .dn-name{grid-column:2;grid-row:1}
+  .dn-pct{grid-column:3;grid-row:1}
+  .dn-yours{grid-column:4;grid-row:1}
+  .dn-spent{grid-column:2;grid-row:2;text-align:left;font-size:11px}
+  .dn-life{grid-column:3/-1;grid-row:2;text-align:right;font-size:11px}
+  .dn-head .dn-spent,.dn-head .dn-life{display:none}
   .controls-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .field:nth-child(3n){border-right:1px solid var(--rule);padding-right:22px}
   .field:nth-child(3n+1){padding-left:22px}

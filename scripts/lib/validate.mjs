@@ -49,6 +49,9 @@ function fieldPathExists(data, path) {
   return false;
 }
 
+/** The one receipt group where a card may print a length of time. */
+const DURATION_GROUP = 'scale';
+
 /**
  * Rules the schema cannot state.
  * Keep every rule cheap. This runs on every build.
@@ -138,6 +141,20 @@ export function semanticErrors(entry, data) {
     for (const item of data.items) {
       if (!groups.has(item.group)) {
         errors.push(`${item.id} points at group "${item.group}", which does not exist`);
+      }
+
+      // A duration card prints a length of time where every other card prints a
+      // sum of money. That only reads as an argument in the scale group, whose
+      // lede declares the unit: your whole working life against one year of
+      // federal spending. Elsewhere it produced cards like "2.5 minutes of the
+      // money stolen from the government every year", which a reader parses as
+      // minutes of money and which means nothing. Those are `yearly` cards now.
+      if (item.kind === 'duration' && item.group !== DURATION_GROUP) {
+        errors.push(
+          `${item.id} is a duration card in group "${item.group}"; a length of ` +
+            `time only reads as an argument in "${DURATION_GROUP}", where the ` +
+            `lede declares the unit. Use a yearly card and print a sum of money`,
+        );
       }
     }
     // A card that renders a count must not carry a rate as well, or the two

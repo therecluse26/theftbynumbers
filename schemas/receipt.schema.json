@@ -3,16 +3,11 @@
   "title": "The receipt",
   "description": "Section three: what the money was actually spent on. Groups order the page. Every item names its own group and its own card kind.",
   "type": "object",
-  "required": ["meta", "households", "groups", "items"],
+  "required": ["meta", "groups", "items"],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
-    "households": {
-      "type": "integer",
-      "exclusiveMinimum": 0,
-      "description": "US households. The denominator for every household card. Census Bureau."
-    },
     "groups": {
       "type": "array",
       "minItems": 1,
@@ -41,11 +36,15 @@
             "then": { "required": ["annualCost", "label"] }
           },
           {
+            "if": { "properties": { "kind": { "const": "yearly" } }, "required": ["kind"] },
+            "then": { "required": ["annualCost", "label"] }
+          },
+          {
             "if": { "properties": { "kind": { "const": "unit" } }, "required": ["kind"] },
             "then": { "required": ["price", "singular", "plural"] }
           },
           {
-            "if": { "properties": { "kind": { "const": "household" } }, "required": ["kind"] },
+            "if": { "properties": { "kind": { "const": "lump" } }, "required": ["kind"] },
             "then": { "required": ["total", "label"] }
           },
           {
@@ -61,8 +60,8 @@
           "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "group": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "kind": {
-            "enum": ["duration", "unit", "household", "fact", "computed"],
-            "description": "duration: your tax funds this annual cost for a length of time. unit: how many of these your tax comes to. household: one lump sum split evenly across every US household. fact: no arithmetic, a finding on its own. computed: worked out in code from the reader's own numbers."
+            "enum": ["duration", "yearly", "unit", "lump", "fact", "computed"],
+            "description": "duration: your tax funds this annual cost for a length of time; the scale group only. yearly: your share of a yearly national cost, over your years. unit: how many of these your tax comes to. lump: your share of one cumulative total, counted once. fact: no arithmetic, a finding on its own. computed: worked out in code from the reader's own numbers."
           },
           "label": {
             "type": "string",
@@ -74,7 +73,7 @@
           "annualCost": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "description": "Dollars a year. Only on a duration card."
+            "description": "Dollars a year. On a duration card and on a yearly card."
           },
           "price": {
             "type": "number",
@@ -84,7 +83,7 @@
           "total": {
             "type": "number",
             "exclusiveMinimum": 0,
-            "description": "One lump sum, not a yearly rate. Only on a household card."
+            "description": "One cumulative total, not a yearly rate. Only on a lump card."
           },
           "figure": {
             "type": "string",
