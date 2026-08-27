@@ -20,7 +20,7 @@ import {
 import { resolveLadderGroups } from './ladder';
 import type { ResolvedLadderItem } from './ladder';
 import { employerSharePctLabel, investmentSeries } from './tax';
-import type { Breakdown, Inputs, ReceiptItem, RoadsItem } from './types';
+import type { Breakdown, Inputs, ReceiptItem, RoadsItem, SourceRef } from './types';
 
 const INK = '#0B0B0A';
 const BONE = '#EDEAE3';
@@ -733,7 +733,8 @@ export function outlaysDonut(r: Breakdown, inputs: Inputs): DonutRender {
       ', from Treasury’s closed accounts. "Yours" is your ' +
       usd(taxOverYears) +
       ' of federal tax, split the same way. The last column is that slice, priced ' +
-      'in your own working life.' +
+      'in your own working life. Every slice also says what that money buys now ' +
+      'against what it bought before, and names the publisher of both figures.' +
       sourceLink(OUTLAYS.meta.fields['totalOutlays']),
   };
 }
@@ -1162,15 +1163,29 @@ export interface StackRender {
  *
  * It is declared below its first caller and hoisted. It sits here because it is
  * a sibling of the ladder renderers that used it first.
+ *
+ * It takes one source or a list of them. A donut slice states the Treasury
+ * amount and then what that money buys against what it used to buy, and those
+ * two figures come from two publishers. Both must be reachable from the slice.
  */
-function sourceLink(source?: { label: string; url: string }): string {
+function sourceLink(source?: SourceRef): string {
   if (!source) return '';
+  const list = Array.isArray(source) ? source : [source];
+  if (list.length === 0) return '';
+  // A middle dot between them, the same separator card() uses, so a slice with
+  // three publishers does not read as one long run of link text.
   return (
-    ' <a href="' +
-    escapeHtml(source.url) +
-    '" target="_blank" rel="noopener noreferrer">' +
-    escapeHtml(source.label) +
-    '</a>'
+    ' ' +
+    list
+      .map(
+        (one) =>
+          '<a href="' +
+          escapeHtml(one.url) +
+          '" target="_blank" rel="noopener noreferrer">' +
+          escapeHtml(one.label) +
+          '</a>',
+      )
+      .join(' &middot; ')
   );
 }
 

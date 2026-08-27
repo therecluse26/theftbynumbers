@@ -6,6 +6,22 @@
 
 export type StatusId = 'single' | 'mfj' | 'hoh';
 
+/** One publisher and the page that states the figure. */
+export interface SourceLink {
+  label: string;
+  url: string;
+}
+
+/**
+ * What a claim cites: one publisher, or several.
+ *
+ * A card that only says what a program does argues the other side's case. Every
+ * card that names government spending must also say what that spending costs
+ * now against what it cost before, and the two figures rarely come from one
+ * publisher. Treasury has the amount; CBO, CMS, GAO or NCES has the trend.
+ */
+export type SourceRef = SourceLink | SourceLink[];
+
 export interface FieldProvenance {
   updateMode: 'fetch' | 'manual';
   updater?: string;
@@ -195,7 +211,7 @@ export interface ReceiptItem {
   figure?: string;
   compute?: ReceiptCompute;
   note: string;
-  source?: { label: string; url: string };
+  source?: SourceRef;
 }
 
 export interface ReceiptGroup {
@@ -219,8 +235,12 @@ export interface OutlayCategory {
   name: string;
   agency?: string;
   amount: number;
+  /**
+   * What the money does, then what it costs now against what it cost before.
+   * A slice that only names the job reads as a defense of the spending.
+   */
   note: string;
-  source?: { label: string; url: string };
+  source?: SourceRef;
 }
 
 export interface OutlaysData {

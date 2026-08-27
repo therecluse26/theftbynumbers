@@ -71,6 +71,20 @@ A data item names its own source in a `source` block:
 "source": { "label": "GAO-24-106703, F-35 Sustainment", "url": "https://www.gao.gov/products/gao-24-106703" }
 ```
 
+In `receipt.json` and `outlays.json`, `source` also takes a **list**. A card or a
+donut slice that states what a thing costs now against what it cost before is
+making two claims, and the two figures rarely come from one publisher. Give each
+claim its own link, in the order the note makes them:
+
+```json
+"source": [
+  { "label": "Final Monthly Treasury Statement, FY2025, table 5", "url": "…" },
+  { "label": "CBO, Comparing the Compensation of Federal and Private-Sector Employees in 2022", "url": "…" }
+]
+```
+
+The links render side by side, separated by a middle dot.
+
 `roads.json` uses `publicSource` and `privateSource`, because one card carries
 two prices from two publishers. A ladder group uses `footnoteSource`.
 
@@ -117,6 +131,39 @@ Break either one and `npm run build` refuses. To refresh the figures, pull the
 Monthly Treasury Statement table 5 from the Fiscal Data API, take the `Total--`
 rows at nesting level 2, and update the `federal-spending` card in the same
 commit.
+
+## Every slice carries its cost case
+
+A donut slice note used to say only what the money does: *"Retirement and health
+benefits for people who worked for the government."* A reader finishes that
+sentence agreeing with the spending. The slice argued the other side's case, on
+this page, in the government's favour, ten times over.
+
+**A note names the job, then what that job costs now against what it cost
+before.** Both halves, every slice. The second half comes from a publisher who
+is not Treasury, so the slice's `source` is a list. What is on the page now:
+
+| Slice | The cost case | Publisher |
+| --- | --- | --- |
+| Health | Individual premiums rose 105% in the four years after the ACA took effect | HHS ASPE, CMS |
+| Social Security | $25.1tn short over 75 years, $2.5tn worse in one report | SSA Trustees |
+| Treasury, most of it interest | On either interest figure, it now costs more than the whole military slice | Its own table |
+| The military | Never audited; $49.3bn of weapon-program cost growth in one year | GAO-25-107569 |
+| Veterans | 2.6% of federal spending in 2000, 4.4% in 2017, after inflation | CBO |
+| Food and farm | 10.93% SNAP payment error rate; ~$10.5bn issued wrong | USDA FNS |
+| Federal pensions | Benefits cost 43% more than the private sector, 93% at high-school level | CBO |
+| Roads, rail and air | ~$1.5bn a km of subway in New York against a ~$220m global median | Transit Costs Project |
+| Homeland Security | Doubled in real terms since 2003, faster than the budget around it | USAFacts |
+| Everything else | Real spending per pupil more than doubled; 17-year-old scores did not move | NCES |
+
+This rule is not machine-checkable and no validator enforces it. It is the
+reason the slices read the way they do. Do not refresh a Treasury amount and
+leave a note behind that only names the job.
+
+The same rule governs the `good` group of `receipt.json`. That group holds the
+programs a reader defends the tax with, so every card in it must state what the
+program costs now against what it cost before. A card there that only describes
+the program is the strongest argument against this whole page.
 
 ## The guard rails
 

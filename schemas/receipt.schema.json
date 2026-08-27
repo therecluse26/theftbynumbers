@@ -5,6 +5,24 @@
   "type": "object",
   "required": ["meta", "groups", "items"],
   "additionalProperties": false,
+  "definitions": {
+    "link": {
+      "type": "object",
+      "required": ["label", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "source": {
+      "description": "One publisher, or several. A card that compares a price now with the price before takes one link per publisher. Rendered in order, separated by a middle dot.",
+      "oneOf": [
+        { "$ref": "#/definitions/link" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/link" } }
+      ]
+    }
+  },
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
@@ -99,15 +117,7 @@
             "minLength": 1,
             "description": "The small print under the card. Supports the {price} token."
           },
-          "source": {
-            "type": "object",
-            "required": ["label", "url"],
-            "additionalProperties": false,
-            "properties": {
-              "label": { "type": "string", "minLength": 1 },
-              "url": { "type": "string", "format": "uri" }
-            }
-          }
+          "source": { "$ref": "#/definitions/source" }
         }
       }
     }

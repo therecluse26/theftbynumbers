@@ -39,8 +39,12 @@ Checked on 2026-08-27. Run `npm run data:links` to re-test that every URL answer
 
 ## Section three: the receipt and the donut
 
-All 27 receipt cards and all 10 donut slices carry a source. The renderer threw
+All 34 receipt cards and all 10 donut slices carry a source. The renderer threw
 the 10 slice links away; that is fixed.
+
+In this file and in `outlays.json`, `source` may be a **list**. A claim about
+what a thing costs now against what it cost before needs one link per publisher.
+`sourceLink()` and `card()` both render a list.
 
 | Claim | Figure | Link | Verified | Note |
 | --- | --- | --- | --- | --- |
@@ -72,6 +76,41 @@ holds its own copies. Do not "fix" these links back to `sigar.mil`.
 Every other receipt card links to a GAO report, a CBO publication, a CRS report,
 the Federal Register, a Supreme Court case or the publisher's own study. Those
 were already deep links and are unchanged.
+
+### The cost case on every donut slice, added 2026-08-27
+
+A slice note that only named the job read as a defense of the spending. Each one
+now also states what that money buys now against what it bought before. The
+Treasury amount is unchanged and still comes from table 5; these are the second
+links.
+
+| Slice | Claim | Link | Verified | Note |
+| --- | --- | --- | --- | --- |
+| Health | Individual-market premiums rose 105%, $2,784 to $5,712, 2013 to 2017 | [HHS ASPE, Individual Market Premium Changes](https://aspe.hhs.gov/sites/default/files/private/pdf/256751/IndividualMarketPremiumChanges.pdf) | `yes` | 39 healthcare.gov states. 62% of them at least doubled. Alabama 222%, New Jersey 12%. |
+| Health | $5.3tn, 18.0% of GDP, $15,474 a head, growing 7.2% against 5.3% for GDP | [CMS, National Health Expenditures 2024 Highlights](https://www.cms.gov/files/document/highlights.pdf) | `yes` | The share rose from 17.6% to 18.0% in one year. |
+| Social Security | $25.1tn unfunded over 75 years | [2025 OASDI Trustees Report, highlights](https://www.ssa.gov/oact/TR/2025/II_A_highlights.html) | `yes` | Present value at 1 January 2025, $2.5tn worse than the 2024 report. |
+| The military | $49.3bn of cost growth in one year across 30 programs | [GAO-25-107569](https://www.gao.gov/products/gao-25-107569) | `yes` | 106 costliest programs reviewed, portfolio near $2.4tn. Sentinel alone was $36bn of the growth. |
+| Veterans | $64bn in 2000 to $180bn in 2017 after inflation; 2.6% to 4.4% of spending | [CBO, Possible Higher Spending Paths for Veterans' Benefits](https://www.cbo.gov/publication/54881) | `yes` | cbo.gov answers a browser and refuses the link checker. |
+| Food and farm | SNAP payment error rate 10.93%, about $10.5bn of about $100bn | [USDA FNS, FY2024 SNAP Quality Control payment error rates](https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-fy24QC-PER.pdf) | `yes` | 9.26% over-payment, 1.67% under-payment. 44 states above the 6% threshold. |
+| Federal pensions | Federal benefits cost 43% more than private sector; 93% at high-school level | [CBO, Comparing the Compensation of Federal and Private-Sector Employees in 2022](https://www.cbo.gov/publication/60235) | `yes` | Total compensation was 5% higher; the gap is in benefits, not wages. The note quotes the benefits figure and says so. cbo.gov refuses the link checker. |
+| Roads, rail and air | About $1.5bn a km in New York against a global median near $220m | [NYU Marron Institute, Transit Costs Project data](https://transitcosts.com/data/) | `yes` | Database covers 50+ countries and 11,000+ km of urban rail built since the late 1990s. |
+| Homeland Security | $55.9bn in 2003 to $115.3bn now in the same dollars, +106% against +85% | [USAFacts, Department of Homeland Security](https://usafacts.org/explainers/what-does-the-us-government-do/agency/us-department-of-homeland-security/) | `yes` | Secondary aggregator of federal accounts, not a primary publisher. |
+| Everything else | 17-year-old scores flat since the early 1970s; real spending per pupil more than doubled | [NCES Fast Facts 38](https://nces.ed.gov/fastfacts/display.asp?id=38) and [NCES Fast Facts 66](https://nces.ed.gov/fastfacts/display.asp?id=66) | `yes` | The long-term trend test was last given to 17-year-olds in **2012**, not 2023. The note says 2012. Do not update it to a later year without checking that NAEP tested age 17 again. |
+
+### The programs people defend the tax with, added 2026-08-27
+
+Seven new cards in the `good` group of `receipt.json`. All are `fact` cards, so
+no arithmetic is applied and no figure divides the reader's tax.
+
+| Claim | Figure | Link | Verified | Note |
+| --- | --- | --- | --- | --- |
+| Individual premiums after the ACA | 105% | [HHS ASPE](https://aspe.hhs.gov/sites/default/files/private/pdf/256751/IndividualMarketPremiumChanges.pdf) | `yes` | Same report as the health slice. |
+| Family premium through an employer | $26,993 | [KFF, 2025 Employer Health Benefits Survey](https://www.kff.org/health-costs/2025-employer-health-benefits-survey/) | `yes` | +6% in 2025, +24% over five years. The basket already cites the worker's $6,850 share of this same premium. |
+| Health share of the economy | 18.0% | [CMS, NHE 2024 Highlights](https://www.cms.gov/files/document/highlights.pdf) | `yes` | Same document as the health slice. |
+| Improper Medicare and Medicaid payments | $94bn | [CMS, FY2025 improper payments fact sheet](https://www.cms.gov/newsroom/fact-sheets/fiscal-year-2025-improper-payments-fact-sheet) | `derived` | $28.83bn Medicare FFS + $23.67bn Part C + $4.23bn Part D + $37.39bn Medicaid = $94.12bn. That is half the $186bn on the `improper-payments` card. **It is a subset of that card, not an addition to it**, and the note says so. Never make this a `yearly` card or the page charges the reader twice. |
+| Medicare hospital fund depletion | 2033 | [Trustees Report summary](https://www.ssa.gov/oact/trsum/) | `yes` | Income then covers 89% of cost; the other 11% is cut by law. Moved three years closer in one report. |
+| 17-year-old test scores | 1970s | [NCES Fast Facts 38](https://nces.ed.gov/fastfacts/display.asp?id=38) and [NCES Fast Facts 66](https://nces.ed.gov/fastfacts/display.asp?id=66) | `yes` | Age 17 was last tested in 2012. See the warning above. |
+| Subsidized loan captured as tuition | 60 cents | [NY Fed Staff Report 733](https://www.newyorkfed.org/research/staff_reports/sr733.html) | `yes` | Lucca, Nadauld and Shen. Pass-through of about 60 cents on the dollar for subsidized loans, smaller but positive for unsubsidized. |
 
 ## Section five: the ladder
 

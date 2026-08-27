@@ -5,6 +5,24 @@
   "type": "object",
   "required": ["meta", "fiscalYear", "totalOutlays", "categories"],
   "additionalProperties": false,
+  "definitions": {
+    "link": {
+      "type": "object",
+      "required": ["label", "url"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+    "source": {
+      "description": "One publisher, or several. A slice note states the Treasury amount and then what that money buys against what it used to buy, so it usually names more than one page. Rendered in order, separated by a middle dot.",
+      "oneOf": [
+        { "$ref": "#/definitions/link" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/link" } }
+      ]
+    }
+  },
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
@@ -35,16 +53,12 @@
             "description": "The line as Treasury prints it, so a reader can find it in the source."
           },
           "amount": { "type": "number", "description": "Dollars. May be negative only inside a combined slice." },
-          "note": { "type": "string", "minLength": 1 },
-          "source": {
-            "type": "object",
-            "required": ["label", "url"],
-            "additionalProperties": false,
-            "properties": {
-              "label": { "type": "string", "minLength": 1 },
-              "url": { "type": "string", "format": "uri" }
-            }
-          }
+          "note": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What the money does, then what it costs now against what it cost before. A slice that only names the job argues the other side's case."
+          },
+          "source": { "$ref": "#/definitions/source" }
         }
       }
     }

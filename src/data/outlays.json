@@ -18,6 +18,14 @@
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
         "note": "The Total Outlays line in the same table. Every slice below must add up to it."
+      },
+      "note": {
+        "updateMode": "manual",
+        "label": "The cost case on each slice: what the money buys now against what it bought before",
+        "url": "https://www.gao.gov/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "A slice that only names the job argues the other side's case, so every note carries a published cost trend as well as the Treasury amount. Each claim names its own publisher in the slice's source list. Re-sample when a publisher issues a new edition, not on the calendar."
       }
     }
   },
@@ -29,29 +37,45 @@
       "name": "Health: Medicare, Medicaid and the rest",
       "agency": "Department of Health and Human Services",
       "amount": 1884277200000,
-      "note": "The largest single line in the budget. One department, more than a quarter of everything.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "The largest single line in the budget. One department, more than a quarter of everything. It did not make care cheaper. HHS's own analysis found the average individual-market premium went from $2,784 a year in 2013 to $5,712 in 2017 across the 39 states on healthcare.gov, a rise of 105% in the four years after the Affordable Care Act took effect. National health spending reached $5.3 trillion in 2024, 18.0% of the whole economy and $15,474 for every person in the country. It grew 7.2% that year, faster than the economy around it.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "HHS ASPE, Individual Market Premium Changes 2013-2017",
+          "url": "https://aspe.hhs.gov/sites/default/files/private/pdf/256751/IndividualMarketPremiumChanges.pdf"
+        },
+        {
+          "label": "CMS, National Health Expenditures 2024 Highlights",
+          "url": "https://www.cms.gov/files/document/highlights.pdf"
+        }
+      ]
     },
     {
       "id": "social-security",
       "name": "Social Security",
       "agency": "Social Security Administration",
       "amount": 1646515200000,
-      "note": "Paid out as it comes in. There is no account with your name on it.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Paid out as it comes in. There is no account with your name on it. The trustees put the 75-year shortfall at $25.1 trillion in today's money, $2.5 trillion worse than the year before, and the combined funds empty in 2034. Paying in buys no legal claim on any of it; the receipt below names the case that settled that.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "2025 OASDI Trustees Report, highlights",
+          "url": "https://www.ssa.gov/oact/TR/2025/II_A_highlights.html"
+        }
+      ]
     },
     {
       "id": "treasury-interest",
       "name": "The Treasury, most of it interest on the debt",
       "agency": "Department of the Treasury",
       "amount": 1458910200000,
-      "note": "Gross interest on the debt alone was $1,215.6 billion of this. Net of what the government pays its own trust funds, CBO puts the cost near $970 billion. Either way it buys nothing at all.",
+      "note": "Gross interest on the debt alone was $1,215.6 billion of this. Net of what the government pays its own trust funds, CBO puts the cost near $970 billion. Either way it buys nothing at all. On either figure, servicing old spending now costs more than the entire military slice below it. This is the price of the years the government spent money it had not collected.",
       "source": {
         "label": "Final Monthly Treasury Statement, FY2025, table 5",
         "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
@@ -62,77 +86,123 @@
       "name": "The military",
       "agency": "Department of Defense, military programs",
       "amount": 868411600000,
-      "note": "Military programs only. Veterans, nuclear weapons and the intelligence agencies are counted elsewhere.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Military programs only. Veterans, nuclear weapons and the intelligence agencies are counted elsewhere. Nobody can audit it: the Pentagon has failed all eight audits it has ever taken. Nobody can hold the price either. GAO reviewed the 106 costliest weapon programs in 2025 and found the estimates for 30 of them had risen $49.3 billion in a single year, against a portfolio of nearly $2.4 trillion.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "GAO-25-107569, Weapon Systems Annual Assessment 2025",
+          "url": "https://www.gao.gov/products/gao-25-107569"
+        }
+      ]
     },
     {
       "id": "veterans",
       "name": "Veterans",
       "agency": "Department of Veterans Affairs",
       "amount": 376591200000,
-      "note": "The bill for the wars, paid decades after the fighting stops.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "The bill for the wars, paid decades after the fighting stops. It is also the fastest-growing line on this chart. CBO measured VA spending rising from $64 billion in 2000 to $180 billion in 2017 after inflation, from 2.6% of all federal spending to 4.4%. Its share of the budget nearly doubled in seventeen years, and it has kept climbing since.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "CBO, Possible Higher Spending Paths for Veterans' Benefits",
+          "url": "https://www.cbo.gov/publication/54881"
+        }
+      ]
     },
     {
       "id": "agriculture",
       "name": "Food and farm programs",
       "agency": "Department of Agriculture",
       "amount": 227431900000,
-      "note": "Food assistance and farm support, in one department.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Food assistance and farm support, in one department. USDA checks its own accuracy and publishes the answer. The SNAP payment error rate was 10.93% in 2024: roughly $10.5 billion of about $100 billion issued to the wrong household or in the wrong amount. Forty-four states missed the 6% threshold and had to file a corrective plan. No grocer stays open at that error rate.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "USDA FNS, FY2024 SNAP Quality Control payment error rates",
+          "url": "https://fns-prod.azureedge.us/sites/default/files/resource-files/snap-fy24QC-PER.pdf"
+        }
+      ]
     },
     {
       "id": "federal-retirement",
       "name": "Federal employee pensions",
       "agency": "Office of Personnel Management",
       "amount": 128239100000,
-      "note": "Retirement and health benefits for people who worked for the government.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Retirement and health benefits for people who worked for the government. CBO priced those benefits against the private sector doing comparable work in 2022. They cost 43% more. For workers whose education stopped at high school, 93% more. You are charged the difference on a package you cannot buy for yourself.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "CBO, Comparing the Compensation of Federal and Private-Sector Employees in 2022",
+          "url": "https://www.cbo.gov/publication/60235"
+        }
+      ]
     },
     {
       "id": "transportation",
       "name": "Roads, rail and air",
       "agency": "Department of Transportation",
       "amount": 127582800000,
-      "note": "Everything people picture when they say roads and bridges. Under two cents of the dollar.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Everything people picture when they say roads and bridges. Under two cents of the dollar, and the dearest building in the world. The Transit Costs Project has costed more than 11,000 km of urban rail across 50 countries. New York builds subway at about $1.5 billion a kilometer. The global median is near $220 million. Section six takes this question on its own.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "NYU Marron Institute, Transit Costs Project data",
+          "url": "https://transitcosts.com/data/"
+        }
+      ]
     },
     {
       "id": "homeland",
       "name": "Homeland Security",
       "agency": "Department of Homeland Security",
       "amount": 115305600000,
-      "note": "Borders, customs, the coast guard, airport screening and disaster relief.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Borders, customs, the coast guard, airport screening and disaster relief. The department is 23 years old and has already doubled in real terms: $55.9 billion in 2003 against $115.3 billion now, in the same dollars. That is 106% growth against 85% for the budget as a whole, so it took a larger bite each year. Section six prices its airport screening against a contractor doing the same job to the same federal standard.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "USAFacts, Department of Homeland Security spending",
+          "url": "https://usafacts.org/explainers/what-does-the-us-government-do/agency/us-department-of-homeland-security/"
+        }
+      ]
     },
     {
       "id": "everything-else",
       "name": "Everything else, after receipts",
       "agency": "Twenty remaining agencies, less undistributed offsetting receipts",
       "amount": 176708900000,
-      "note": "Energy, housing, labor, justice, the environment, education, the State Department, NASA, the courts and Congress together spent $514.5 billion. The government then nets $337.8 billion of its own receipts against that, leaving this.",
-      "source": {
-        "label": "Final Monthly Treasury Statement, FY2025, table 5",
-        "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
-      }
+      "note": "Energy, housing, labor, justice, the environment, education, the State Department, NASA, the courts and Congress together spent $514.5 billion. The government then nets $337.8 billion of its own receipts against that, leaving this. Take the schools out of that list and look at them. Real spending per public school pupil has more than doubled since 1970. On the government's own long-term trend test, the reading and mathematics scores of 17-year-olds in 2012, the last year it was given to them, were not measurably different from the early 1970s. Twice the money bought the same result.",
+      "source": [
+        {
+          "label": "Final Monthly Treasury Statement, FY2025, table 5",
+          "url": "https://fiscaldata.treasury.gov/static-data/published-reports/mts/MonthlyTreasuryStatement_202509.pdf"
+        },
+        {
+          "label": "NCES Fast Facts, long-term trends in reading and mathematics achievement",
+          "url": "https://nces.ed.gov/fastfacts/display.asp?id=38"
+        },
+        {
+          "label": "NCES Fast Facts, expenditures per pupil",
+          "url": "https://nces.ed.gov/fastfacts/display.asp?id=66"
+        }
+      ]
     }
   ]
 }
