@@ -18,6 +18,22 @@
         "maxAgeDays": 400,
         "updatedAt": "2026-08-26",
         "note": "The wage base is set by the SSA, not the IRS, and is announced with the cost-of-living adjustment each October. The employer-share hint links this page, because that is where the cap the hint names is published."
+      },
+      "credits.childTaxCredit.perChild": {
+        "updateMode": "manual",
+        "label": "IRS, Child Tax Credit",
+        "url": "https://www.irs.gov/credits-deductions/individuals/child-tax-credit",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "$2,200 per qualifying child, made permanent and indexed by the One Big Beautiful Bill Act of July 2025, so it is set by statute rather than by the annual revenue procedure that covers the rest of this file. The credit falls $50 for each $1,000 of income over $200,000, or $400,000 on a joint return. The refundable additional child tax credit, worth up to $1,700 a child, is NOT modelled: this page stops the credit at zero tax and never shows a refund. The note with id note-credits says so."
+      },
+      "capitalGains.longTerm": {
+        "updateMode": "manual",
+        "label": "IRS, topic 409, capital gains and losses",
+        "url": "https://www.irs.gov/taxtopics/tc409",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "Long-term rates for 2026, from Rev. Proc. 2025-32: 0% to $49,450 of taxable income single, $98,900 joint, $66,200 head of household; 15% to $545,500, $613,700 and $579,600; 20% above. The net investment income tax adds 3.8% over $200,000, or $250,000 on a joint return. Those two thresholds are statutory and have never been indexed: they have stood unchanged since 2013, so inflation pulls more earners into them every year. Nothing on this page is reduced by any of it. The invested pot is shown before tax on purpose, because the tax depends on which account the money sits in, not on a rate."
       }
     }
   },
@@ -47,37 +63,164 @@
   ],
   "brackets": {
     "single": [
-      { "from": 0, "rate": 0.1 },
-      { "from": 12400, "rate": 0.12 },
-      { "from": 50400, "rate": 0.22 },
-      { "from": 105700, "rate": 0.24 },
-      { "from": 201775, "rate": 0.32 },
-      { "from": 256225, "rate": 0.35 },
-      { "from": 640600, "rate": 0.37 }
+      {
+        "from": 0,
+        "rate": 0.1
+      },
+      {
+        "from": 12400,
+        "rate": 0.12
+      },
+      {
+        "from": 50400,
+        "rate": 0.22
+      },
+      {
+        "from": 105700,
+        "rate": 0.24
+      },
+      {
+        "from": 201775,
+        "rate": 0.32
+      },
+      {
+        "from": 256225,
+        "rate": 0.35
+      },
+      {
+        "from": 640600,
+        "rate": 0.37
+      }
     ],
     "mfj": [
-      { "from": 0, "rate": 0.1 },
-      { "from": 24800, "rate": 0.12 },
-      { "from": 100800, "rate": 0.22 },
-      { "from": 211400, "rate": 0.24 },
-      { "from": 403550, "rate": 0.32 },
-      { "from": 512450, "rate": 0.35 },
-      { "from": 768700, "rate": 0.37 }
+      {
+        "from": 0,
+        "rate": 0.1
+      },
+      {
+        "from": 24800,
+        "rate": 0.12
+      },
+      {
+        "from": 100800,
+        "rate": 0.22
+      },
+      {
+        "from": 211400,
+        "rate": 0.24
+      },
+      {
+        "from": 403550,
+        "rate": 0.32
+      },
+      {
+        "from": 512450,
+        "rate": 0.35
+      },
+      {
+        "from": 768700,
+        "rate": 0.37
+      }
     ],
     "hoh": [
-      { "from": 0, "rate": 0.1 },
-      { "from": 17700, "rate": 0.12 },
-      { "from": 67450, "rate": 0.22 },
-      { "from": 105700, "rate": 0.24 },
-      { "from": 201775, "rate": 0.32 },
-      { "from": 256200, "rate": 0.35 },
-      { "from": 640600, "rate": 0.37 }
+      {
+        "from": 0,
+        "rate": 0.1
+      },
+      {
+        "from": 17700,
+        "rate": 0.12
+      },
+      {
+        "from": 67450,
+        "rate": 0.22
+      },
+      {
+        "from": 105700,
+        "rate": 0.24
+      },
+      {
+        "from": 201775,
+        "rate": 0.32
+      },
+      {
+        "from": 256200,
+        "rate": 0.35
+      },
+      {
+        "from": 640600,
+        "rate": 0.37
+      }
     ]
   },
   "standardDeduction": {
     "single": 16100,
     "mfj": 32200,
     "hoh": 24150
+  },
+  "credits": {
+    "childTaxCredit": {
+      "perChild": 2200,
+      "phaseOutStart": {
+        "single": 200000,
+        "mfj": 400000,
+        "hoh": 200000
+      },
+      "phaseOutStep": 1000,
+      "phaseOutPerStep": 50
+    }
+  },
+  "capitalGains": {
+    "longTerm": {
+      "single": [
+        {
+          "from": 0,
+          "rate": 0
+        },
+        {
+          "from": 49450,
+          "rate": 0.15
+        },
+        {
+          "from": 545500,
+          "rate": 0.2
+        }
+      ],
+      "mfj": [
+        {
+          "from": 0,
+          "rate": 0
+        },
+        {
+          "from": 98900,
+          "rate": 0.15
+        },
+        {
+          "from": 613700,
+          "rate": 0.2
+        }
+      ],
+      "hoh": [
+        {
+          "from": 0,
+          "rate": 0
+        },
+        {
+          "from": 66200,
+          "rate": 0.15
+        },
+        {
+          "from": 579600,
+          "rate": 0.2
+        }
+      ]
+    },
+    "netInvestmentIncomeRate": 0.038,
+    "netInvestmentIncomeThreshold": {
+      "single": 200000,
+      "mfj": 250000,
+      "hoh": 200000
+    }
   },
   "payroll": {
     "socialSecurity": {

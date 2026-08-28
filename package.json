@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run data:validate && astro build",
+    "build": "npm run check && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "check": "npm run data:validate && npm run check:tax && npm run check:types",
+    "check:tax": "node --import ./scripts/lib/ts-register.mjs scripts/check-tax.mjs",
+    "check:types": "astro check",
     "data:validate": "node scripts/validate-data.mjs",
     "data:check": "node scripts/update-data.mjs --check",
     "data:update": "node scripts/update-data.mjs",

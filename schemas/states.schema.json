@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "title": "State income tax rates, property tax rates and median home values",
+  "title": "State income, property and sales tax rates, and median home values",
   "type": "object",
   "required": ["meta", "states"],
   "additionalProperties": false,
@@ -13,7 +13,14 @@
       "description": "The first entry is the national row. The site uses it as the default.",
       "items": {
         "type": "object",
-        "required": ["id", "name", "incomeTaxRatePct", "propertyTaxRatePct", "medianHomeValue"],
+        "required": [
+          "id",
+          "name",
+          "incomeTaxRatePct",
+          "propertyTaxRatePct",
+          "salesTaxRatePct",
+          "medianHomeValue"
+        ],
         "additionalProperties": false,
         "properties": {
           "id": { "type": "string", "pattern": "^[A-Z]{2}$" },
@@ -34,6 +41,12 @@
             "minimum": 0,
             "maximum": 5,
             "description": "Yearly property tax as a percentage of home value. Owed every year, on a home owned outright."
+          },
+          "salesTaxRatePct": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 15,
+            "description": "State rate plus the average local rate, the source's combined column. Alaska levies no state sales tax but its boroughs do, so it is 1.82%, not zero. Only Delaware, Montana, New Hampshire and Oregon are genuinely zero."
           },
           "medianHomeValue": { "type": "number", "exclusiveMinimum": 0 }
         }

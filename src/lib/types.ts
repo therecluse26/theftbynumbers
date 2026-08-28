@@ -58,6 +58,25 @@ export interface FederalTaxData {
   filingStatuses: FilingStatus[];
   brackets: Record<StatusId, Bracket[]>;
   standardDeduction: ByStatus;
+  credits: {
+    childTaxCredit: {
+      perChild: number;
+      phaseOutStart: ByStatus;
+      phaseOutStep: number;
+      phaseOutPerStep: number;
+    };
+  };
+  /**
+   * Long-term rates, and the net investment income surtax.
+   *
+   * Used only to state what the invested pot would owe. No figure on the page
+   * is reduced by it. The surtax thresholds are statutory and unindexed.
+   */
+  capitalGains: {
+    longTerm: Record<StatusId, Bracket[]>;
+    netInvestmentIncomeRate: number;
+    netInvestmentIncomeThreshold: ByStatus;
+  };
   payroll: {
     socialSecurity: { rate: number; wageBase: number };
     medicare: {
@@ -74,6 +93,13 @@ export interface StateRow {
   selectLabel?: string;
   isNational?: boolean;
   incomeTaxRatePct: number;
+  /**
+   * Combined state and average local sales tax rate.
+   *
+   * Sales tax used to be one national constant applied to every reader, so an
+   * Oregon reader was charged $1,703 a year of a tax Oregon does not levy.
+   */
+  salesTaxRatePct: number;
   /** Yearly property tax as a percentage of home value. */
   propertyTaxRatePct: number;
   medianHomeValue: number;
@@ -334,7 +360,8 @@ export interface RoadsData {
 
 export interface AssumptionsData {
   meta: DataMeta;
-  salesTax: { spendShare: number; combinedRate: number };
+  /** The rate is per state, in states.json. Only the spend share is national. */
+  salesTax: { spendShare: number };
   investment: {
     defaultAnnualReturnPct: number;
     minAnnualReturnPct: number;
@@ -346,12 +373,49 @@ export interface AssumptionsData {
   horizon: { defaultYears: number; minYears: number; maxYears: number };
   income: { defaultIncome: number; maxIncome: number };
   stateRateSlider: { minPct: number; maxPct: number; stepPct: number };
+  /** The hero gauge's scale. A chart bound, so it carries no provenance. */
+  dial: { maxRatePct: number };
+  /** How many people a joint return covers. A count, so no provenance. */
+  earners: { defaultEarners: number; maxEarners: number };
+  /** How many children the picker offers. A count, so no provenance. */
+  dependents: { defaultChildren: number; maxChildren: number };
+  /** The renter branch: the property tax line inside a rent dollar. */
+  propertyTax: { rentTaxShare: number };
 }
+
+/** Own the home, or rent it. It decides which property tax bill applies. */
+export type Tenure = 'own' | 'rent';
 
 /** Everything the reader can change. */
 export interface Inputs {
   income: number;
   status: StatusId;
+  /**
+   * How many people earned the income. Only a joint return can have two.
+   *
+   * The Social Security wage base is per worker, not per return. A couple who
+   * each earn $150,000 owe two full wage bases, not one. Applying one base to
+   * the combined income understated their Social Security tax by $7,161.
+   */
+  earners: number;
+  /**
+   * Children who qualify for the child tax credit.
+   *
+   * Head of household filing status requires a qualifying person, so a head of
+   * household with children used to be charged federal income tax a real
+   * return would not have: $2,748 at $50,000 with two children, where the
+   * truth is nothing.
+   */
+  children: number;
+  /**
+   * Whether the reader owns their home or rents it.
+   *
+   * An owner is charged the tax on the state's median home. A renter is
+   * charged the property tax line inside a year of average rent. Everybody
+   * used to get the owner's bill, so a $30,000 renter in New Jersey was
+   * charged $10,507 of tax on a house they do not have.
+   */
+  tenure: Tenure;
   stateIndex: number;
   stateRatePct: number;
   years: number;
@@ -367,7 +431,16 @@ export interface Breakdown {
   /** Wage, plus the employer's share when that option is on. */
   base: number;
   taxable: number;
+  /** Federal income tax, after the child tax credit. Never below zero. */
   federal: number;
+  /**
+   * The child tax credit that was applied, after its phase-out.
+   *
+   * Exposed so the ledger can name it rather than work it out again. The
+   * refundable part is not modelled, so a reader owed a refund sees zero, not
+   * a negative number.
+   */
+  childCredit: number;
   socialSecurity: number;
   medicare: number;
   state: number;
@@ -403,10 +476,27 @@ export interface Breakdown {
   total: number;
   /** What the paycheck nets: wage less withholdings. Sales tax is spent later. */
   takeHomePay: number;
-  /** What is left after every tax on this page, sales tax included. */
+  /**
+   * What is left after every tax on this page, sales tax included.
+   *
+   * This can go negative. Property tax is charged on a house, not on a
+   * paycheck, so it does not shrink when the wage does. At a low income in a
+   * high-property-tax state the bill passes the whole wage. It used to be
+   * clamped at zero, which printed "You keep $0" beside a rate above 100% and
+   * left the two figures unable to agree.
+   */
   kept: number;
-  /** Total tax as a share of base. */
+  /** Total tax as a share of base. Not clamped: it can pass 1. */
   effectiveRate: number;
+  /**
+   * True when the bill is larger than everything the reader earned.
+   *
+   * Computed once here so no renderer re-derives the comparison and gets it
+   * subtly different. Every string with a bounded unit — a career of N years,
+   * an hour of a 40-hour week, a bar that cannot exceed its track — branches
+   * on this and says out loud that it clamped.
+   */
+  exceedsBase: boolean;
   /**
    * employmentTax as a share of base. This is the only honest rate to quote
    * against your cost to your employer.

@@ -1,5 +1,13 @@
 ---
-import { CHARITY, STATES_DATA, TAX, dataUpdatedAt, longDate } from '../lib/data';
+import {
+  ASSUMPTIONS,
+  CHARITY,
+  STATES_DATA,
+  TAX,
+  dataUpdatedAt,
+  longDate,
+} from '../lib/data';
+import { usd } from '../lib/format';
 import { figuresFootnote } from '../lib/render';
 
 /*
@@ -9,30 +17,60 @@ import { figuresFootnote } from '../lib/render';
  * that file's meta block. The note and the figure then cite one page, and a
  * refresh that moves the source moves both at once.
  *
- * Notes 1, 3, 4, 5, 6, 10, 12 and 13 are caveats about the model. They state no
- * figure, so they take no link.
+ * Every note carries a stable id. Refer to a note by that id, never by its
+ * position: DATA.md and SOURCES.md both cited note numbers, both drifted when
+ * the list grew, and both ended up pointing at the wrong note.
+ *
+ * These notes are caveats about the model. They state no figure, so they take
+ * no link: estimates, scope, sameness, fungible, cumulative, federal-only,
+ * returns, todays-dollars, refreshed.
  */
 const stateRates = STATES_DATA.meta.fields['incomeTaxRatePct'];
 const propertyRates = STATES_DATA.meta.fields['propertyTaxRatePct'];
 const wageBase = TAX.meta.fields['payroll.socialSecurity.wageBase'];
+const childCredit = TAX.meta.fields['credits.childTaxCredit.perChild'];
+const { perChild, phaseOutStart } = TAX.credits.childTaxCredit;
+const childCreditFigures =
+  `${usd(perChild)} a child, falling away above ${usd(phaseOutStart.single)}` +
+  ` of income, or ${usd(phaseOutStart.mfj)} on a joint return`;
 const giveWell = CHARITY.meta.fields['price'];
+
+const rentTaxShare = ASSUMPTIONS.meta.fields['propertyTax.rentTaxShare'];
 
 /** Payroll tax incidence. No figure comes from it, so it has no meta entry. */
 const incidence = {
   label: 'CBO Working Paper 2021-06, payroll tax pass-through',
   url: 'https://www.cbo.gov/publication/57089',
 };
+
+/** Property tax incidence. Cited against this page's own renter figure. */
+const passThrough = {
+  label: 'Carroll and Yinger, National Tax Journal 1994, on rental housing',
+  url: 'https://ideas.repec.org/a/ntj/journl/v47y1994i2p295-316.html',
+};
 ---
 
 <section class="notes">
   <h3>Read this before you quote the number</h3>
   <ol>
-    <li>
-      <b>These are estimates.</b> Real returns depend on credits, retirement
-      contributions, itemized deductions, dependents and dozens of other things this
-      page does not ask about. It is not tax advice.
+    <li id="note-estimates">
+      <b>These are estimates.</b> A real return depends on retirement contributions,
+      itemized deductions, and dozens of other things this page does not ask about.
+      It is not tax advice.
     </li>
-    <li>
+    <li id="note-credits">
+      <b>One credit is modelled, and no refund is.</b> The child tax credit comes off
+      the federal line, up to {' '}
+      <span set:html={childCreditFigures} />. It stops at zero: this page never shows
+      a refund, and the refundable part of that credit is not counted. Nor is the
+      earned income tax credit. So a head of household earning $50,000 with two
+      children correctly owes no federal income tax here &mdash; but the real return
+      also pays them about $1,650 back, and this page cannot show that.{' '}
+      <a href={childCredit.url} target="_blank" rel="noopener noreferrer">
+        {childCredit.label}
+      </a>
+    </li>
+    <li id="note-state-tax">
       <b>State tax is approximated</b> as a flat rate on gross income. Most states use
       brackets and their own deductions, so treat this figure as a ballpark. Until you
       pick a state, the page charges the median state rate, not zero. Pick your own
@@ -41,13 +79,13 @@ const incidence = {
         {stateRates.label}
       </a>
     </li>
-    <li>
+    <li id="note-scope">
       <b>This measures only what left your pocket</b>, not what came back. These taxes
       also pay for roads, courts, schools, defense and the like. Section three prices
       each of them against what it used to cost. Section six asks how much of the bill
       they actually are, and who else has ever done them.
     </li>
-    <li>
+    <li id="note-sameness">
       <b>Every comparison in section six opens by saying what makes the two sides the
       same job.</b> Same statute, same unit, same buyer, same beat. A card that cannot
       make that claim is not on the page; the ones thrown out for failing it are listed
@@ -57,13 +95,13 @@ const incidence = {
       pays, which is the standing objection to both. Each card names its own remaining
       weakness after the figures. Read those before you quote a multiple.
     </li>
-    <li>
+    <li id="note-fungible">
       <b>Your dollars are not traceable.</b> Money is fungible. You did not personally
       buy a missile, a prison cell or an empty desk. Every figure in section three is{' '}
       <i>your share</i> of a national total, worked out from published accounts. Nothing
       on this page claims a specific dollar of yours went to a specific thing.
     </li>
-    <li>
+    <li id="note-cumulative">
       <b>A cumulative bill is priced against a single year of spending.</b> Every
       figure in section three divides by the same thing: the part of every federal
       dollar you pay this year. The two Afghanistan cards and the war card read low
@@ -75,17 +113,18 @@ const incidence = {
       pandemic frauds fell in years whose outlays were close to today's, and the
       F-35 total runs to 2088, so most of it has not been spent yet.
     </li>
-    <li>
-      <b>The Social Security card counts both halves of the payroll tax</b> &mdash; yours
-      and your employer's &mdash; on the same incidence argument used above. Whether the
-      invested figure beats the benefit depends entirely on the years and return you
-      pick; over a short run it does not. Your real benefit depends on an earnings
-      history this page never asks for.{' '}
+    <li id="note-social-security">
+      <b>The Social Security card counts both halves of the Social Security tax</b>
+      &mdash; 6.2% from you and 6.2% from your employer &mdash; on the same incidence
+      argument used above. Medicare is not in this card. Whether the invested figure
+      beats the benefit depends entirely on the years and return you pick; over a short
+      run it does not. Your real benefit depends on an earnings history this page never
+      asks for.{' '}
       <a href={wageBase.url} target="_blank" rel="noopener noreferrer">
         {wageBase.label}
       </a>
     </li>
-    <li>
+    <li id="note-charity">
       <b>Charity figures are estimates, not price tags.</b> A cost per life saved is a
       model with a wide band around it, and GiveWell expects every one of these figures
       to rise over time. Read the linked analysis before you quote a number.{' '}
@@ -93,7 +132,7 @@ const incidence = {
         {giveWell.label}
       </a>
     </li>
-    <li>
+    <li id="note-incidence">
       <b>The employer's share is counted as your money only if you accept the incidence
       argument</b> &mdash; that absent the tax, the same amount would have reached your
       wage. Most economists do; note that had it been paid to you as salary, income tax
@@ -102,7 +141,7 @@ const incidence = {
         {incidence.label}
       </a>
     </li>
-    <li>
+    <li id="note-federal-only">
       <b>Sections three and six divide your federal tax only.</b> The bill at the top of
       this page counts federal, state and local tax together. These two sections divide
       federal spending, because Treasury publishes those accounts and no single ledger
@@ -113,28 +152,41 @@ const incidence = {
       the road bill: most roads are built and maintained by states and counties, not by
       Washington, and that spending is outside these accounts entirely.
     </li>
-    <li>
-      <b>Property tax is charged on the median home in the state you picked</b>, not on
-      a home you told us about. The rate is the state's effective rate on owner-occupied
-      housing. If you rent, you still pay it: the landlord owes it and prices it into the
-      rent. If you own a cheaper or dearer home than the median, your own bill differs.
-      This is the one tax on the page you keep paying after the thing is bought and paid
-      for, which is why it has its own row.{' '}
+    <li id="note-property">
+      <b>Property tax depends on whether you own or rent.</b> An owner is charged the
+      state's effective rate on the state's median home, not on a home you told us
+      about, so a cheaper or dearer house changes your own bill. A renter is charged
+      the property tax inside a year of average US rent &mdash; 11 cents of every rent
+      dollar, from the landlords' own trade association. That rent is a national
+      average, so the renter figure does not move when you change the state, although
+      the real thing does: the same research puts New Jersey at 16 cents and Arizona
+      at 4. Economists also disagree about how much of a landlord's property tax a
+      tenant really bears rather than the owner. Carroll and Yinger found the tax on
+      rental housing is, on average, not a benefit tax, and any part of it that falls
+      on the owner instead would make the renter figure smaller. Either way this is the one tax
+      on the page you keep paying after the thing is bought and paid for, and an owner
+      who stops paying loses the house to the county.{' '}
       <a href={propertyRates.url} target="_blank" rel="noopener noreferrer">
         {propertyRates.label}
+      </a>{' '}
+      <a href={rentTaxShare.url} target="_blank" rel="noopener noreferrer">
+        {rentTaxShare.label}
+      </a>{' '}
+      <a href={passThrough.url} target="_blank" rel="noopener noreferrer">
+        {passThrough.label}
       </a>
     </li>
-    <li>
+    <li id="note-returns">
       <b>Investment returns are not guaranteed.</b> This page assumes a steady annual
       return, which no real market delivers. Actual sequences of good and bad years
       produce very different results.
     </li>
-    <li>
+    <li id="note-todays-dollars">
       <b>Everything is in today's dollars</b> and holds your income flat, which keeps the
       comparison readable but is not how a career usually goes.
     </li>
-    <li><b>Figures used:</b> <span set:html={figuresFootnote()} /></li>
-    <li>
+    <li id="note-figures"><b>Figures used:</b> <span set:html={figuresFootnote()} /></li>
+    <li id="note-refreshed">
       <b>Data last refreshed {longDate(dataUpdatedAt())}.</b> Every rate and price on
       this page comes from a JSON file in the repository. Each file records its own
       source and refresh date.

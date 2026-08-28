@@ -19,6 +19,14 @@
         "updatedAt": "2026-08-26",
         "note": "Table 2 of the source, the 2024 effective rate column. The source publishes no national figure, so the US row carries the median of the fifty-one published rates. That median under-weights the populous high-rate states, so the national default is the mild end of the range."
       },
+      "salesTaxRatePct": {
+        "updateMode": "manual",
+        "label": "Tax Foundation, state and local sales tax rates, midyear 2026",
+        "url": "https://taxfoundation.org/data/all/state/2026-sales-tax-rates-midyear/",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "The state rate plus the average local rate, the source's combined column, as of 1 July 2026. Unlike the income and property columns, this source does publish a national figure, so the US row carries its population-weighted average of 7.53% rather than a median of the fifty-one. A typical reader is a person, not a state. Alaska levies no state sales tax but its boroughs do, so it is 1.82%; only Delaware, Montana, New Hampshire and Oregon are zero. New Jersey's average local rate is slightly negative because Salem County charges a reduced rate."
+      },
       "medianHomeValue": {
         "updateMode": "fetch",
         "updater": "zillow-zhvi",
@@ -30,57 +38,423 @@
     }
   },
   "states": [
-    { "id": "US", "name": "United States", "selectLabel": "United States (median state rates)", "isNational": true, "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.79, "medianHomeValue": 408800 },
-    { "id": "AL", "name": "Alabama", "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.37, "medianHomeValue": 232106 },
-    { "id": "AK", "name": "Alaska", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.94, "medianHomeValue": 380987 },
-    { "id": "AZ", "name": "Arizona", "incomeTaxRatePct": 2.5, "propertyTaxRatePct": 0.48, "medianHomeValue": 420906 },
-    { "id": "AR", "name": "Arkansas", "incomeTaxRatePct": 3.6, "propertyTaxRatePct": 0.56, "medianHomeValue": 219754 },
-    { "id": "CA", "name": "California", "incomeTaxRatePct": 6.0, "propertyTaxRatePct": 0.7, "medianHomeValue": 765036 },
-    { "id": "CO", "name": "Colorado", "incomeTaxRatePct": 4.25, "propertyTaxRatePct": 0.5, "medianHomeValue": 535507 },
-    { "id": "CT", "name": "Connecticut", "incomeTaxRatePct": 5.0, "propertyTaxRatePct": 1.54, "medianHomeValue": 425333 },
-    { "id": "DE", "name": "Delaware", "incomeTaxRatePct": 5.2, "propertyTaxRatePct": 0.54, "medianHomeValue": 396207 },
-    { "id": "DC", "name": "District of Columbia", "incomeTaxRatePct": 6.0, "propertyTaxRatePct": 0.6, "medianHomeValue": 574199 },
-    { "id": "FL", "name": "Florida", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.78, "medianHomeValue": 372755 },
-    { "id": "GA", "name": "Georgia", "incomeTaxRatePct": 5.19, "propertyTaxRatePct": 0.79, "medianHomeValue": 328277 },
-    { "id": "HI", "name": "Hawaii", "incomeTaxRatePct": 7.2, "propertyTaxRatePct": 0.29, "medianHomeValue": 823970 },
-    { "id": "ID", "name": "Idaho", "incomeTaxRatePct": 5.3, "propertyTaxRatePct": 0.5, "medianHomeValue": 468156 },
-    { "id": "IL", "name": "Illinois", "incomeTaxRatePct": 4.95, "propertyTaxRatePct": 1.88, "medianHomeValue": 281547 },
-    { "id": "IN", "name": "Indiana", "incomeTaxRatePct": 3.0, "propertyTaxRatePct": 0.76, "medianHomeValue": 249724 },
-    { "id": "IA", "name": "Iowa", "incomeTaxRatePct": 3.8, "propertyTaxRatePct": 1.33, "medianHomeValue": 227764 },
-    { "id": "KS", "name": "Kansas", "incomeTaxRatePct": 5.2, "propertyTaxRatePct": 1.21, "medianHomeValue": 239111 },
-    { "id": "KY", "name": "Kentucky", "incomeTaxRatePct": 3.5, "propertyTaxRatePct": 0.74, "medianHomeValue": 228840 },
-    { "id": "LA", "name": "Louisiana", "incomeTaxRatePct": 3.0, "propertyTaxRatePct": 0.55, "medianHomeValue": 208930 },
-    { "id": "ME", "name": "Maine", "incomeTaxRatePct": 6.4, "propertyTaxRatePct": 0.98, "medianHomeValue": 396938 },
-    { "id": "MD", "name": "Maryland", "incomeTaxRatePct": 4.9, "propertyTaxRatePct": 0.92, "medianHomeValue": 423956 },
-    { "id": "MA", "name": "Massachusetts", "incomeTaxRatePct": 5.0, "propertyTaxRatePct": 1.0, "medianHomeValue": 642387 },
-    { "id": "MI", "name": "Michigan", "incomeTaxRatePct": 4.25, "propertyTaxRatePct": 1.19, "medianHomeValue": 254230 },
-    { "id": "MN", "name": "Minnesota", "incomeTaxRatePct": 6.6, "propertyTaxRatePct": 1.0, "medianHomeValue": 341308 },
-    { "id": "MS", "name": "Mississippi", "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.58, "medianHomeValue": 189895 },
-    { "id": "MO", "name": "Missouri", "incomeTaxRatePct": 4.0, "propertyTaxRatePct": 0.89, "medianHomeValue": 258099 },
-    { "id": "MT", "name": "Montana", "incomeTaxRatePct": 5.6, "propertyTaxRatePct": 0.61, "medianHomeValue": 455364 },
-    { "id": "NE", "name": "Nebraska", "incomeTaxRatePct": 4.5, "propertyTaxRatePct": 1.44, "medianHomeValue": 271338 },
-    { "id": "NV", "name": "Nevada", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.5, "medianHomeValue": 442655 },
-    { "id": "NH", "name": "New Hampshire", "incomeTaxRatePct": 0, "propertyTaxRatePct": 1.5, "medianHomeValue": 495256 },
-    { "id": "NJ", "name": "New Jersey", "incomeTaxRatePct": 4.6, "propertyTaxRatePct": 1.88, "medianHomeValue": 558900 },
-    { "id": "NM", "name": "New Mexico", "incomeTaxRatePct": 3.9, "propertyTaxRatePct": 0.63, "medianHomeValue": 310375 },
-    { "id": "NY", "name": "New York", "incomeTaxRatePct": 5.6, "propertyTaxRatePct": 1.3, "medianHomeValue": 502162 },
-    { "id": "NC", "name": "North Carolina", "incomeTaxRatePct": 4.25, "propertyTaxRatePct": 0.66, "medianHomeValue": 331413 },
-    { "id": "ND", "name": "North Dakota", "incomeTaxRatePct": 1.7, "propertyTaxRatePct": 0.92, "medianHomeValue": 280510 },
-    { "id": "OH", "name": "Ohio", "incomeTaxRatePct": 2.75, "propertyTaxRatePct": 1.36, "medianHomeValue": 237200 },
-    { "id": "OK", "name": "Oklahoma", "incomeTaxRatePct": 3.9, "propertyTaxRatePct": 0.79, "medianHomeValue": 216242 },
-    { "id": "OR", "name": "Oregon", "incomeTaxRatePct": 8.4, "propertyTaxRatePct": 0.81, "medianHomeValue": 492347 },
-    { "id": "PA", "name": "Pennsylvania", "incomeTaxRatePct": 3.07, "propertyTaxRatePct": 1.26, "medianHomeValue": 278429 },
-    { "id": "RI", "name": "Rhode Island", "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 1.12, "medianHomeValue": 488738 },
-    { "id": "SC", "name": "South Carolina", "incomeTaxRatePct": 4.2, "propertyTaxRatePct": 0.49, "medianHomeValue": 300562 },
-    { "id": "SD", "name": "South Dakota", "incomeTaxRatePct": 0, "propertyTaxRatePct": 1.0, "medianHomeValue": 312005 },
-    { "id": "TN", "name": "Tennessee", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.52, "medianHomeValue": 327696 },
-    { "id": "TX", "name": "Texas", "incomeTaxRatePct": 0, "propertyTaxRatePct": 1.4, "medianHomeValue": 297592 },
-    { "id": "UT", "name": "Utah", "incomeTaxRatePct": 4.55, "propertyTaxRatePct": 0.48, "medianHomeValue": 533118 },
-    { "id": "VT", "name": "Vermont", "incomeTaxRatePct": 6.0, "propertyTaxRatePct": 1.51, "medianHomeValue": 381496 },
-    { "id": "VA", "name": "Virginia", "incomeTaxRatePct": 5.0, "propertyTaxRatePct": 0.78, "medianHomeValue": 405474 },
-    { "id": "WA", "name": "Washington", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.75, "medianHomeValue": 592562 },
-    { "id": "WV", "name": "West Virginia", "incomeTaxRatePct": 4.4, "propertyTaxRatePct": 0.51, "medianHomeValue": 169780 },
-    { "id": "WI", "name": "Wisconsin", "incomeTaxRatePct": 5.3, "propertyTaxRatePct": 1.32, "medianHomeValue": 322641 },
-    { "id": "WY", "name": "Wyoming", "incomeTaxRatePct": 0, "propertyTaxRatePct": 0.53, "medianHomeValue": 355667 }
+    {
+      "id": "US",
+      "name": "United States",
+      "selectLabel": "United States (median state rates)",
+      "isNational": true,
+      "incomeTaxRatePct": 4.4,
+      "propertyTaxRatePct": 0.79,
+      "salesTaxRatePct": 7.53,
+      "medianHomeValue": 408800
+    },
+    {
+      "id": "AL",
+      "name": "Alabama",
+      "incomeTaxRatePct": 4.4,
+      "propertyTaxRatePct": 0.37,
+      "salesTaxRatePct": 9.46,
+      "medianHomeValue": 232106
+    },
+    {
+      "id": "AK",
+      "name": "Alaska",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.94,
+      "salesTaxRatePct": 1.82,
+      "medianHomeValue": 380987
+    },
+    {
+      "id": "AZ",
+      "name": "Arizona",
+      "incomeTaxRatePct": 2.5,
+      "propertyTaxRatePct": 0.48,
+      "salesTaxRatePct": 8.54,
+      "medianHomeValue": 420906
+    },
+    {
+      "id": "AR",
+      "name": "Arkansas",
+      "incomeTaxRatePct": 3.6,
+      "propertyTaxRatePct": 0.56,
+      "salesTaxRatePct": 9.48,
+      "medianHomeValue": 219754
+    },
+    {
+      "id": "CA",
+      "name": "California",
+      "incomeTaxRatePct": 6,
+      "propertyTaxRatePct": 0.7,
+      "salesTaxRatePct": 9.03,
+      "medianHomeValue": 765036
+    },
+    {
+      "id": "CO",
+      "name": "Colorado",
+      "incomeTaxRatePct": 4.25,
+      "propertyTaxRatePct": 0.5,
+      "salesTaxRatePct": 7.89,
+      "medianHomeValue": 535507
+    },
+    {
+      "id": "CT",
+      "name": "Connecticut",
+      "incomeTaxRatePct": 5,
+      "propertyTaxRatePct": 1.54,
+      "salesTaxRatePct": 6.35,
+      "medianHomeValue": 425333
+    },
+    {
+      "id": "DE",
+      "name": "Delaware",
+      "incomeTaxRatePct": 5.2,
+      "propertyTaxRatePct": 0.54,
+      "salesTaxRatePct": 0,
+      "medianHomeValue": 396207
+    },
+    {
+      "id": "DC",
+      "name": "District of Columbia",
+      "incomeTaxRatePct": 6,
+      "propertyTaxRatePct": 0.6,
+      "salesTaxRatePct": 6,
+      "medianHomeValue": 574199
+    },
+    {
+      "id": "FL",
+      "name": "Florida",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.78,
+      "salesTaxRatePct": 6.98,
+      "medianHomeValue": 372755
+    },
+    {
+      "id": "GA",
+      "name": "Georgia",
+      "incomeTaxRatePct": 5.19,
+      "propertyTaxRatePct": 0.79,
+      "salesTaxRatePct": 7.56,
+      "medianHomeValue": 328277
+    },
+    {
+      "id": "HI",
+      "name": "Hawaii",
+      "incomeTaxRatePct": 7.2,
+      "propertyTaxRatePct": 0.29,
+      "salesTaxRatePct": 4.5,
+      "medianHomeValue": 823970
+    },
+    {
+      "id": "ID",
+      "name": "Idaho",
+      "incomeTaxRatePct": 5.3,
+      "propertyTaxRatePct": 0.5,
+      "salesTaxRatePct": 6.03,
+      "medianHomeValue": 468156
+    },
+    {
+      "id": "IL",
+      "name": "Illinois",
+      "incomeTaxRatePct": 4.95,
+      "propertyTaxRatePct": 1.88,
+      "salesTaxRatePct": 8.98,
+      "medianHomeValue": 281547
+    },
+    {
+      "id": "IN",
+      "name": "Indiana",
+      "incomeTaxRatePct": 3,
+      "propertyTaxRatePct": 0.76,
+      "salesTaxRatePct": 7,
+      "medianHomeValue": 249724
+    },
+    {
+      "id": "IA",
+      "name": "Iowa",
+      "incomeTaxRatePct": 3.8,
+      "propertyTaxRatePct": 1.33,
+      "salesTaxRatePct": 6.94,
+      "medianHomeValue": 227764
+    },
+    {
+      "id": "KS",
+      "name": "Kansas",
+      "incomeTaxRatePct": 5.2,
+      "propertyTaxRatePct": 1.21,
+      "salesTaxRatePct": 8.71,
+      "medianHomeValue": 239111
+    },
+    {
+      "id": "KY",
+      "name": "Kentucky",
+      "incomeTaxRatePct": 3.5,
+      "propertyTaxRatePct": 0.74,
+      "salesTaxRatePct": 6,
+      "medianHomeValue": 228840
+    },
+    {
+      "id": "LA",
+      "name": "Louisiana",
+      "incomeTaxRatePct": 3,
+      "propertyTaxRatePct": 0.55,
+      "salesTaxRatePct": 10.13,
+      "medianHomeValue": 208930
+    },
+    {
+      "id": "ME",
+      "name": "Maine",
+      "incomeTaxRatePct": 6.4,
+      "propertyTaxRatePct": 0.98,
+      "salesTaxRatePct": 5.5,
+      "medianHomeValue": 396938
+    },
+    {
+      "id": "MD",
+      "name": "Maryland",
+      "incomeTaxRatePct": 4.9,
+      "propertyTaxRatePct": 0.92,
+      "salesTaxRatePct": 6,
+      "medianHomeValue": 423956
+    },
+    {
+      "id": "MA",
+      "name": "Massachusetts",
+      "incomeTaxRatePct": 5,
+      "propertyTaxRatePct": 1,
+      "salesTaxRatePct": 6.25,
+      "medianHomeValue": 642387
+    },
+    {
+      "id": "MI",
+      "name": "Michigan",
+      "incomeTaxRatePct": 4.25,
+      "propertyTaxRatePct": 1.19,
+      "salesTaxRatePct": 6,
+      "medianHomeValue": 254230
+    },
+    {
+      "id": "MN",
+      "name": "Minnesota",
+      "incomeTaxRatePct": 6.6,
+      "propertyTaxRatePct": 1,
+      "salesTaxRatePct": 8.14,
+      "medianHomeValue": 341308
+    },
+    {
+      "id": "MS",
+      "name": "Mississippi",
+      "incomeTaxRatePct": 4.4,
+      "propertyTaxRatePct": 0.58,
+      "salesTaxRatePct": 7.06,
+      "medianHomeValue": 189895
+    },
+    {
+      "id": "MO",
+      "name": "Missouri",
+      "incomeTaxRatePct": 4,
+      "propertyTaxRatePct": 0.89,
+      "salesTaxRatePct": 8.44,
+      "medianHomeValue": 258099
+    },
+    {
+      "id": "MT",
+      "name": "Montana",
+      "incomeTaxRatePct": 5.6,
+      "propertyTaxRatePct": 0.61,
+      "salesTaxRatePct": 0,
+      "medianHomeValue": 455364
+    },
+    {
+      "id": "NE",
+      "name": "Nebraska",
+      "incomeTaxRatePct": 4.5,
+      "propertyTaxRatePct": 1.44,
+      "salesTaxRatePct": 6.98,
+      "medianHomeValue": 271338
+    },
+    {
+      "id": "NV",
+      "name": "Nevada",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.5,
+      "salesTaxRatePct": 8.24,
+      "medianHomeValue": 442655
+    },
+    {
+      "id": "NH",
+      "name": "New Hampshire",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 1.5,
+      "salesTaxRatePct": 0,
+      "medianHomeValue": 495256
+    },
+    {
+      "id": "NJ",
+      "name": "New Jersey",
+      "incomeTaxRatePct": 4.6,
+      "propertyTaxRatePct": 1.88,
+      "salesTaxRatePct": 6.6,
+      "medianHomeValue": 558900
+    },
+    {
+      "id": "NM",
+      "name": "New Mexico",
+      "incomeTaxRatePct": 3.9,
+      "propertyTaxRatePct": 0.63,
+      "salesTaxRatePct": 7.68,
+      "medianHomeValue": 310375
+    },
+    {
+      "id": "NY",
+      "name": "New York",
+      "incomeTaxRatePct": 5.6,
+      "propertyTaxRatePct": 1.3,
+      "salesTaxRatePct": 8.54,
+      "medianHomeValue": 502162
+    },
+    {
+      "id": "NC",
+      "name": "North Carolina",
+      "incomeTaxRatePct": 4.25,
+      "propertyTaxRatePct": 0.66,
+      "salesTaxRatePct": 7.1,
+      "medianHomeValue": 331413
+    },
+    {
+      "id": "ND",
+      "name": "North Dakota",
+      "incomeTaxRatePct": 1.7,
+      "propertyTaxRatePct": 0.92,
+      "salesTaxRatePct": 7.09,
+      "medianHomeValue": 280510
+    },
+    {
+      "id": "OH",
+      "name": "Ohio",
+      "incomeTaxRatePct": 2.75,
+      "propertyTaxRatePct": 1.36,
+      "salesTaxRatePct": 7.29,
+      "medianHomeValue": 237200
+    },
+    {
+      "id": "OK",
+      "name": "Oklahoma",
+      "incomeTaxRatePct": 3.9,
+      "propertyTaxRatePct": 0.79,
+      "salesTaxRatePct": 9.06,
+      "medianHomeValue": 216242
+    },
+    {
+      "id": "OR",
+      "name": "Oregon",
+      "incomeTaxRatePct": 8.4,
+      "propertyTaxRatePct": 0.81,
+      "salesTaxRatePct": 0,
+      "medianHomeValue": 492347
+    },
+    {
+      "id": "PA",
+      "name": "Pennsylvania",
+      "incomeTaxRatePct": 3.07,
+      "propertyTaxRatePct": 1.26,
+      "salesTaxRatePct": 6.34,
+      "medianHomeValue": 278429
+    },
+    {
+      "id": "RI",
+      "name": "Rhode Island",
+      "incomeTaxRatePct": 4.4,
+      "propertyTaxRatePct": 1.12,
+      "salesTaxRatePct": 7,
+      "medianHomeValue": 488738
+    },
+    {
+      "id": "SC",
+      "name": "South Carolina",
+      "incomeTaxRatePct": 4.2,
+      "propertyTaxRatePct": 0.49,
+      "salesTaxRatePct": 7.49,
+      "medianHomeValue": 300562
+    },
+    {
+      "id": "SD",
+      "name": "South Dakota",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 1,
+      "salesTaxRatePct": 6.11,
+      "medianHomeValue": 312005
+    },
+    {
+      "id": "TN",
+      "name": "Tennessee",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.52,
+      "salesTaxRatePct": 9.61,
+      "medianHomeValue": 327696
+    },
+    {
+      "id": "TX",
+      "name": "Texas",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 1.4,
+      "salesTaxRatePct": 8.2,
+      "medianHomeValue": 297592
+    },
+    {
+      "id": "UT",
+      "name": "Utah",
+      "incomeTaxRatePct": 4.55,
+      "propertyTaxRatePct": 0.48,
+      "salesTaxRatePct": 7.42,
+      "medianHomeValue": 533118
+    },
+    {
+      "id": "VT",
+      "name": "Vermont",
+      "incomeTaxRatePct": 6,
+      "propertyTaxRatePct": 1.51,
+      "salesTaxRatePct": 6.43,
+      "medianHomeValue": 381496
+    },
+    {
+      "id": "VA",
+      "name": "Virginia",
+      "incomeTaxRatePct": 5,
+      "propertyTaxRatePct": 0.78,
+      "salesTaxRatePct": 5.77,
+      "medianHomeValue": 405474
+    },
+    {
+      "id": "WA",
+      "name": "Washington",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.75,
+      "salesTaxRatePct": 9.57,
+      "medianHomeValue": 592562
+    },
+    {
+      "id": "WV",
+      "name": "West Virginia",
+      "incomeTaxRatePct": 4.4,
+      "propertyTaxRatePct": 0.51,
+      "salesTaxRatePct": 6.6,
+      "medianHomeValue": 169780
+    },
+    {
+      "id": "WI",
+      "name": "Wisconsin",
+      "incomeTaxRatePct": 5.3,
+      "propertyTaxRatePct": 1.32,
+      "salesTaxRatePct": 5.72,
+      "medianHomeValue": 322641
+    },
+    {
+      "id": "WY",
+      "name": "Wyoming",
+      "incomeTaxRatePct": 0,
+      "propertyTaxRatePct": 0.53,
+      "salesTaxRatePct": 5.39,
+      "medianHomeValue": 355667
+    }
   ]
 }

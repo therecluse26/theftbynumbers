@@ -2,7 +2,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Federal tax data",
   "type": "object",
-  "required": ["meta", "taxYear", "filingStatuses", "brackets", "standardDeduction", "payroll"],
+  "required": [
+    "meta",
+    "taxYear",
+    "filingStatuses",
+    "brackets",
+    "standardDeduction",
+    "credits",
+    "capitalGains",
+    "payroll"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
@@ -35,6 +44,56 @@
       }
     },
     "standardDeduction": { "$ref": "#/definitions/byStatus" },
+    "credits": {
+      "type": "object",
+      "required": ["childTaxCredit"],
+      "additionalProperties": false,
+      "description": "Only the child tax credit is modelled. The earned income tax credit is not: it needs a phase-in, a plateau, a phase-out and an investment-income test per child count and per status, and being subtly wrong about a refund is worse than being silent about one.",
+      "properties": {
+        "childTaxCredit": {
+          "type": "object",
+          "required": ["perChild", "phaseOutStart", "phaseOutStep", "phaseOutPerStep"],
+          "additionalProperties": false,
+          "properties": {
+            "perChild": { "type": "number", "minimum": 0 },
+            "phaseOutStart": { "$ref": "#/definitions/byStatus" },
+            "phaseOutStep": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "The statute reduces the credit for each $1,000 or fraction thereof over the threshold, so this is data, not arithmetic."
+            },
+            "phaseOutPerStep": { "type": "number", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "capitalGains": {
+      "type": "object",
+      "required": [
+        "longTerm",
+        "netInvestmentIncomeRate",
+        "netInvestmentIncomeThreshold"
+      ],
+      "additionalProperties": false,
+      "description": "Used only to state what the invested pot would owe. No figure on this page is reduced by it: which account the money sits in is the reader's choice, not a tax rate.",
+      "properties": {
+        "longTerm": {
+          "type": "object",
+          "required": ["single", "mfj", "hoh"],
+          "additionalProperties": false,
+          "properties": {
+            "single": { "$ref": "#/definitions/bracketTable" },
+            "mfj": { "$ref": "#/definitions/bracketTable" },
+            "hoh": { "$ref": "#/definitions/bracketTable" }
+          }
+        },
+        "netInvestmentIncomeRate": { "$ref": "#/definitions/rate" },
+        "netInvestmentIncomeThreshold": {
+          "$ref": "#/definitions/byStatus",
+          "description": "Statutory and never indexed. Frozen at these figures since 2013."
+        }
+      }
+    },
     "payroll": {
       "type": "object",
       "required": ["socialSecurity", "medicare"],

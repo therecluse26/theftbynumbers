@@ -27,6 +27,7 @@ const { invest, years } = Astro.props;
       <p class="eyebrow">Of which is growth</p>
       <p class="stat-fig num" id="growthFig">{invest.growth}</p>
       <p class="stat-note" id="growthNote">{invest.growthNote}</p>
+      <p class="stat-note" id="gainsNote" set:html={invest.gainsNote} />
     </div>
   </div>
 

@@ -24,6 +24,29 @@ body{
   border-top:3px solid var(--yellow);
 }
 
+/*
+ * Every link on the page, wherever it lands.
+ *
+ * Nearly every link here is a source citation inside a hint, a note or a
+ * caveat, so a link takes the colour of the text it sits in and is marked by
+ * its underline. Yellow is the highlight: on hover, on focus, and on the
+ * links that carry their own emphasis.
+ *
+ * This rule is global on purpose. It used to be written out once per
+ * container, so a link in a container nobody had thought of fell through to
+ * the browser default and rendered blue on a near-black page. Three did.
+ * `:visited` is covered too, or a followed link turns purple.
+ */
+a,
+a:link,
+a:visited{
+  color:inherit;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+a:hover,
+a:focus-visible{color:var(--yellow)}
+
 .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
 .bleed{width:100vw;margin-left:calc(50% - 50vw)}
 
@@ -147,9 +170,6 @@ label,.field-label{
   text-transform:uppercase;color:var(--bone-50);margin-bottom:9px;
 }
 .hint{font-size:12.5px;color:var(--bone-50);margin:9px 0 0;line-height:1.4}
-/* Every footnote, hint and caveat now carries its source as a link. */
-.hint a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.hint a:hover{color:var(--yellow)}
 
 .money-input{display:flex;align-items:center;gap:5px;border-bottom:2px solid var(--yellow);padding-bottom:3px}
 .money-input span{
@@ -256,9 +276,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 }
 .buy-label{margin:9px 0 0;font-size:14.5px;line-height:1.35;font-weight:600;color:var(--bone)}
 .buy-price{font-family:var(--mono);font-size:11px;color:var(--bone-50);margin:5px 0 0;letter-spacing:.04em}
-.buy-src{margin:7px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:.05em}
-.buy-src a{color:var(--bone-50);text-decoration:underline;text-underline-offset:2px}
-.buy-src a:hover{color:var(--yellow)}
+/* The colour sits on the line, not on the link inside it. A rule on the link
+   would outrank the global a:hover and the source would stop lighting up. */
+.buy-src{
+  margin:7px 0 0;font-family:var(--mono);font-size:10px;letter-spacing:.05em;
+  color:var(--bone-50);
+}
 
 /* receipt */
 .life{border:1px solid var(--rule-2);padding:24px 22px;margin-bottom:28px}
@@ -304,8 +327,6 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   display:block;font-family:var(--mono);font-size:10px;letter-spacing:.04em;
   color:var(--bone-50);font-weight:400;margin-top:3px;line-height:1.45;
 }
-.dn-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.dn-note a:hover{color:var(--yellow)}
 .dn-spent,.dn-pct,.dn-yours,.dn-life{font-family:var(--mono);font-size:12px;text-align:right}
 .dn-spent{color:var(--bone-50)}
 .dn-pct{color:var(--bone-50)}
@@ -371,15 +392,12 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
   font-size:26px;line-height:1;color:var(--yellow);
   font-variant-numeric:tabular-nums;letter-spacing:-.02em;
 }
-.tier-count small{font-size:.5em;font-variation-settings:"wdth" 100,"wght" 600;margin-left:2px;opacity:.75}
 /* Long counts, stepped down so they stay inside the fixed count column. */
 .tier-count-sm{font-size:18px}
 .tier-count-xs{font-size:14px}
 .tier-name{font-size:15.5px;font-weight:600;color:var(--bone);line-height:1.3}
 .tier-note{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;color:var(--bone-50);font-weight:400;margin-top:3px}
 /* Only the giving rungs carry a source. A number about a life names who worked it out. */
-.tier-note a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.tier-note a:hover{color:var(--yellow)}
 .tier-price{font-family:var(--mono);font-size:13px;color:var(--bone-50);white-space:nowrap}
 .tier.locked .tier-count{
   font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;
@@ -484,8 +502,6 @@ input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:0;backg
 .notes li{font-size:13px;color:var(--bone-70);line-height:1.5;margin-bottom:12px;break-inside:avoid}
 .notes b{font-weight:700;color:var(--bone)}
 /* A note that states a fact ends in the link that substantiates it. */
-.notes a{color:inherit;text-decoration:underline;text-underline-offset:2px}
-.notes a:hover{color:var(--yellow)}
 
 .empty{margin:40px 0 60px;padding:36px 24px;border:1px dashed var(--rule-2)}
 .empty p{margin:0;font-size:15px;color:var(--bone-50)}

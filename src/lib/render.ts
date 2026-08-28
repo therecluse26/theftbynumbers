@@ -5,7 +5,7 @@
  * script calls the same functions on every keystroke. One source of truth,
  * so the first paint and the first update always agree.
  */
-import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, STATES_DATA, TAX, longDate } from './data';
+import { ASSUMPTIONS, BASKET, METALS, OUTLAYS, RECEIPT, ROADS, STATES, STATES_DATA, TAX, basketPrice, longDate } from './data';
 import {
   career,
   commas,
@@ -19,7 +19,7 @@ import {
 } from './format';
 import { resolveLadderGroups } from './ladder';
 import type { ResolvedLadderItem } from './ladder';
-import { employerSharePctLabel, investmentSeries } from './tax';
+import { capitalGainsTax, employerSharePctLabel, investmentSeries } from './tax';
 import type { Breakdown, Inputs, ReceiptItem, RoadsItem, SourceRef } from './types';
 
 const INK = '#0B0B0A';
@@ -58,8 +58,38 @@ export interface HeroText {
   ribbonBase: string;
 }
 
+/**
+ * How to name the denominator, in words.
+ *
+ * Every ratio on the hero and the ribbon divides by `base`. That is the wage
+ * on its own, or the wage plus the employer's share when the reader counts it.
+ * The two states need different English, and the hero, the ribbon legend and
+ * the ribbon's aria-label must all pick the same one. They used to decide
+ * separately, and the aria-label said "of your income" while the legend beside
+ * it said "of what you cost".
+ */
+interface BasePhrase {
+  /** Completes "You kept 70.5% of ___". */
+  of: string;
+  /** The ribbon's own caption. */
+  ribbonBase: string;
+}
+
+function basePhrase(inputs: Inputs): BasePhrase {
+  return inputs.countEmployerShare
+    ? {
+        of: 'what you cost to employ you',
+        ribbonBase: 'Every dollar it costs to employ you, left to right',
+      }
+    : {
+        of: 'your income',
+        ribbonBase: 'Every dollar you earned, left to right',
+      };
+}
+
 export function heroText(r: Breakdown, inputs: Inputs): HeroText {
   const status = statusOf(inputs);
+  const phrase = basePhrase(inputs);
 
   if (inputs.countEmployerShare) {
     // With the employer's share counted, the honest denominator is what you
@@ -85,8 +115,8 @@ export function heroText(r: Breakdown, inputs: Inputs): HeroText {
         'Your paycheck still nets <b>' +
         usd(r.takeHomePay) +
         '</b> &mdash; the employer\'s share never reaches it.',
-      keptPct: 'Kept ' + pct(r.kept / r.base) + ' of what you cost',
-      ribbonBase: 'Every dollar it costs to employ you, left to right',
+      keptPct: keptLegend(r, ' of what you cost'),
+      ribbonBase: phrase.ribbonBase,
     };
   }
 
@@ -96,12 +126,30 @@ export function heroText(r: Breakdown, inputs: Inputs): HeroText {
     foot:
       'That is <b>' +
       pct(r.effectiveRate) +
-      '</b> of everything you earned. You keep <b>' +
-      usd(r.kept) +
-      '</b>.',
-    keptPct: 'Kept ' + pct(r.kept / r.base),
-    ribbonBase: 'Every dollar you earned, left to right',
+      '</b> of everything you earned. ' +
+      (r.exceedsBase
+        ? 'The bill is <b>' +
+          usd(-r.kept) +
+          '</b> more than your whole wage. Property tax is charged on a ' +
+          'house, not on a paycheck, so it does not shrink when your income ' +
+          'does.'
+        : 'You keep <b>' + usd(r.kept) + '</b>.'),
+    keptPct: keptLegend(r, ''),
+    ribbonBase: phrase.ribbonBase,
   };
+}
+
+/**
+ * The legend under the ribbon.
+ *
+ * When the bill passes the wage there is nothing kept and the percentage would
+ * be negative, so the legend states the shortfall instead. It used to print
+ * "Kept 0.0%" beside a hero reading 102.1%, and the two could not both be read.
+ */
+function keptLegend(r: Breakdown, suffix: string): string {
+  return r.exceedsBase
+    ? 'Nothing kept, and ' + usd(-r.kept) + ' short'
+    : 'Kept ' + pct(r.kept / r.base) + suffix;
 }
 
 /** Hero text for an empty income box. */
@@ -109,9 +157,11 @@ export function emptyHeroText(inputs: Inputs): HeroText {
   return {
     label: 'On <b>$0</b> a year, ' + statusOf(inputs).who + ' pays',
     figure: '$0',
-    foot: 'Enter an income below to see the breakdown.',
+    // The form is above this line. It used to say "below", from a layout where
+    // the controls came last, and it contradicted the empty message under them.
+    foot: 'Enter an income above to see the breakdown.',
     keptPct: 'Kept 0%',
-    ribbonBase: 'Every dollar you earned, left to right',
+    ribbonBase: basePhrase(inputs).ribbonBase,
   };
 }
 
@@ -167,14 +217,30 @@ function arc(
 /* ---------- dial ---------- */
 
 export function dialSvg(effectiveRate: number): string {
-  const MAX = 0.6;
+  // The top of the scale is a chart bound, so it lives in the data file with
+  // the slider ranges. SWEEP and START are geometry and stay here.
+  const MAX = ASSUMPTIONS.dial.maxRatePct / 100;
   const SWEEP = 270;
   const START = -135;
   const clamped = Math.min(effectiveRate, MAX);
   const angle = START + (clamped / MAX) * SWEEP;
+  const overRange = effectiveRate > MAX;
 
   let g = arc(74, START, START + SWEEP, 15, 'rgba(237,234,227,.14)');
   if (clamped > 0.0005) g += arc(74, START, angle, 15, YELLOW);
+  // The needle pegs silently otherwise, and a 102% reader sees the same face
+  // as a 60% one. Mark the end of the scale so the pegging is visible.
+  if (overRange) {
+    const tip = point(88, START + SWEEP);
+    const a = point(80, START + SWEEP - 5);
+    const b = point(80, START + SWEEP + 5);
+    g +=
+      '<polygon points="' +
+      [tip, a, b].map((p) => p[0] + ',' + p[1]).join(' ') +
+      '" fill="' +
+      YELLOW +
+      '"/>';
+  }
 
   for (let i = 0; i <= 24; i++) {
     const value = (i / 24) * MAX;
@@ -245,7 +311,7 @@ export interface RibbonRender {
   ariaLabel: string;
 }
 
-export function ribbon(r: Breakdown): RibbonRender {
+export function ribbon(r: Breakdown, inputs: Inputs): RibbonRender {
   const parts: Array<[string, string, number, string, string]> = [
     ['Kept', 'What you keep', r.kept, '#2C2B27', BONE],
     ['Federal', 'Box 2', r.federal, '#FFD400', INK],
@@ -286,12 +352,21 @@ export function ribbon(r: Breakdown): RibbonRender {
 
   return {
     html,
-    ariaLabel:
-      'You kept ' +
-      pct(r.kept / total) +
-      ' of your income; ' +
-      pct(r.effectiveRate) +
-      ' went to tax.',
+    ariaLabel: r.exceedsBase
+      ? 'Tax took ' +
+        pct(r.effectiveRate) +
+        ' of ' +
+        basePhrase(inputs).of +
+        '. Nothing was kept, and the bill is ' +
+        usd(-r.kept) +
+        ' more than you earned.'
+      : 'You kept ' +
+        pct(r.kept / total) +
+        ' of ' +
+        basePhrase(inputs).of +
+        '; ' +
+        pct(r.effectiveRate) +
+        ' went to tax.',
   };
 }
 
@@ -321,7 +396,15 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
         usd(r.taxable) +
         ' of taxable income, after the ' +
         usd(TAX.standardDeduction[inputs.status]) +
-        ' standard deduction.',
+        ' standard deduction' +
+        (r.childCredit > 0
+          ? ', less ' +
+            usd(r.childCredit) +
+            ' of child tax credit for ' +
+            inputs.children +
+            (inputs.children === 1 ? ' child' : ' children') +
+            '. The credit stops at zero here; the refundable part is not modelled.'
+          : '.'),
     },
     {
       box: 'Box 4',
@@ -332,7 +415,8 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
         pct(socialSecurity.rate) +
         ' on the first ' +
         usd(socialSecurity.wageBase) +
-        ' you earn.',
+        // The wage base is per worker, so two earners get two of them.
+        (inputs.earners > 1 ? ' each of you earns.' : ' you earn.'),
     },
     {
       box: 'Box 6',
@@ -368,7 +452,7 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
       amount: r.employerShare,
       note:
         'Another ' +
-        employerSharePctLabel(r.wage) +
+        employerSharePctLabel(r.wage, inputs.earners) +
         ' your employer pays on top of your wage. It never enters your paycheck, ' +
         'so it does not reduce your take-home; it raises what you cost.',
     });
@@ -389,9 +473,13 @@ function ledgerRows(r: Breakdown, inputs: Inputs): LedgerRow[] {
       name: 'Property tax, estimated',
       amount: r.propertyTax,
       note:
-        'A year of tax on the median home in the state you picked. Owed on a ' +
-        'home already paid off, every year, for as long as you hold it. Stop ' +
-        'paying and the county sells the house.',
+        inputs.tenure === 'own'
+          ? 'A year of tax on the median home in the state you picked. Owed on a ' +
+            'home already paid off, every year, for as long as you hold it. Stop ' +
+            'paying and the county sells the house.'
+          : 'The property tax inside a year of your rent. Your landlord owes ' +
+            'it and you fund it, a little at a time, in a payment that never ' +
+            'itemises it. You cannot stop paying it without moving out.',
     });
   }
   return rows;
@@ -537,35 +625,41 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
  * income. This is the strongest sentence on the page.
  */
 export function lifeCost(r: Breakdown, inputs: Inputs): LifeCost {
-  const yearsForTax = r.effectiveRate * inputs.years;
-  const hoursOfForty = r.effectiveRate * 40;
+  // A career and a working week are bounded units. The rate is not: property
+  // tax does not shrink with the wage, so it can pass 1. Clamp the units, and
+  // let the note beside each one say that the bill did not stop there.
+  const share = Math.min(1, r.effectiveRate);
+  const yearsForTax = share * inputs.years;
+  const hoursOfForty = share * 40;
+  const years = inputs.years + ' ' + plural(inputs.years, 'year');
 
   let days = '';
   for (const day of WEEKDAYS) days += '<span class="wd">' + day + '</span>';
 
   return {
     figure: career(yearsForTax),
-    note:
-      'You work ' +
-      inputs.years +
-      ' ' +
-      plural(inputs.years, 'year') +
-      '. That much of it is for the government, not for you.',
+    note: r.exceedsBase
+      ? 'You work ' +
+        years +
+        '. Every one of them is for the government, and the bill is still not paid.'
+      : 'You work ' + years + '. That much of it is for the government, not for you.',
     weekHtml:
       '<div class="week" role="img" aria-label="' +
-      pct(r.effectiveRate) +
+      pct(share) +
       ' of every working week goes to tax.">' +
       '<div class="week-fill" style="width:' +
-      Math.min(100, r.effectiveRate * 100).toFixed(2) +
+      (share * 100).toFixed(2) +
       '%"></div>' +
       '<div class="week-days">' +
       days +
       '</div>' +
       '</div>',
-    weekNote:
-      'In a 40-hour week, ' +
-      hoursOfForty.toFixed(1) +
-      ' hours of your work are theirs before an hour of it is yours.',
+    weekNote: r.exceedsBase
+      ? 'In a 40-hour week, all 40 hours of your work are theirs, and the ' +
+        'bill is still not paid.'
+      : 'In a 40-hour week, ' +
+        hoursOfForty.toFixed(1) +
+        ' hours of your work are theirs before an hour of it is yours.',
   };
 }
 
@@ -994,6 +1088,15 @@ export interface InvestText {
   balanceNote: string;
   growth: string;
   growthNote: string;
+  /**
+   * What the growth would owe in tax, and why this page does not deduct it.
+   *
+   * The balance above is a pre-tax figure. That is a choice, not an oversight:
+   * the tax on it is zero in a Roth, ordinary income out of a 401(k), and
+   * depends on turnover and timing in a brokerage. A single modelled rate
+   * would be wrong for most readers. So the number is stated instead.
+   */
+  gainsNote: string;
   /** "After 20 years", the eyebrow above the comparison. */
   heading: string;
   /** The two bars and their legend, ready for innerHTML. */
@@ -1038,9 +1141,14 @@ function comparisonHtml(
   couldHave: number,
 ): string {
   const scale = couldHave || 1;
-  const tookShare = tookHome / scale;
-  const taxShare = taxPaid / scale;
-  const growthShare = growth / scale;
+  // Clamped for the geometry only. `tookHome` goes negative when the bill
+  // passes the wage, and a negative flex-grow is invalid CSS: the browser
+  // drops the declaration and the segment collapses without a word. The
+  // printed dollar figures below stay signed and truthful.
+  const bar = (n: number) => Math.max(0, n / scale);
+  const tookShare = bar(tookHome);
+  const taxShare = bar(taxPaid);
+  const growthShare = bar(growth);
 
   const row = (label: string, total: string, hot: boolean, bar: string) =>
     '<div class="cmp-row">' +
@@ -1126,6 +1234,18 @@ export function investText(r: Breakdown, inputs: Inputs): InvestText {
       usd(taxPaid) +
       '. The rest is compounding' +
       (growth > taxPaid ? ', which by now is doing more work than you are.' : '.'),
+    gainsNote:
+      growth > 0
+        ? 'Held in a taxable account and sold in one go, that ' +
+          usd(growth) +
+          ' of growth would owe about ' +
+          usd(capitalGainsTax(r.taxable, growth, inputs.status)) +
+          ' in federal capital gains tax, plus any state tax. Held in a Roth ' +
+          'it would owe none. In a 401(k) it would be taxed as income on the ' +
+          'way out. This page deducts none of it: which account the money ' +
+          'sits in is your choice, not a tax rate.' +
+          sourceLink(TAX.meta.fields['capitalGains.longTerm'])
+        : '',
     heading:
       'After ' + inputs.years + ' ' + plural(inputs.years, 'year') + ' at this income',
     comparison: comparisonHtml(tookHome, taxPaid, growth, couldHave),
@@ -1209,8 +1329,10 @@ function tier(item: ResolvedLadderItem, count: number): string {
     '<span class="tier-count num' +
     countClass(shown) +
     '">' +
+    // The count stands alone. The rung's own name says what it counts, so an
+    // "x" after it added nothing and broke the line.
     shown +
-    '<small>x</small></span>' +
+    '</span>' +
     '<span class="tier-name">' +
     escapeHtml(count === 1 ? item.singular : item.plural) +
     '<span class="tier-note">' +
@@ -1491,9 +1613,11 @@ export function stackFootnote(): string {
     'A rung about your own time is priced at what you keep after every tax on ' +
     'this page, held flat. That is a smaller number than your paycheck, because ' +
     'sales tax and property tax come out of the paycheck later. ' +
-    'Other prices are ' +
-    TAX.taxYear +
-    ' averages. The home is the median value in the state you picked above. ' +
+    // The vintage comes from the file that owns the prices, never from the tax
+    // year. Bumping the tax year must not silently re-date every price.
+    'Other prices were sampled on ' +
+    longDate(BASKET.meta.updatedAt) +
+    '. The home is the median value in the state you picked above. ' +
     'Gold moves daily; this uses spot on ' +
     longDate(METALS.meta.updatedAt) +
     '.' +
@@ -1508,37 +1632,74 @@ export function figuresFootnote(): string {
     TAX.taxYear +
     ' IRS brackets and standard deductions, a ' +
     usd(TAX.payroll.socialSecurity.wageBase) +
-    ' Social Security wage base, and prices sampled from typical ' +
-    TAX.taxYear +
-    ' US averages.' +
+    ' Social Security wage base, and US average prices sampled on ' +
+    // Same rule as stackFootnote: the price date comes from the price file.
+    longDate(BASKET.meta.updatedAt) +
+    '.' +
     sourceLink(TAX.meta.fields['*']) +
-    sourceLink(TAX.meta.fields['payroll.socialSecurity.wageBase'])
+    sourceLink(TAX.meta.fields['payroll.socialSecurity.wageBase']) +
+    sourceLink(BASKET.meta.fields['price'])
   );
 }
 
-/** The wording on the sales tax checkbox, built from the assumptions file. */
-export function salesTaxHint(): string {
+/**
+ * The wording on the sales tax checkbox.
+ *
+ * The rate is the picked state's own, so four states get a different sentence
+ * entirely. "at Oregon's 0.0% combined rate" would be absurd.
+ */
+export function salesTaxHint(inputs: Inputs): string {
+  const row = STATES[inputs.stateIndex];
+  if (!row) return '';
+  if (row.salesTaxRatePct <= 0) {
+    return (
+      row.name +
+      ' levies no sales tax, state or local. Nothing is added here.' +
+      sourceLink(STATES_DATA.meta.fields['salesTaxRatePct'])
+    );
+  }
   return (
     'Rough: ' +
     pct(ASSUMPTIONS.salesTax.spendShare, 0) +
-    ' of take-home spent on taxable goods at a ' +
-    pct(ASSUMPTIONS.salesTax.combinedRate, 1) +
-    ' combined rate.'
+    ' of take-home spent on taxable goods at ' +
+    (row.isNational ? 'the national average ' : row.name + "'s ") +
+    pct(row.salesTaxRatePct / 100, 2) +
+    ' combined state and local rate.' +
+    sourceLink(STATES_DATA.meta.fields['salesTaxRatePct'])
   );
 }
 
-/** The wording on the property tax checkbox, built from the states file. */
+/** The wording on the property tax checkbox. It depends on own or rent. */
 export function propertyTaxHint(inputs: Inputs): string {
   const row = STATES[inputs.stateIndex];
   if (!row) return '';
+  if (inputs.tenure === 'rent') {
+    return (
+      "The landlord's tax bill, inside your rent: " +
+      pct(ASSUMPTIONS.propertyTax.rentTaxShare, 0) +
+      ' of ' +
+      usd(basketPrice('rent-month')) +
+      ' a month. Rent here is a national average, so this one figure does ' +
+      'not move with the state you picked.' +
+      sourceLink(ASSUMPTIONS.meta.fields['propertyTax.rentTaxShare'])
+    );
+  }
   return (
     pct(row.propertyTaxRatePct / 100, 2) +
     ' a year on the ' +
     usd(row.medianHomeValue) +
     ' median home in ' +
     row.name +
-    '. It never ends, and owning the house outright does not stop it.'
+    '. It never ends, and owning the house outright does not stop it.' +
+    sourceLink(STATES_DATA.meta.fields['propertyTaxRatePct'])
   );
+}
+
+/** The wording under the own-or-rent control. */
+export function tenureHint(inputs: Inputs): string {
+  return inputs.tenure === 'own'
+    ? 'Charged on the median home in the state you picked, not on a home you told us about.'
+    : 'Charged on a year of average US rent. You never see this line, but you fund it.';
 }
 
 /** The wording on the employer share checkbox. */
@@ -1550,6 +1711,52 @@ export function employerHint(): string {
     "what you cost — so it's counted against your full compensation, not your salary. " +
     'The Social Security half stops at the wage base, so above ' +
     usd(TAX.payroll.socialSecurity.wageBase) +
-    ' the rate on your whole wage is lower. The ledger row shows your own.'
+    ' the rate on your whole wage is lower. That base is per worker, so two ' +
+    'earners on one return get two of them. The ledger row shows your own.'
   );
+}
+
+/**
+ * The wording under the children control.
+ *
+ * A head of household with no children set gets a nudge, not a silent change.
+ * The status legally requires a qualifying person, so the reader is probably
+ * one control away from a much smaller federal line. Moving the number for
+ * them on a status click would be exactly the kind of surprise this page is
+ * against.
+ */
+export function childrenHint(inputs: Inputs): string {
+  const credit = TAX.credits.childTaxCredit;
+  if (inputs.status === 'hoh' && inputs.children === 0) {
+    return (
+      'Head of household filing status needs a qualifying person. If that ' +
+      'person is your child, set the count: it is worth up to ' +
+      usd(credit.perChild) +
+      ' off the federal line.' +
+      sourceLink(TAX.meta.fields['credits.childTaxCredit.perChild'])
+    );
+  }
+  return (
+    usd(credit.perChild) +
+    ' each, less ' +
+    usd(credit.phaseOutPerStep) +
+    ' for every ' +
+    usd(credit.phaseOutStep) +
+    ' over ' +
+    usd(credit.phaseOutStart[inputs.status]) +
+    '. The refundable part is not modelled, so this page never shows a refund.' +
+    sourceLink(TAX.meta.fields['credits.childTaxCredit.perChild'])
+  );
+}
+
+/** The wording under the earners control. It only shows on a joint return. */
+export function earnersHint(inputs: Inputs): string {
+  return inputs.earners > 1
+    ? 'Two wage bases, so Social Security runs to ' +
+        usd(TAX.payroll.socialSecurity.wageBase * 2) +
+        ' of joint wage. Split evenly between you, because this page never ' +
+        'asks who earned what.'
+    : 'One wage base. Social Security stops at ' +
+        usd(TAX.payroll.socialSecurity.wageBase) +
+        ' of the joint wage.';
 }

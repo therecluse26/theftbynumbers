@@ -2,18 +2,34 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Editorial assumptions and control ranges",
   "type": "object",
-  "required": ["meta", "salesTax", "investment", "horizon", "income", "stateRateSlider"],
+  "required": [
+    "meta",
+    "salesTax",
+    "investment",
+    "horizon",
+    "income",
+    "stateRateSlider",
+    "dial",
+    "earners",
+    "dependents",
+    "propertyTax"
+  ],
   "additionalProperties": false,
   "properties": {
     "$schema": { "type": "string" },
     "meta": { "$ref": "meta.schema.json" },
     "salesTax": {
       "type": "object",
-      "required": ["spendShare", "combinedRate"],
+      "required": ["spendShare"],
       "additionalProperties": false,
+      "description": "The rate lives in states.json, per state. Only the share of take-home that is spent on taxable goods is national.",
       "properties": {
-        "spendShare": { "type": "number", "minimum": 0, "maximum": 1 },
-        "combinedRate": { "type": "number", "minimum": 0, "maximum": 1 }
+        "spendShare": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Share of take-home spent on goods a sales tax reaches. Most spending is not taxable: rent, mortgage interest, health insurance, tuition and most services."
+        }
       }
     },
     "investment": {
@@ -66,6 +82,62 @@
         "minPct": { "type": "number", "minimum": 0 },
         "maxPct": { "type": "number", "exclusiveMinimum": 0 },
         "stepPct": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "propertyTax": {
+      "type": "object",
+      "required": ["rentTaxShare"],
+      "additionalProperties": false,
+      "description": "The renter branch. A national ratio with no per-state source, so it lives here and not in states.json.",
+      "properties": {
+        "rentTaxShare": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "The property tax line inside a rent dollar. Not an incidence estimate: it is the money that leaves the tenant and reaches the county, which is what this page measures."
+        }
+      }
+    },
+    "dependents": {
+      "type": "object",
+      "required": ["defaultChildren", "maxChildren"],
+      "additionalProperties": false,
+      "description": "How many children the picker offers. A count of people, so it carries no provenance entry.",
+      "properties": {
+        "defaultChildren": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zero, so the opening headline does not move for a reader who never touches the control."
+        },
+        "maxChildren": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "earners": {
+      "type": "object",
+      "required": ["defaultEarners", "maxEarners"],
+      "additionalProperties": false,
+      "description": "How many people a joint return covers. A count of people, so it carries no provenance entry.",
+      "properties": {
+        "defaultEarners": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "One, deliberately. It is the conservative reading and it leaves the arithmetic unchanged for a reader who never touches the control."
+        },
+        "maxEarners": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "dial": {
+      "type": "object",
+      "required": ["maxRatePct"],
+      "additionalProperties": false,
+      "description": "The gauge in the hero. A chart bound, not an empirical claim, so it carries no provenance entry.",
+      "properties": {
+        "maxRatePct": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "description": "The top of the dial's scale. A rate above this pegs the needle, and the dial draws an over-range mark so the pegging is visible."
+        }
       }
     }
   }

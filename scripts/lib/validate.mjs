@@ -67,14 +67,28 @@ export function semanticErrors(entry, data) {
   };
 
   if (entry.id === 'federal-tax') {
-    for (const [status, table] of Object.entries(data.brackets)) {
-      if (table[0].from !== 0) errors.push(`brackets.${status} must start at 0`);
+    // Every bracket table in the file, not just the ordinary-income one. This
+    // loop used to read data.brackets alone, so a second table could have been
+    // added out of order and nothing would have said so.
+    const tables = {
+      ...Object.fromEntries(
+        Object.entries(data.brackets).map(([k, v]) => [`brackets.${k}`, v]),
+      ),
+      ...Object.fromEntries(
+        Object.entries(data.capitalGains.longTerm).map(([k, v]) => [
+          `capitalGains.longTerm.${k}`,
+          v,
+        ]),
+      ),
+    };
+    for (const [name, table] of Object.entries(tables)) {
+      if (table[0].from !== 0) errors.push(`${name} must start at 0`);
       for (let i = 1; i < table.length; i++) {
         if (table[i].from <= table[i - 1].from) {
-          errors.push(`brackets.${status}[${i}] is not above the band below it`);
+          errors.push(`${name}[${i}] is not above the band below it`);
         }
         if (table[i].rate < table[i - 1].rate) {
-          errors.push(`brackets.${status}[${i}] rate falls below the band below it`);
+          errors.push(`${name}[${i}] rate falls below the band below it`);
         }
       }
     }

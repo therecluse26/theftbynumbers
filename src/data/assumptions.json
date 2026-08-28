@@ -3,6 +3,22 @@
   "meta": {
     "updatedAt": "2026-08-26",
     "fields": {
+      "salesTax.spendShare": {
+        "updateMode": "manual",
+        "label": "Bureau of Labor Statistics, Consumer expenditures in 2024",
+        "url": "https://www.bls.gov/opub/reports/consumer-expenditures/2024/home.htm",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "An editorial estimate. No publisher states this share, and this page does not pretend one does. It is the part of take-home pay that goes on goods a sales tax actually reaches. Most spending is not among them: rent, mortgage interest, health insurance, tuition, pension contributions and most services are all outside it, and groceries are exempt in most states. For scale, the survey put average annual expenditures at $78,535 per consumer unit in 2024 against $104,207 of income before taxes, and roughly a third of that spending falls in taxable categories. To replace this with a derivation, sum the taxable categories in the survey table against income after taxes and record the arithmetic here. The 2024 release carries no after-tax income figure, so that has to start from the 2023 tables."
+      },
+      "propertyTax.rentTaxShare": {
+        "updateMode": "manual",
+        "label": "National Apartment Association, Breaking down one dollar of rent",
+        "url": "https://www.naahq.org/sites/default/files/2023-09/Dollar%20of%20Rent%202023%20Final.pdf",
+        "maxAgeDays": 400,
+        "updatedAt": "2026-08-27",
+        "note": "Eleven cents of every rent dollar goes to property tax. This is the tax line inside the rent, not an estimate of how much higher the rent is because the tax exists. It is what leaves the tenant and reaches the county, which is what this page measures. Two things a reader should know. It varies by state: the same research puts New Jersey at 16 cents and Connecticut at 15, against 4 in Arizona and Nevada, and this page uses the national figure for every state. And economists dispute how much of a landlord's property tax a tenant really bears rather than the owner: Carroll and Yinger found the tax on rental housing is, on average, not a benefit tax, and any part of it that falls on the owner instead would make this figure smaller. The note with id note-property says both."
+      },
       "investment.defaultAnnualReturnPct": {
         "updateMode": "manual",
         "label": "Long-run US market average after inflation",
@@ -21,8 +37,7 @@
     }
   },
   "salesTax": {
-    "spendShare": 0.35,
-    "combinedRate": 0.075
+    "spendShare": 0.35
   },
   "investment": {
     "defaultAnnualReturnPct": 7,
@@ -44,5 +59,19 @@
     "minPct": 0,
     "maxPct": 11,
     "stepPct": 0.05
+  },
+  "dial": {
+    "maxRatePct": 60
+  },
+  "earners": {
+    "defaultEarners": 1,
+    "maxEarners": 2
+  },
+  "dependents": {
+    "defaultChildren": 0,
+    "maxChildren": 6
+  },
+  "propertyTax": {
+    "rentTaxShare": 0.11
   }
 }
